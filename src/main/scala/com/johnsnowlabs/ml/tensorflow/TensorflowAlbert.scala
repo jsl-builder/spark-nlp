@@ -98,7 +98,7 @@ class TensorflowAlbert(val tensorflow: TensorflowWrapper,
       .feed(segmentIdsKey, segmentTensors)
       .fetch(outputSequenceKey)
 
-    val outs = runner.run().asScala
+    val outs = runner.run().asScala.toList
     val embeddings = TensorResources.extractFloats(outs.head)
 
     tensors.clearSession(outs)

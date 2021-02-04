@@ -72,7 +72,7 @@ class TensorflowLD(val tensorflow: TensorflowWrapper,
       .feed(inputKey, tokenTensors)
       .fetch(outputKey)
 
-    val outs = runner.run().asScala
+    val outs = runner.run().asScala.toList
     val predictions = TensorResources.extractFloats(outs.head).grouped(outputSize).toArray
 
     tensors.clearSession(outs)

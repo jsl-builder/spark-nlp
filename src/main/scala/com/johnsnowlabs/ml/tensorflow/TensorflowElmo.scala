@@ -123,7 +123,7 @@ class TensorflowElmo(val tensorflow: TensorflowWrapper,
       .feed(sequenceKey, tensors.createTensor(sequencesLength))
       .fetch(embeddingsKey)
 
-    val outs = runner.run().asScala
+    val outs = runner.run().asScala.toList
     val wordEmbeddings = TensorResources.extractFloats(outs.head)
     tensors.clearSession(outs)
     tensors.clearTensors()

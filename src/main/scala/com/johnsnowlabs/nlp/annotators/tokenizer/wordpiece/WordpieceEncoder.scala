@@ -4,25 +4,22 @@ import com.johnsnowlabs.nlp.annotators.common.{IndexedToken, TokenPiece}
 import scala.collection.mutable.ArrayBuffer
 
 
-private[nlp] class WordpieceEncoder
-(
-  vocabulary: Map[String, Int],
-  unkToken: String = "[UNK]",
-  maxInputCharsPerWord: Int = 200,
-  partPrefix: String = "##"
-) {
+private[nlp] class WordpieceEncoder(vocabulary: Map[String, Int],
+                                    unkToken: String = "[UNK]",
+                                    maxInputCharsPerWord: Int = 200,
+                                    partPrefix: String = "##") {
 
   require(vocabulary.contains(unkToken), "token " + unkToken + " not found in vocabulary")
 
-  def encode(token: IndexedToken): Array[TokenPiece] = {
+  def encode(indexedToken: IndexedToken): Array[TokenPiece] = {
     val unkId = vocabulary(unkToken)
 
-    if (token.token.length > maxInputCharsPerWord)
-      return Array(TokenPiece(unkToken, token.token, unkId, true, token.begin, token.end))
+    if (indexedToken.token.length > maxInputCharsPerWord)
+      return Array(TokenPiece(unkToken, indexedToken.token, unkId, true, indexedToken.begin, indexedToken.end))
 
     val result = ArrayBuffer[TokenPiece]()
 
-    val text = token.token
+    val text = indexedToken.token
     var start = 0
     var end = text.length
 
@@ -32,8 +29,8 @@ private[nlp] class WordpieceEncoder
 
       val found = vocabulary.get(toFind)
       if (found.nonEmpty) {
-        val subToken = TokenPiece(toFind, token.token, found.get, start == 0,
-          token.begin + start, token.begin + end - 1)
+        val subToken = TokenPiece(toFind, indexedToken.token, found.get, start == 0,
+          indexedToken.begin + start, indexedToken.begin + end - 1)
         result.append(subToken)
         start = end
         end = text.length
@@ -42,7 +39,7 @@ private[nlp] class WordpieceEncoder
 
         if (end == start) {
           // Not Found anything in vocabulary
-          return Array(TokenPiece(unkToken, token.token, unkId, true, token.begin, token.end))
+          return Array(TokenPiece(unkToken, indexedToken.token, unkId, true, indexedToken.begin, indexedToken.end))
         }
       }
     }

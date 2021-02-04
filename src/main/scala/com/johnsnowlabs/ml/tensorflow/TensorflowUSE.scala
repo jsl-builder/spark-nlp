@@ -43,7 +43,7 @@ class TensorflowUSE(val tensorflow: TensorflowWrapper,
       .feed(inputKey, sentenceTensors)
       .fetch(outPutKey)
 
-    val outs = runner.run().asScala
+    val outs = runner.run().asScala.toList
     val allEmbeddings = TensorResources.extractFloats(outs.head)
 
     tensors.clearSession(outs)

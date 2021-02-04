@@ -2,8 +2,12 @@ package com.johnsnowlabs.ml.tensorflow
 
 import com.johnsnowlabs.nlp.{Annotation, AnnotatorType}
 import com.johnsnowlabs.nlp.annotators.common._
+import org.tensorflow.Tensor
+import org.tensorflow.ndarray.buffer.IntDataBuffer
+import org.tensorflow.types.family.TType
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable
 
 /**
   * BERT (Bidirectional Encoder Representations from Transformers) provides dense vector representations for natural language by using a deep, pre-trained neural network with the Transformer architecture
@@ -32,41 +36,44 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
   private val maskIdsKey = "input_mask:0"
   private val segmentIdsKey = "segment_ids:0"
   private val embeddingsKey = "sequence_output:0"
-  private val senteneEmbeddingsKey = "pooled_output:0"
+  private val sentenceEmbeddingsKey = "pooled_output:0"
 
+  /** Encode the input sequence to indexes IDs adding padding where necessary */
   def encode(sentences: Seq[(WordpieceTokenizedSentence, Int)], maxSequenceLength: Int): Seq[Array[Int]] = {
-    val maxSentenceLength = Array(maxSequenceLength - 2, sentences.map(_._1.tokens.length).max).min
+    val maxSentenceLength =
+      Array(
+        maxSequenceLength - 2,
+        sentences.map{ case(wpTokSentence, _) => wpTokSentence.tokens.length}.max).min
 
+    sentences
+      .map{ case(wpTokSentence, _) =>
+        val tokenPieceIds = wpTokSentence.tokens.map(t => t.pieceId)
+        val padding = Array.fill(maxSentenceLength - tokenPieceIds.length)(0)
 
-    sentences.map(sentence => {
-      val tokenPieceIds = sentence._1.tokens.map(t => t.pieceId)
-      val padding = Array.fill(maxSentenceLength - tokenPieceIds.length)(0)
-
-      Array(sentenceStartTokenId) ++
-        tokenPieceIds.take(maxSentenceLength) ++
-        Array(sentenceEndTokenId) ++
-        padding
-    })
+        Array(sentenceStartTokenId) ++ tokenPieceIds.take(maxSentenceLength) ++ Array(sentenceEndTokenId) ++ padding
+      }
   }
 
   def tag(batch: Seq[Array[Int]]): Seq[Array[Array[Float]]] = {
     val tensors = new TensorResources()
 
-    val maxSentenceLength = batch.map(x => x.length).max
+    val maxSentenceLength = batch.map(encodedSentence => encodedSentence.length).max
     val batchLength = batch.length
 
-    val tokenBuffers = tensors.createIntBuffer(batchLength*maxSentenceLength)
-    val maskBuffers = tensors.createIntBuffer(batchLength*maxSentenceLength)
-    val segmentBuffers = tensors.createIntBuffer(batchLength*maxSentenceLength)
+    val tokenBuffers: IntDataBuffer = tensors.createIntBuffer(batchLength * maxSentenceLength)
+    val maskBuffers: IntDataBuffer = tensors.createIntBuffer(batchLength * maxSentenceLength)
+    val segmentBuffers: IntDataBuffer = tensors.createIntBuffer(batchLength * maxSentenceLength)
 
+    // [nb of encoded sentences , maxSentenceLength]
     val shape = Array(batch.length.toLong, maxSentenceLength)
 
-    batch.zipWithIndex.foreach { case (sentence, idx) =>
-      val offset = idx * maxSentenceLength
-      tokenBuffers.offset(offset).write(sentence)
-      maskBuffers.offset(offset).write(sentence.map(x=> if (x == 0) 0 else 1))
-      segmentBuffers.offset(offset).write(Array.fill(maxSentenceLength)(0))
-    }
+    batch.zipWithIndex
+      .foreach { case (sentence, idx) =>
+        val offset = idx * maxSentenceLength
+        tokenBuffers.offset(offset).write(sentence)
+        maskBuffers.offset(offset).write(sentence.map(x => if (x == 0) 0 else 1))
+        segmentBuffers.offset(offset).write(Array.fill(maxSentenceLength)(0))
+      }
 
     val runner = tensorflow.getTFHubSession(configProtoBytes = configProtoBytes, initAllTables = false).runner
 
@@ -80,7 +87,7 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
       .feed(segmentIdsKey, segmentTensors)
       .fetch(embeddingsKey)
 
-    val outs = runner.run().asScala
+    val outs = runner.run().asScala.toList
     val embeddings = TensorResources.extractFloats(outs.head)
 
     tensors.clearSession(outs)
@@ -122,7 +129,7 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
       val offset = idx * maxSentenceLength
 
       tokenBuffers.offset(offset).write(sentence)
-      maskBuffers.offset(offset).write(sentence.map(x=> if (x == 0) 0 else 1))
+      maskBuffers.offset(offset).write(sentence.map(x => if (x == 0) 0 else 1))
       segmentBuffers.offset(offset).write(Array.fill(maxSentenceLength)(0))
     }
 
@@ -136,9 +143,9 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
       .feed(tokenIdsKey, tokenTensors)
       .feed(maskIdsKey, maskTensors)
       .feed(segmentIdsKey, segmentTensors)
-      .fetch(senteneEmbeddingsKey)
+      .fetch(sentenceEmbeddingsKey)
 
-    val outs = runner.run().asScala
+    val outs = runner.run().asScala.toList
     val embeddings = TensorResources.extractFloats(outs.head)
 
     tensors.clearSession(outs)
@@ -164,7 +171,7 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
     batch.zipWithIndex.foreach { case(sentence, idx) =>
       val offset = idx * maxSentenceLength
       tokenBuffers.offset(offset).write(sentence.map(_.toLong))
-      maskBuffers.offset(offset).write(sentence.map(x=> if (x == 0L) 0L else 1L))
+      maskBuffers.offset(offset).write(sentence.map(x => if (x == 0L) 0L else 1L))
       segmentBuffers.offset(offset).write(Array.fill(maxSentenceLength)(0L))
     }
 
@@ -179,9 +186,9 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
       .feed(tokenIdsKey, tokenTensors)
       .feed(maskIdsKey, maskTensors)
       .feed(segmentIdsKey, segmentTensors)
-      .fetch(senteneEmbeddingsKey)
+      .fetch(sentenceEmbeddingsKey)
 
-    val outs = runner.run().asScala
+    val outs = runner.run().asScala.toList
     val embeddings = TensorResources.extractFloats(outs.head)
 
     tensors.clearSession(outs)

@@ -17,6 +17,8 @@ class AlbertEmbeddingsTestSpec extends FlatSpec {
     val smallCorpus = ResourceHelper.spark.read.option("header","true")
       .csv("src/test/resources/embeddings/sentence_embeddings.csv")
 
+    smallCorpus.show(1, false)
+
     val documentAssembler = new DocumentAssembler()
       .setInputCol("text")
       .setOutputCol("document")

@@ -83,7 +83,7 @@ class TensorflowT5(val tensorflow: TensorflowWrapper,
         .feed(encoderAttentionMaskKey, encoderAttentionMaskTensors)
         .fetch(encoderOutputsKey)
 
-      val encoderOuts = runner.run().asScala
+      val encoderOuts = runner.run().asScala.toList
       val encoderOutsFloats = TensorResources.extractFloats(encoderOuts.head)
       val dim = encoderOutsFloats.length / inputDim
       val encoderOutsBatch = encoderOutsFloats.grouped(dim).toArray.grouped(maxSentenceLength).toArray

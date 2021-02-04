@@ -58,19 +58,19 @@ class TensorResources {
 
 
   def createIntBufferTensor(shape: Array[Long], buf: IntDataBuffer): Tensor[TInt32] = {
-    val result = TInt32.tensorOf(Shape.of(shape:_*), buf)
+    val result = TInt32.tensorOf(Shape.of(shape: _*), buf)
     tensors.append(result)
     result
   }
 
   def createLongBufferTensor(shape: Array[Long], buf: LongDataBuffer): Tensor[TInt64] = {
-    val result = TInt64.tensorOf(Shape.of(shape:_*), buf)
+    val result = TInt64.tensorOf(Shape.of(shape: _*), buf)
     tensors.append(result)
     result
   }
 
   def createFloatBufferTensor(shape: Array[Long], buf: FloatDataBuffer): Tensor[TFloat32] = {
-    val result = TFloat32.tensorOf(Shape.of(shape:_*), buf)
+    val result = TFloat32.tensorOf(Shape.of(shape: _*), buf)
     tensors.append(result)
     result
   }
@@ -83,7 +83,7 @@ class TensorResources {
     tensors.clear()
   }
 
-  def clearSession(outs: mutable.Buffer[Tensor[_ <:TType]]): Unit = {
+  def clearSession(outs: List[Tensor[_]]): Unit = {
     outs.foreach(_.close())
   }
 

@@ -83,7 +83,7 @@ class TensorflowMarian(val tensorflow: TensorflowWrapper,
       .feed(encoderAttentionMaskKey, encoderAttentionMaskKeyTensors)
       .fetch(encoderOutputsKey)
 
-    val encoderOuts = runner.run().asScala
+    val encoderOuts = runner.run().asScala.toList
     val encoderOutsFloats = TensorResources.extractFloats(encoderOuts.head)
     val dim = encoderOutsFloats.length / inputDim
     val encoderOutsBatch = encoderOutsFloats.grouped(dim).toArray.grouped(maxSentenceLength).toArray
@@ -157,7 +157,7 @@ class TensorflowMarian(val tensorflow: TensorflowWrapper,
         .feed(decoderCausalMaskKey, decoderCausalMaskTensors)
         .fetch(decoderOutputsKey)
 
-      val decoderOuts = runner.run().asScala
+      val decoderOuts = runner.run().asScala.toList
       val decoderOutputs = TensorResources.extractFloats(decoderOuts.head)
         .grouped(vocabSize).toArray.grouped(decoderInputLength).toArray
 
