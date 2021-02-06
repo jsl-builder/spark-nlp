@@ -10,6 +10,7 @@ import org.apache.spark.sql.functions.{explode, size}
 import org.scalatest._
 
 class ElmoEmbeddingsTestSpec extends FlatSpec {
+
   "Elmo Embeddings" should "generate annotations" taggedAs SlowTest in {
     System.out.println("Working Directory = " + System.getProperty("user.dir"))
     val data = Seq(

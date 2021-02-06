@@ -51,6 +51,8 @@ class BertEmbeddingsTestSpec extends FlatSpec {
     val bertDF2 = pipeline.fit(data2).transform(data2)
     val bertDF3 = pipeline.fit(data3).transform(data3)
 
+    bertDF3.show()
+
   }
 
   "Bert Embeddings" should "correctly work in a pipeline" taggedAs SlowTest in {

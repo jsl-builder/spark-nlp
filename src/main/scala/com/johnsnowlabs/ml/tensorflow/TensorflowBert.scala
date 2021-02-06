@@ -6,6 +6,7 @@ import org.tensorflow.Tensor
 import org.tensorflow.ndarray.buffer.IntDataBuffer
 import org.tensorflow.types.family.TType
 
+import java.io.{BufferedWriter, File, FileWriter}
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
@@ -32,11 +33,11 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
                      configProtoBytes: Option[Array[Byte]] = None
                     ) extends Serializable {
 
-  private val tokenIdsKey = "input_ids:0"
-  private val maskIdsKey = "input_mask:0"
-  private val segmentIdsKey = "segment_ids:0"
-  private val embeddingsKey = "sequence_output:0"
-  private val sentenceEmbeddingsKey = "pooled_output:0"
+  private val TokenIdsKey = "input_ids:0"
+  private val MaskIdsKey = "input_mask:0"
+  private val SegmentIdsKey = "segment_ids:0"
+  private val EmbeddingsKey = "sequence_output:0"
+  private val SentenceEmbeddingsKey = "pooled_output:0"
 
   /** Encode the input sequence to indexes IDs adding padding where necessary */
   def encode(sentences: Seq[(WordpieceTokenizedSentence, Int)], maxSequenceLength: Int): Seq[Array[Int]] = {
@@ -82,10 +83,10 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
     val segmentTensors = tensors.createIntBufferTensor(shape, segmentBuffers)
 
     runner
-      .feed(tokenIdsKey, tokenTensors)
-      .feed(maskIdsKey, maskTensors)
-      .feed(segmentIdsKey, segmentTensors)
-      .fetch(embeddingsKey)
+      .feed(TokenIdsKey, tokenTensors)
+      .feed(MaskIdsKey, maskTensors)
+      .feed(SegmentIdsKey, segmentTensors)
+      .fetch(EmbeddingsKey)
 
     val outs = runner.run().asScala.toList
     val embeddings = TensorResources.extractFloats(outs.head)
@@ -140,10 +141,10 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
     val segmentTensors = tensorsSegments.createIntBufferTensor(shape, segmentBuffers)
 
     runner
-      .feed(tokenIdsKey, tokenTensors)
-      .feed(maskIdsKey, maskTensors)
-      .feed(segmentIdsKey, segmentTensors)
-      .fetch(sentenceEmbeddingsKey)
+      .feed(TokenIdsKey, tokenTensors)
+      .feed(MaskIdsKey, maskTensors)
+      .feed(SegmentIdsKey, segmentTensors)
+      .fetch(SentenceEmbeddingsKey)
 
     val outs = runner.run().asScala.toList
     val embeddings = TensorResources.extractFloats(outs.head)
@@ -175,7 +176,6 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
       segmentBuffers.offset(offset).write(Array.fill(maxSentenceLength)(0L))
     }
 
-
     val runner = tensorflow.getTFHubSession(configProtoBytes = configProtoBytes, initAllTables = false).runner
 
     val tokenTensors = tensors.createLongBufferTensor(shape, null)
@@ -183,10 +183,10 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
     val segmentTensors = tensors.createLongBufferTensor(shape, null)
 
     runner
-      .feed(tokenIdsKey, tokenTensors)
-      .feed(maskIdsKey, maskTensors)
-      .feed(segmentIdsKey, segmentTensors)
-      .fetch(sentenceEmbeddingsKey)
+      .feed(TokenIdsKey, tokenTensors)
+      .feed(MaskIdsKey, maskTensors)
+      .feed(SegmentIdsKey, segmentTensors)
+      .fetch(SentenceEmbeddingsKey)
 
     val outs = runner.run().asScala.toList
     val embeddings = TensorResources.extractFloats(outs.head)
@@ -196,7 +196,6 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
 
     val dim = embeddings.length / batchLength
     embeddings.grouped(dim).toArray
-
   }
 
   def calculateEmbeddings(sentences: Seq[WordpieceTokenizedSentence],
@@ -210,6 +209,18 @@ class TensorflowBert(val tensorflow: TensorflowWrapper,
     sentences.zipWithIndex.grouped(batchSize).flatMap{batch =>
       val encoded = encode(batch, maxSentenceLength)
       val vectors = tag(encoded)
+
+      /** START */
+      // FIXME REMOVE ME
+      val text = vectors.map(_.map(_.mkString("\n")).mkString("\n")).mkString("\n")
+//      println(s"vectors: $text")
+      println(s"vectors length: $text")
+      // FileWriter
+      val file = new File(s"${this.getClass.getName}_spk3-TF2.txt")
+      val bw = new BufferedWriter(new FileWriter(file))
+      bw.write(text)
+      bw.close()
+      /** END */
 
       /*Combine tokens and calculated embeddings*/
       batch.zip(vectors).map{case (sentence, tokenVectors) =>

@@ -2,6 +2,7 @@ package com.johnsnowlabs.ml.tensorflow
 
 import com.johnsnowlabs.nlp.annotators.common._
 
+import java.io.{BufferedWriter, File, FileWriter}
 import scala.collection.JavaConverters._
 
 /** Embeddings from a language model trained on the 1 Billion Word Benchmark.
@@ -53,6 +54,19 @@ class TensorflowElmo(val tensorflow: TensorflowWrapper,
     /*Run embeddings calculation by batches*/
     sentences.zipWithIndex.grouped(batchSize).flatMap { batch =>
       val vectors = tag((sentences), poolingLayer, getDimensions(poolingLayer))
+
+      /** START */
+      // FIXME REMOVE ME
+      val text = vectors.map(_.map(_.mkString("\n")).mkString("\n")).mkString("\n")
+      //      println(s"vectors: $text")
+      println(s"vectors length: $text")
+      // FileWriter
+      val file = new File(s"${this.getClass.getName}_spk3-TF2.txt")
+      val bw = new BufferedWriter(new FileWriter(file))
+      bw.write(text)
+      bw.close()
+      /** END */
+
       /*Combine tokens and sentences  and their calculated embeddings*/
       batch.zip(vectors).map { case (sentence, tokenVectors) =>
         val tokenLength = sentence._1.indexedTokens.length
@@ -101,7 +115,7 @@ class TensorflowElmo(val tensorflow: TensorflowWrapper,
       val diff = maxSentenceLength - tokensArray.length
 
       if(tokensArray.length < maxSentenceLength){
-        val tokens = tokensArray.map{x=> x.token}
+        val tokens = tokensArray.map{x => x.token}
         /* Padding by adding extra empty tokens to smaller sentences */
         val newTokens = tokens ++ Array.fill(1, diff)(" ").head
         newTokens.map { token =>
