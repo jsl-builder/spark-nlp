@@ -39,8 +39,8 @@ There are two types of Annotators:
 
 The types are:
 
-||||
-|:---:|:---:|:---:|
+|||
+|:---:|:---:|
 |DOCUMENT = "document"|DATE = "date"|
 |TOKEN = "token"|ENTITY = "entity"|
 |WORDPIECE = "wordpiece"|NEGEX = "negex"|
