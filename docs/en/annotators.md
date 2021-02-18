@@ -39,7 +39,7 @@ There are two types of Annotators:
 
 The types are:
 
-|||
+|AnnotatorType|AnnotatorType|
 |:---:|:---:|
 |DOCUMENT = "document"|DATE = "date"|
 |TOKEN = "token"|ENTITY = "entity"|
@@ -115,16 +115,16 @@ Identifies tokens with tokenization open standards. A few rules will help custom
 - `setExceptions(StringArray)`: List of tokens to not alter at all. Allows composite tokens like two worded tokens that the user may not want to split.
 - `addException(String)`: Add a single exception
 - `setExceptionsPath(String)`: Path to txt file with list of token exceptions
-- `caseSensitiveExceptions(bool)`: Whether to follow case sensitiveness for matching exceptions in text
-- `contextChars(StringArray)`: List of 1 character string to rip off from tokens, such as parenthesis or question marks. Ignored if using prefix, infix or suffix patterns.
-- `splitChars(StringArray)`: List of 1 character string to split tokens inside, such as hyphens. Ignored if using infix, prefix or suffix patterns.
-- `splitPattern (String)`: pattern to separate from the inside of tokens. takes priority over splitChars.
+- `setCaseSensitiveExceptions(bool)`: Whether to follow case sensitiveness for matching exceptions in text
+- `setContextChars(StringArray)`: List of 1 character string to rip off from tokens, such as parenthesis or question marks. Ignored if using prefix, infix or suffix patterns.
+- `setSplitChars(StringArray)`: List of 1 character string to split tokens inside, such as hyphens. Ignored if using infix, prefix or suffix patterns.
+- `setSplitPattern(String)`: Regex pattern to separate from the inside of tokens. Takes priority over `setSplitChars()`.
 - `setTargetPattern`: Basic regex rule to identify a candidate for tokenization. Defaults to `\\S+` which means anything not a space
 - `setSuffixPattern`: Regex to identify sub-tokens that are in the end of the token. Regex has to end with `\\z` and must contain groups (). Each group will become a separate token within the prefix. Defaults to non-letter characters. e.g. quotes or parenthesis
 - `setPrefixPattern`: Regex to identify sub-tokens that come in the beginning of the token. Regex has to start with `\\A` and must contain groups (). Each group will become a separate token within the prefix. Defaults to non-letter characters. e.g. quotes or parenthesis
 - `addInfixPattern`: Add an extension pattern regex with groups to the top of the rules (will target first, from more specific to the more general).
-- `minLength`: Set the minimum allowed length for each token
-- `maxLength`: Set the maximum allowed length for each token
+- `setMinLength`: Set the minimum allowed length for each token
+- `setMaxLength`: Set the maximum allowed length for each token
 
 > **Note:** all these APIs receive regular expressions so please make sure that you escape special characters according to Java conventions.  
 
@@ -140,8 +140,11 @@ tokenizer = Tokenizer() \
     .setOutputCol("token") \
     .setSplitChars(['-']) \
     .setContextChars(['(', ')', '?', '!']) \
-    .addException("New York") \
-    .addException("e-mail")
+    .setExceptions(["New York", "e-mail"]) \
+    .setSplitPattern("'") \
+    .setMaxLength(0) \
+    .setMaxLength(99999) \
+    .setCaseSensitiveExceptions(False)
 ```
 
 ```scala
@@ -150,8 +153,11 @@ val tokenizer = new Tokenizer()
     .setOutputCol("token")
     .setContextChars(Array("(", ")", "?", "!"))
     .setSplitChars(Array('-'))
-    .addException("New York")
-    .addException("e-mail")
+    .setExceptions(["New York", "e-mail"])
+    .setSplitPattern("'")
+    .setMaxLength(0)
+    .setMaxLength(99999)
+    .setCaseSensitiveExceptions(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -278,7 +284,7 @@ Retrieves lemmas out of words with the objective of returning a base dictionary 
 
 **Output Type:** Token  
 
-**Input Types:** Token  
+**Input Types:** token  
 
 **Input:** abduct -> abducted abducting abduct abducts  
 
@@ -316,9 +322,9 @@ Refer to the [Lemmatizer](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlab
 
 This annotator excludes from a sequence of strings (e.g. the output of a `Tokenizer`, `Normalizer`, `Lemmatizer`, and `Stemmer`) and drops all the stop words from the input sequences.
 
-**Output Type:** Clean Tokens
+**Output Type:** token
 
-**Input Type:** Token
+**Input Type:** token
 
 **Reference:**
 
