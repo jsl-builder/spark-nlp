@@ -49,7 +49,7 @@ The types are:
 |CATEGORY = "category"|LABELED_DEPENDENCY = "labeled_dependency"|
 |SENTIMENT = "sentiment"|LANGUAGE = "language"|
 |POS = "pos"|CHUNK = "chunk"|
-|NAMED_ENTITY = "named_entity"|
+|NAMED_ENTITY = "named_entity"||
 
 {:.table-model-big}
 |Annotator|Description|Version |
