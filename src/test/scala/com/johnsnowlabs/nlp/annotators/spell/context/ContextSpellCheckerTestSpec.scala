@@ -166,7 +166,7 @@ class ContextSpellCheckerTestSpec extends FlatSpec {
   }
 
 
-  "a Spell Checker" should "correctly preprocess training data" taggedAs FastTest in {
+  "a Spell Checker" should "correctly preprocess training data" taggedAs SlowTest in {
 
     val path = "src/test/resources/test.txt"
     val dataset = SparkAccessor.spark.sparkContext.textFile(path).
@@ -387,7 +387,7 @@ class ContextSpellCheckerTestSpec extends FlatSpec {
 
   }
 
-  "number classes" should "recognize different number patterns" taggedAs FastTest in {
+  "number classes" should "recognize different number patterns" taggedAs SlowTest in {
     import scala.collection.JavaConversions._
     val number = new NumberToken
     val transducer = number.generateTransducer
@@ -396,7 +396,7 @@ class ContextSpellCheckerTestSpec extends FlatSpec {
     assert(number.separate("$40,000").equals(number.label))
   }
 
-  "date classes" should "recognize different date and time formats" taggedAs FastTest in {
+  "date classes" should "recognize different date and time formats" taggedAs SlowTest in {
     import scala.collection.JavaConversions._
     val date = new DateToken
     val transducer = date.generateTransducer
@@ -405,7 +405,7 @@ class ContextSpellCheckerTestSpec extends FlatSpec {
     assert(date.separate("10/25/1982").equals(date.label))
   }
 
-  "suffixes and prefixes" should "recognized and handled properly" taggedAs FastTest in {
+  "suffixes and prefixes" should "recognized and handled properly" taggedAs SlowTest in {
     val suffixedToken = SuffixedToken(Array(")", ","))
     val prefixedToken = PrefixedToken(Array("("))
 
