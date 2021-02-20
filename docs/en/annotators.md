@@ -322,7 +322,7 @@ Returns hard-stems out of words with the objective of retrieving the meaningful 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getLanguage()`: Get language for text
-    - `getLazyAnnotator()`:  Get boolean if `Stemmer` used as a lazy annotator or not.
+    - `getLazyAnnotator()`:  Whether `Stemmer` used as a lazy annotator or not.
 
 **Example:**
 
@@ -436,7 +436,7 @@ This annotator excludes from a sequence of strings (e.g. the output of a `Tokeni
     - `getCaseSensitive()`: Whether to do a case sensitive comparison over the stop words.
     - `getLocale()`: Locale of the input for case insensitive matching. Ignored when caseSensitive is true.
     -  `getStopWords()`: The words to be filtered out.
-    - `getLazyAnnotator()`: Whether `StopWordsCleaner` as a lazy annotator or not.
+    - `getLazyAnnotator()`: Whether `StopWordsCleaner` used as a lazy annotator or not.
 
 **Example:**
 
@@ -707,6 +707,7 @@ Refer to the [Chunker](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlabs.n
     - `setN(int)`: Number elements per n-gram (>=1)
     - `setEnableCumulative(Boolean)`: Whether to calculate just the actual n-grams or all n-grams from 1 through n
     - `setDelimiter(String)`: Glue character used to join the tokens
+    - `setLazyAnnotator(Boolean)`: Use `NGramGenerator` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -776,10 +777,11 @@ Reads from different forms of date and time expressions and converts them to a p
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setDateFormat(format)`: SimpleDateFormat standard date *output* formatting. Defaults to yyyy/MM/dd
-    - `setAnchorDateYear()`: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: 2021
-    - `setAnchorDateMonth()`: Add an anchor month for the relative dates such as a day after tomorrow. If not set it will use the current month. Example: 1 which means January
-    - `setAnchorDateDay()`: Add an anchor day of the day for the relative dates such as a day after tomorrow. If not set it will use the current day. Example: 11
+    - `setDateFormat(format)`: SimpleDateFormat standard date *output* formatting. Defaults to `yyyy/MM/dd`
+    - `setAnchorDateYear()`: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: `2021`
+    - `setAnchorDateMonth()`: Add an anchor month for the relative dates such as a day after tomorrow. If not set it will use the current month. Example: `1` which means January
+    - `setAnchorDateDay()`: Add an anchor day of the day for the relative dates such as a day after tomorrow. If not set it will use the current day. Example: `11`
+    - `setLazyAnnotator(Boolean)`: Use `DateMatcher` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -845,10 +847,11 @@ Reads from multiple different forms of date and time expressions and converts th
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setDateFormat(format)`: SimpleDateFormat standard date *output* formatting. Defaults to yyyy/MM/dd
-    - `setAnchorDateYear()`: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: 2021
-    - `setAnchorDateMonth()`: Add an anchor month for the relative dates such as a day after tomorrow. If not set it will use the current month. Example: 1 which means January
-    - `setAnchorDateDay()`: Add an anchor day of the day for the relative dates such as a day after tomorrow. If not set it will use the current day. Example: 11
+    - `setDateFormat(format)`: SimpleDateFormat standard date *output* formatting. Defaults to `yyyy/MM/dd`
+    - `setAnchorDateYear()`: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: `2021`
+    - `setAnchorDateMonth()`: Add an anchor month for the relative dates such as a day after tomorrow. If not set it will use the current month. Example: `1` which means January
+    - `setAnchorDateDay()`: Add an anchor day of the day for the relative dates such as a day after tomorrow. If not set it will use the current day. Example: `11`
+    - `setLazyAnnotator(Boolean)`: Use `MultiDateMatcher` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -899,9 +902,10 @@ Finds sentence bounds in raw text. Applies rules from Pragmatic Segmenter.
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setCustomBounds(string)`: Custom sentence separator text
-    - `setUseCustomBoundsOnly(bool)`: Use only custom bounds without considering those of Pragmatic Segmenter. Defaults to false. Needs customBounds.
-    - `setUseAbbreviations(bool)`: Whether to consider abbreviation strategies for better accuracy but slower performance. Defaults to true.
-    - `setExplodeSentences(bool)`: Whether to split sentences into different Dataset rows. Useful for higher parallelism in fat rows. Defaults to false.
+    - `setUseCustomBoundsOnly(bool)`: Use only custom bounds without considering those of Pragmatic Segmenter. Defaults to `false`. Needs customBounds.
+    - `setUseAbbreviations(bool)`: Whether to consider abbreviation strategies for better accuracy but slower performance. Defaults to `true`.
+    - `setExplodeSentences(bool)`: Whether to split sentences into different Dataset rows. Useful for higher parallelism in fat rows. Defaults to `false`.
+    - `setLazyAnnotator(Boolean)`: Use `SentenceDetector` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -952,6 +956,7 @@ Sets a POS tag to each word within a sentence. Its train data (train_pos) is a s
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setNIterations(number)`: Number of iterations for training. May improve accuracy but takes longer. Default `5`
     - `setPosColumn(colname)`: Column containing an array of POS Tags matching every token on the line.
+    - `setLazyAnnotator(Boolean)`: Use `POSTagger` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1008,6 +1013,7 @@ Scores a sentence for a sentiment
     - `setSentimentCol(String)`: Column with the sentiment result of every row. Must be 'positive' or 'negative'
     - `setCorpusPrune(true)`: When training on small data you may want to disable this to not cut off infrequent words
     - `setFeatureLimit()`: Set content feature limit, to boost performance in very dirt text. Default disabled with `-1`.
+    - `setLazyAnnotator(Boolean)`: Use `ViveknSentimentDetector` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1029,7 +1035,8 @@ Scores a sentence for a sentiment
 sentiment_detector = ViveknSentimentApproach() \
     .setInputCols(["sentence", "token"]) \
     .setOutputCol("sentiment") \
-    .setSentimentCol("sentiment_label")
+    .setSentimentCol("sentiment_label") \
+    .setCorpusPrune(0)
 ```
 
 ```scala
@@ -1086,6 +1093,7 @@ Scores a sentence for a sentiment
     - `setIncrementMultiplier(double)`: Defaults to `2.0`
     - `setDecrementMultiplier(double)`: Defaults to `-2.0`
     - `setReverseMultiplier(double)`: Defaults to `-1.0`
+    - `setLazyAnnotator(Boolean)`: Use `SentimentDetector` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1144,6 +1152,7 @@ Word Embeddings lookup annotator that maps tokens to vectors
         - *TEXT* -> This format is usually used by [Glove](https://nlp.stanford.edu/projects/glove/)
         - *BINARY* -> This format is usually used by [Word2Vec](https://code.google.com/archive/p/word2vec/)
     - `setCaseSensitive`: whether to ignore case in tokens for embeddings matching
+    - `setLazyAnnotator(Boolean)`: Use `WordEmbeddings` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1207,7 +1216,8 @@ You can find the pre-trained models for `BertEmbeddings` in the [Spark NLP Model
     - `setConfigProtoBytes(Array[int])`: ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString()`
     - `setDimension(int)`: Set Embeddings dimensions for the BERT model Only possible to set this when the first time is saved dimension is not changeable, it comes from BERT config file
     - `setMaxSentenceLength(int)`: Max sentence length to process
-    - `setVocabulary(Map[String, Int])`: Vocabulary used to encode the words to ids with WordPieceEncoder
+    - `setVocabulary(Map[String, Int])`: Vocabulary used to encode the words to ids with `WordPieceEncoder`
+    - `setLazyAnnotator(Boolean)`: Use `BertEmbeddings` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1263,7 +1273,8 @@ You can find the pre-trained models for `BertEmbeddings` in the [Spark NLP Model
     - `setConfigProtoBytes(Array[Int])`: ConfigProto from tensorflow, serialized into byte array.
     - `setDimension(int)`: Set Embeddings dimensions for the BERT model Only possible to set this when the first time is saved dimension is not changeable, it comes from BERT config file
     - `setMaxSentenceLength(int)`: Max sentence length to process
-    - `setVocabulary(Map[String, Int])`: Vocabulary used to encode the words to ids with WordPieceEncoder
+    - `setVocabulary(Map[String, Int])`: Vocabulary used to encode the words to ids with `WordPieceEncoder`
+    - `setLazyAnnotator(Boolean)`: Use `BertSentenceEmbeddings` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1322,6 +1333,7 @@ You can find the pre-trained model for `ElmoEmbeddings` in the  [Spark NLP Model
     - `setCaseSensitive(Boolean)`: Whether to lowercase tokens or not
     - `setDimension(int)`: Set Dimension of pooling layer. This is meta for the annotation and will not affect the actual embedding calculation.
     - `setPoolingLayer(String)`: Function used to set the embedding output layer of the ELMO model word_emb: the character-based word representations with shape `[batch_size, max_length, 512]`.
+    - `setLazyAnnotator(Boolean)`: Use `ElmoEmbeddings` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1382,6 +1394,7 @@ You can find the pre-trained model for `AlbertEmbeddings` in the  [Spark NLP Mod
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setBatchSize(int)`: Batch size. Large values allows faster processing but requires more memory.
     - `setMaxSentenceLength(int)`: Max sentence length to process
+    - `setLazyAnnotator(Boolean)`: Use `Albertembeddings` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1437,8 +1450,9 @@ You can find the pre-trained model for `XlnetEmbeddings` in the  [Spark NLP Mode
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setBatchSize(int)`: Batch size. Large values allows faster processing but requires more memory.
     - `setMaxSentenceLength(int)`: Max sentence length to process.
-    - `setModelIfNotSet()`: Sets XLNet tensorflow Model.
-    - `setDimension(value: Int)`: Set dimension of Embeddings Since output shape depends on the model selected, see https://github.com/zihangdai/xlnet for further reference 
+    - `setModelIfNotSet()`: Sets `XLNet` tensorflow Model.
+    - `setDimension(value: Int)`: Set dimension of Embeddings Since output shape depends on the model selected, see https://github.com/zihangdai/xlnet for further reference
+    - `setLazyAnnotator(Boolean)`: Use `XlnetEmbeddings` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1486,7 +1500,7 @@ The Universal Sentence Encoder encodes text into high dimensional vectors that c
 
 **Input Types:** Document
 
-**Reference:**
+**Reference:** [UniversalSentenceEncoder](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/UniversalSentenceEncoder.scala)
 
 **Functions:**
 
@@ -1496,6 +1510,7 @@ The Universal Sentence Encoder encodes text into high dimensional vectors that c
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setConfigProtoBytes(bytes: Array[Int])`: ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString() `
     - `setLoadSP(value: Boolean)`: set loadSP 
+    - `setLazyAnnotator(Boolean)`: Use `UniversalSentenceEncoder` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1534,7 +1549,7 @@ This annotator converts the results from `WordEmbeddings`, `BertEmbeddings`, `El
 
 **Input Types:** Document
 
-**Reference:**
+**Reference:** [SentenceEmbeddings](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/SentenceEmbeddings.scala)
 
 **Functions:**
 
@@ -1542,8 +1557,9 @@ This annotator converts the results from `WordEmbeddings`, `BertEmbeddings`, `El
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setPoolingStrategy()`: Choose how you would like to aggregate Word Embeddings to Sentence Embeddings: AVERAGE or SUM
+    - `setPoolingStrategy()`: Choose how you would like to aggregate Word Embeddings to Sentence Embeddings: `AVERAGE` or `SUM`
     - `setDimension(int)`: Number of embedding dimensions
+    - `setLazyAnnotator(Boolean)`: Use `SentenceEmbeddings` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1618,7 +1634,7 @@ This annotator utilizes `WordEmbeddings` or `BertEmbeddings` to generate chunk e
 
 **Input Types:** CHUNK, Word_Embeddings
 
-**Reference:**
+**Reference:** [ChunkEmbeddings](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/ChunkEmbeddings.scala)
 
 **Functions:**
 
@@ -1627,7 +1643,8 @@ This annotator utilizes `WordEmbeddings` or `BertEmbeddings` to generate chunk e
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setPoolingStrategy(String)`: Choose how you would like to aggregate Word Embeddings to Sentence Embeddings: AVERAGE or SUM
-    - `setSkipOOV(Boolean)`: Whether to discard default vectors for OOV words from the aggregation / pooling 
+    - `setSkipOOV(Boolean)`: Whether to discard default vectors for OOV words from the aggregation / pooling
+    - `setLazyAnnotator(Boolean)`: Use `ChunkEmbeddings` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1712,15 +1729,16 @@ ClassifierDL is a generic Multi-class Text Classification. ClassifierDL uses the
     - `setDropout`: Dropout coefficient.
     - `setMaxEpochs`: Maximum number of epochs to train.
     - `setEnableOutputLogs`: Whether to output to annotators log folder.
-    - `setValidationSplit`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between 0.0 and 1.0 and by default it is 0.0 and off.
+    - `setValidationSplit`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between 0.0 and 1.0 and by default it is `0.0` and off.
     - `setVerbose`: Level of verbosity during training.
     - `setOutputLogsPath`: Folder path to save training logs.
+    - `setLazyAnnotator(Boolean)`: Use `ClassifierDL` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
-    - `getClasses()`: get the tags used to trained this NerDLModel 
+    - `getClasses()`: get the tags used to trained this `NerDLModel` 
     - `getConfigProtoBytes()`: Tensorflow config Protobytes passed to the TF session 
 
 > **NOTE**: This annotator accepts a label column of a single item in either type of String, Int, Float, or Double.
@@ -1787,6 +1805,7 @@ Refer to the [ClassifierDLApproach](https://nlp.johnsnowlabs.com/api/index#com.j
     - `setValidationSplit()`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between 0.0 and 1.0 and by default it is 0.0 and off.
     - `setVerbose()`: Level of verbosity during training.
     - `setOutputLogsPath()`: Folder path to save training logs.
+    - `setLazyAnnotator(Boolean)`: Use `MultiClassifierDL` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1865,6 +1884,7 @@ SentimentDL is an annotator for multi-class sentiment analysis. This annotator c
     - `setOutputLogsPath`: Folder path to save training logs.
     - `setValidationSplit`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between 0.0 and 1.0 and by default it is 0.0 and off.
     - `setVerbose`: Level of verbosity during training.
+    - `setLazyAnnotator(Boolean)`: Use `SentimentDL` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1919,7 +1939,7 @@ LanguageDetectorDL is a state-of-the-art language detection and identification a
 
 **Input Types:** DOCUMENT or SENTENCE
 
-**Reference:** 
+**Reference:** [LanguageDetectorDL](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/ld/dl/LanguageDetectorDL.scala)
 
 **Functions:**
 
@@ -1930,6 +1950,7 @@ LanguageDetectorDL is a state-of-the-art language detection and identification a
     - `setThreshold`: The minimum threshold for the final result otheriwse it will be either neutral or the value set in thresholdLabel.
     - `setThresholdLabel`: In case the score is less than threshold, what should be the label. Default is Unknown.
     - `setCoalesceSentences`: If sets to true the output of all sentences will be averaged to one output instead of one output per sentence. Default to true.
+    - `setLazyAnnotator(Boolean)`: Use `LanguageDetectorDL` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -1993,6 +2014,7 @@ You can tweak the following parameters to get the best result from the annotator
     - `setStopWords(list)`: Set the list of stop words
     - `setThreshold(float)`: Each keyword will be given a keyword score greater than 0. (Lower the score better the keyword) Set an upper bound for the keyword score from this method.
     - `setWindowSize(int)`: Yake will construct a co-occurrence matrix. You can set the window size for the co-occurrence matrix construction from this method. ex: windowSize=2 will look at two words to both left and right of a candidate word.
+    - `setLazyAnnotator(Boolean)`: Use `YakeModel` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -2061,6 +2083,7 @@ Optionally the user can provide an entity dictionary file for better accuracy
     - `setEntities()`: Array of entities to recognize
     - `setVerbose()`: Verbosity level
     - `setRandomSeed()`: Random seed
+    - `setLazyAnnotator(Boolean)`: Use `NER CRF` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -2141,6 +2164,7 @@ Neural Network architecture is Char CNNs - BiLSTM - CRF that achieves state-of-t
     - `setVerbose`: Verbosity level.
     - `setRandomSeed`: Random seed.
     - `setOutputLogsPath`: Folder path to save training logs.
+    - `setLazyAnnotator(Boolean)`: Use `NER DL` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -2221,6 +2245,7 @@ This NER converter can be used to the output of a NER model into the ner chunk f
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setWhiteList(Array(String))`: If defined, list of entities to process. The rest will be ignored. Do not include IOB prefix on labels.
     - `setPreservePosition(Boolean)`: Whether to preserve the original position of the tokens in the original document or use the modified tokens.
+    - `setLazyAnnotator(Boolean)`: Use `NER Converter` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -2269,21 +2294,22 @@ This annotator retrieves tokens and makes corrections automatically if not found
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setDictionary(path, tokenPattern, readAs, options)`: path to file with properly spelled words, tokenPattern is the regex pattern to identify them in text, readAs LINE_BY_LINE or SPARK_DATASET, with options passed to Spark reader if the latter is set.
-    - `setCaseSensitive(boolean)`: defaults to false. Might affect accuracy
+    - `setDictionary(path, tokenPattern, readAs, options)`: path to file with properly spelled words, tokenPattern is the regex pattern to identify them in text, readAs `LINE_BY_LINE` or `SPARK_DATASET`, with options passed to Spark reader if the latter is set.
+    - `setCaseSensitive(boolean)`: defaults to `false`. Might affect accuracy
     - `setDoubleVariants(boolean)`: enables extra check for word combinations, more accuracy at performance
     - `setShortCircuit(boolean)`: faster but less accurate mode
-    - `setWordSizeIgnore(int)`: Minimum size of word before moving on. Defaults to 3.
-    - `setDupsLimit(int)`: Maximum duplicate of characters to account for. Defaults to 2.
-    - `setReductLimit(int)`: Word reduction limit. Defaults to 3
-    - `setIntersections(int)`: Hamming intersections to attempt. Defaults to 10.
-    - `setVowelSwapLimit(int)`: Vowel swap attempts. Defaults to 6.
+    - `setWordSizeIgnore(int)`: Minimum size of word before moving on. Defaults to `3`.
+    - `setDupsLimit(int)`: Maximum duplicate of characters to account for. Defaults to `2`.
+    - `setReductLimit(int)`: Word reduction limit. Defaults to `3`
+    - `setIntersections(int)`: Hamming intersections to attempt. Defaults to `10`.
+    - `setVowelSwapLimit(int)`: Vowel swap attempts. Defaults to `6`.
+    - `setLazyAnnotator(Boolean)`: Use `Norvig SpellChecker` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
-    - `getCaseSensitive()`: Sensitivity on spell checking. Defaults to false. Might affect accuracy 
+    - `getCaseSensitive()`: Sensitivity on spell checking. Defaults to `false`. Might affect accuracy 
     - `getDoubleVariants()`: Increase search at cost of performance. Enables extra check for word combinations 
     - `getDupsLimit()`: Maximum duplicate of characters in a word to consider. Defaults to `2` .Maximum duplicate of characters to account for. Defaults to `2`. 
     - `getFrequencyPriority()`: Applies frequency over hamming in intersections. When false hamming takes priority 
@@ -2337,21 +2363,22 @@ This spell checker is inspired on Symmetric Delete algorithm. It retrieves token
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setDeletesThreshold(value: Int)`: minimum frequency of corrections a word needs to have to be considered from training. Increase if training set is LARGE. Defaults to 0.
-    - `setFrequencyThreshold(value: Int)`: minimum frequency of words to be considered from training. Increase if training set is LARGE. Defaults to 0. 
+    - `setDeletesThreshold(value: Int)`: minimum frequency of corrections a word needs to have to be considered from training. Increase if training set is LARGE. Defaults to `0`.
+    - `setFrequencyThreshold(value: Int)`: minimum frequency of words to be considered from training. Increase if training set is LARGE. Defaults to `0`. 
     - `setLongestWordLength(value: Int)`: length of longest word in corpus 
     - `setMaxFrequency(value: Long)`: maximum frequency of a word in the corpus 
     - `setMinFrequency(value: Long)`: minimum frequency of a word in the corpus 
     - `setDictionary(path, tokenPattern, readAs, options)`: Optional dictionary of properly written words. If provided, significantly boosts spell checking performance
-    - `setMaxEditDistance(distance)`: Maximum edit distance to calculate possible derived words. Defaults to 3.
+    - `setMaxEditDistance(distance)`: Maximum edit distance to calculate possible derived words. Defaults to ``3``.
+    - `setLazyAnnotator(Boolean)`: Use `Symmetric SpellChecker` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
-    - `getDeletesThreshold()`: minimum frequency of corrections a word needs to have to be considered from training. Increase if training set is LARGE. Defaults to 0 
-    - `getDupsLimit()`: maximum duplicate of characters in a word to consider. Defaults to 2 
-    - `getFrequencyThreshold()`: minimum frequency of words to be considered from training. Increase if training set is LARGE. Defaults to 0. 
+    - `getDeletesThreshold()`: minimum frequency of corrections a word needs to have to be considered from training. Increase if training set is `LARGE`. Defaults to `0` 
+    - `getDupsLimit()`: maximum duplicate of characters in a word to consider. Defaults to `2` 
+    - `getFrequencyThreshold()`: minimum frequency of words to be considered from training. Increase if training set is `LARGE`. Defaults to `0`. 
     - `getMaxEditDistance()`: max edit distance characters to derive strings from a word.
 
 **Example:**
@@ -2408,6 +2435,7 @@ Implements Noisy Channel Model Spell Algorithm. Correction candidates are extrac
     - `setGamma(g:Float)`: Controls the influence of individual word frequency in the decision.
     - `updateVocabClass(label:String, vocab:Array(String), append:boolean)`: Update existing vocabulary classes so they can cover new words. If append set to `false` overwrite vocabulary class in the model by new words, if `true` extends existing vocabulary class. Defaults to `true`.  
     - `updateRegexClass(label:String, regex:String)`: Update existing regex rule for the class defined by regex.
+    - `setLazyAnnotator(Boolean)`: Use `Context SpellChecker` as a lazy annotator or not.
     
 * Train:
 
@@ -2480,6 +2508,7 @@ Unlabeled parser that finds a grammatical relation between two words in a senten
     - `setNumberOfIterations(int)`: Number of iterations in training, converges to better accuracy
     - `setDependencyTreeBank(String)`: Dependency treebank folder with files in [Penn Treebank format](http://www.nltk.org/nltk_data/)
     - `setConllU(String)`: Path to a file in [CoNLL-U format](https://universaldependencies.org/format.html)
+    - `setLazyAnnotator(Boolean)`: Use `Untyped Dependency Parser` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
@@ -2534,6 +2563,7 @@ Labeled parser that finds a grammatical relation between two words in a sentence
     - `setNumberOfIterations(int)`: Number of iterations in training, converges to better accuracy
     - `setConll2009(String)`: Path to a file in [CoNLL 2009 format](https://ufal.mff.cuni.cz/conll2009-st/trial-data.html)
     - `setConllU(String)`: Path to a file in [CoNLL-U format](https://universaldependencies.org/format.html)
+    - `setLazyAnnotator(Boolean)`: Use `Typed Dependency Parser` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
