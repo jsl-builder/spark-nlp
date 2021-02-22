@@ -2595,6 +2595,174 @@ val typedDependencyParser = new TypedDependencyParserApproach()
 
 Refer to the [TypedDependencyParserApproach](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlabs.nlp.annotators.parser.typdep.TypedDependencyParserApproach) Scala docs for more details on the API.
 
+## NerChunker
+
+Similar to what we used to do in `POSChunker` with `POS tags`, now we can also extract phrases that fits into a known pattern using the NER tags. `NerChunker` would be quite handy to extract entity groups with neighboring tokens when there is no pretrained NER model to address certain issues. Lets say we want to extract clinical findings and body parts together as a single chunk even if there are some unwanted tokens between.
+
+**Output Type:** Chunk  
+
+**Input Types:** Document, Named_Entity  
+
+**Reference:** [NerChunker](https://github.com/JohnSnowLabs/spark-nlp-internal/blob/8df092a1e61ddbbb9883607ecb0aed56fac02897/src/main/scala/com/johnsnowlabs/nlp/annotators/ner/NerChunker.scala)  
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setRegexParsers(Array[String])`: A list of regex patterns to match chunks
+    <!-- - `addRegexParser(String)`: adds a pattern to the current list of chunk patterns. -->
+    - `setLazyAnnotator(Boolean)`: Use `NerChunker` as a lazy annotator or not.
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getRegexParsers()`: A list of regex patterns to match chunks
+    - `getLazyAnnotator()`: Whether `NerChunker` as a lazy annotator or not.
+
+**Example:**
+
+<div class="tabs-box" markdown="1">
+
+{% include programmingLanguageSelectScalaPython.html %}
+
+```python
+ner_model = NerDLModel.pretrained("ner_radiology", "en", "clinical/models")\
+    .setInputCols("sentence","token","embeddings")\
+    .setOutputCol("ner")
+
+ner_chunker = NerChunker().\
+    .setInputCols(["sentence","ner"])\
+    .setOutputCol("ner_chunk")\
+    .setRegexParsers(["<IMAGINGFINDINGS>*<BODYPART>"])
+```
+
+```scala
+ner_model = NerDLModel.pretrained("ner_radiology", "en", "clinical/models")
+    .setInputCols("sentence","token","embeddings")
+    .setOutputCol("ner")
+
+ner_chunker = NerChunker().
+    .setInputCols(["sentence","ner"])
+    .setOutputCol("ner_chunk")
+    .setRegexParsers(["<IMAGINGFINDINGS>*<BODYPART>"])
+```
+
+</div></div><div class="h3-box" markdown="1">
+
+Refer to the NerChunker Scala docs for more details on the API.
+
+## ChunkFilterer
+
+ChunkFilterer will allow you to filter out named entities by some conditions or predefined look-up lists, so that you can feed these entities to other annotators like `Assertion Status` or `Entity Resolvers`. It can be used with two criteria: `isin` and `regex`.
+
+**Output Type:** Chunk  
+
+**Input Types:** Document, Chunk  
+
+**Reference:** ChunkFilterer  
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setCriteria(String)`:
+    - `setWhiteList(Array[String])`:
+    - `setLazyAnnotator(Boolean)`: Use `ChunkFilterer` as a lazy annotator or not.
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `ChunkFilterer` used as a lazy annotator or not.
+
+**Example:**
+
+<div class="tabs-box" markdown="1">
+
+{% include programmingLanguageSelectScalaPython.html %}
+
+```python
+chunk_filterer = ChunkFilterer()\
+      .setInputCols("sentence","ner_chunk")\
+      .setOutputCol("chunk_filtered")\
+      .setCriteria("isin") \ 
+      .setWhiteList(['severe fever','sore throat'])
+```
+
+```scala
+chunk_filterer = ChunkFilterer()
+      .setInputCols("sentence","ner_chunk")
+      .setOutputCol("chunk_filtered")
+      .setCriteria("isin")
+      .setWhiteList(["severe fever","sore throat"])
+```
+
+</div></div><div class="h3-box" markdown="1">
+
+Refer to the ChunkFilterer Scala docs for more details on the API.
+
+## AssertionFilterer
+
+`AssertionFilterer` will allow you to filter out the named entities by the list of acceptable assertion statuses. This annotator would be quite handy if you want to set a white list for the acceptable assertion statuses like present or conditional; and do not want absent conditions get out of your pipeline.
+
+**Output Type:** Assertion  
+
+**Input Types:** Document, Chunk, Embeddings
+
+**Reference:** AssertionFilterer  
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setWhiteList(Array[String])`:
+    - `setLazyAnnotator(Boolean)`: Use `AssertionFilterer` as a lazy annotator or not.
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `AssertionFilterer` used as a lazy annotator or not.
+
+**Example:**
+
+<div class="tabs-box" markdown="1">
+
+{% include programmingLanguageSelectScalaPython.html %}
+
+```python
+clinical_assertion = AssertionDLModel.pretrained("assertion_dl", "en", "clinical/models") \
+  .setInputCols(["sentence", "ner_chunk", "embeddings"]) \
+  .setOutputCol("assertion")
+
+assertion_filterer = AssertionFilterer()\
+  .setInputCols("sentence","ner_chunk","assertion")\
+  .setOutputCol("assertion_filtered")\
+  .setWhiteList(["present"])
+```
+
+```scala
+clinical_assertion = AssertionDLModel.pretrained("assertion_dl", "en", "clinical/models") \
+  .setInputCols(["sentence", "ner_chunk", "embeddings"]) \
+  .setOutputCol("assertion")
+
+assertion_filterer = AssertionFilterer()\
+  .setInputCols("sentence","ner_chunk","assertion")\
+  .setOutputCol("assertion_filtered")\
+  .setWhiteList(["present"])
+```
+
+</div></div><div class="h3-box" markdown="1">
+
+Refer to the AssertionFilterer Scala docs for more details on the API.
+
 ## References
 
 [1] Speech and Language Processing. Daniel Jurafsky & James H. Martin. 2018
