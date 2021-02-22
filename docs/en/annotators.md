@@ -21,10 +21,10 @@ figurative, but also tells about the structure of the `metadata` map in
 the Annotation. This is the one referred in the input and output of
 annotators.
 - **Inputs**: Represents how many and which annotator types are expected
-in `setInputCols`. These are column names of output of other annotators
+in `setInputCols()`. These are column names of output of other annotators
 in the DataFrames.
 - **Output** Represents the type of the output in the column
-`setOutputCol`.
+`setOutputCol()`.
 
 There are two types of Annotators:
 
@@ -358,6 +358,8 @@ Retrieves lemmas out of words with the objective of returning a base dictionary 
 
 **Input Types:** Token
 
+<!-- **Input**: abduct -> abducted abducting abduct abducts -->
+
 **Reference:** [Lemmatizer](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/Lemmatizer.scala) | [LemmatizerModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/LemmatizerModel.scala)  
 
 **Functions:** 
@@ -426,7 +428,7 @@ This annotator excludes from a sequence of strings (e.g. the output of a `Tokeni
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setStopWords(Array[String])`: The words to be filtered out. 
     - `setCaseSensitive(Boolean)`: Whether to do a case sensitive comparison over the stop words.
-    - `setLocale(String)`: Locale of the input for case insensitive matching. Ignored when `caseSensitive()` is true 
+    - `setLocale(String)`: Locale of the input for case insensitive matching. Ignored when `caseSensitive()` is `true` 
     - `setLazyAnnotator(Boolean)`: Use `StopWordsCleaner` as a lazy annotator or not.
 
 * ***Parameter Getters***
@@ -434,7 +436,7 @@ This annotator excludes from a sequence of strings (e.g. the output of a `Tokeni
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getCaseSensitive()`: Whether to do a case sensitive comparison over the stop words.
-    - `getLocale()`: Locale of the input for case insensitive matching. Ignored when caseSensitive is true.
+    - `getLocale()`: Locale of the input for case insensitive matching. Ignored when `caseSensitive()` is `true`.
     -  `getStopWords()`: The words to be filtered out.
     - `getLazyAnnotator()`: Whether `StopWordsCleaner` used as a lazy annotator or not.
 
@@ -505,7 +507,7 @@ Uses a reference file to match a set of regular expressions and put them inside 
 
 **Input Types:** Document  
 
-**Input:** `the\\s\\w+`, "followed by 'the'"  
+<!-- **Input:** `the\\s\\w+`, "followed by 'the'"   -->
 
 **Reference:** [RegexMatcher](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/RegexMatcher.scala) | [RegexMatcherModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/RegexMatcherModel.scala)  
 
@@ -570,6 +572,8 @@ Annotator to match entire phrases (by token) provided in a file against a Docume
 **Output Type:** Entity  
 
 **Input Types:** Document, Token 
+
+<!-- **Input**: hello world, I am looking for you -->
 
 **Reference:** [TextMatcher](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/TextMatcher.scala) | [TextMatcherModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/TextMatcherModel.scala)  
 
@@ -704,8 +708,8 @@ Refer to the [Chunker](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlabs.n
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setN(int)`: Number elements per n-gram (>=1)
-    - `setEnableCumulative(Boolean)`: Whether to calculate just the actual n-grams or all n-grams from 1 through n
+    - `setN(int)`: Number elements per **n-gram (>=1)**
+    - `setEnableCumulative(Boolean)`: Whether to calculate just the actual n-grams or all **n-grams from 1 through n**
     - `setDelimiter(String)`: Glue character used to join the tokens
     - `setLazyAnnotator(Boolean)`: Use `NGramGenerator` as a lazy annotator or not.
 
@@ -714,8 +718,8 @@ Refer to the [Chunker](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlabs.n
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getDelimiter()`: Glue character used to join the tokens
-    - `getEnableCumulative()`: Whether to calculate just the actual n-grams or all n-grams from 1 through n.
-    - `getN()`: Number elements per n-gram (>=1)
+    - `getEnableCumulative()`: Whether to calculate just the actual n-grams or all **n-grams from 1 through n**.
+    - `getN()`: Number elements per **n-gram (>=1)**
 
 **Example:**
 
@@ -777,10 +781,10 @@ Reads from different forms of date and time expressions and converts them to a p
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setDateFormat(format)`: SimpleDateFormat standard date *output* formatting. Defaults to `yyyy/MM/dd`
-    - `setAnchorDateYear()`: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: `2021`
-    - `setAnchorDateMonth()`: Add an anchor month for the relative dates such as a day after tomorrow. If not set it will use the current month. Example: `1` which means January
-    - `setAnchorDateDay()`: Add an anchor day of the day for the relative dates such as a day after tomorrow. If not set it will use the current day. Example: `11`
+    - `setDateFormat(format)`: SimpleDateFormat standard date *output* formatting. Defaults to **yyyy/MM/dd**
+    - `setAnchorDateYear()`: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: **2021**
+    - `setAnchorDateMonth()`: Add an anchor month for the relative dates such as a day after tomorrow. If not set it will use the current month. Example: **1** which means January
+    - `setAnchorDateDay()`: Add an anchor day of the day for the relative dates such as a day after tomorrow. If not set it will use the current day. Example: **11**
     - `setLazyAnnotator(Boolean)`: Use `DateMatcher` as a lazy annotator or not.
 
 * ***Parameter Getters***
@@ -847,10 +851,10 @@ Reads from multiple different forms of date and time expressions and converts th
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setDateFormat(format)`: SimpleDateFormat standard date *output* formatting. Defaults to `yyyy/MM/dd`
-    - `setAnchorDateYear()`: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: `2021`
-    - `setAnchorDateMonth()`: Add an anchor month for the relative dates such as a day after tomorrow. If not set it will use the current month. Example: `1` which means January
-    - `setAnchorDateDay()`: Add an anchor day of the day for the relative dates such as a day after tomorrow. If not set it will use the current day. Example: `11`
+    - `setDateFormat(format)`: SimpleDateFormat standard date *output* formatting. Defaults to **yyyy/MM/dd**
+    - `setAnchorDateYear()`: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: **2021**
+    - `setAnchorDateMonth()`: Add an anchor month for the relative dates such as a day after tomorrow. If not set it will use the current month. Example: **1** which means January
+    - `setAnchorDateDay()`: Add an anchor day of the day for the relative dates such as a day after tomorrow. If not set it will use the current day. Example: **11**
     - `setLazyAnnotator(Boolean)`: Use `MultiDateMatcher` as a lazy annotator or not.
 
 * ***Parameter Getters***
@@ -954,7 +958,7 @@ Sets a POS tag to each word within a sentence. Its train data (train_pos) is a s
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setNIterations(number)`: Number of iterations for training. May improve accuracy but takes longer. Default `5`
+    - `setNIterations(number)`: Number of iterations for training. May improve accuracy but takes longer. Default **5**
     - `setPosColumn(colname)`: Column containing an array of POS Tags matching every token on the line.
     - `setLazyAnnotator(Boolean)`: Use `POSTagger` as a lazy annotator or not.
 
@@ -962,7 +966,7 @@ Sets a POS tag to each word within a sentence. Its train data (train_pos) is a s
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
-    - `getNIterations()`: Number of iterations for training. May improve accuracy but takes longer. Default `5`.
+    - `getNIterations()`: Number of iterations for training. May improve accuracy but takes longer. Default **5**.
 
 **Example:**
 
@@ -998,7 +1002,7 @@ Scores a sentence for a sentiment
 
 **Input Types:** Document, Token  
 
-**Input:** File or folder of text files of positive and negative data  
+<!-- **Input:** File or folder of text files of positive and negative data   -->
 
 **Reference:** [ViveknSentimentApproach](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/sda/vivekn/ViveknSentimentApproach.scala) | [ViveknSentimentModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/sda/vivekn/ViveknSentimentModel.scala)
   
@@ -1008,20 +1012,20 @@ Scores a sentence for a sentiment
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setImportantFeatureRatio(Double)`: Set Proportion of feature content to be considered relevant. Defaults to `0.5`
-    - `setUnimportantFeatureStep()`: Set Proportion to lookahead in unimportant features. Defaults to `0.025`
+    - `setImportantFeatureRatio(Double)`: Set Proportion of feature content to be considered relevant. Defaults to **0.5**
+    - `setUnimportantFeatureStep()`: Set Proportion to lookahead in unimportant features. Defaults to **0.025**
     - `setSentimentCol(String)`: Column with the sentiment result of every row. Must be 'positive' or 'negative'
     - `setCorpusPrune(true)`: When training on small data you may want to disable this to not cut off infrequent words
-    - `setFeatureLimit()`: Set content feature limit, to boost performance in very dirt text. Default disabled with `-1`.
+    - `setFeatureLimit()`: Set content feature limit, to boost performance in very dirt text. Default disabled with **-1**.
     - `setLazyAnnotator(Boolean)`: Use `ViveknSentimentDetector` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
-    - `getFeatureLimit()`: Get content feature limit, to boost performance in very dirt text. Default disabled with `-1`
-    - `getImportantFeatureRatio()`: Get Proportion of feature content to be considered relevant. Defaults to `0.5`
-    - `getUnimportantFeatureStep()`: Get Proportion to lookahead in unimportant features. Defaults to `0.025`
+    - `getFeatureLimit()`: Get content feature limit, to boost performance in very dirt text. Default disabled with **-1**
+    - `getImportantFeatureRatio()`: Get Proportion of feature content to be considered relevant. Defaults to **0.5**
+    - `getUnimportantFeatureStep()`: Get Proportion to lookahead in unimportant features. Defaults to **0.025**
 
 **Example:**
 
@@ -1087,12 +1091,12 @@ Scores a sentence for a sentiment
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setDictionary(path, delimiter, readAs, options)`: path to file with list of inputs and their content, with such delimiter, readAs `LINE_BY_LINE` or as `SPARK_DATASET`. If latter is set, options is passed to spark reader.
-    - `setPositiveMultiplier(double)`: Defaults to `1.0`
-    - `setNegativeMultiplier(double)`: Defaults to `-1.0`
-    - `setIncrementMultiplier(double)`: Defaults to `2.0`
-    - `setDecrementMultiplier(double)`: Defaults to `-2.0`
-    - `setReverseMultiplier(double)`: Defaults to `-1.0`
+    - `setDictionary(path, delimiter, readAs, options)`: *path* to file with list of inputs and their content, with such delimiter, *readAs* `LINE_BY_LINE` or as `SPARK_DATASET`. If latter is set, *options* is passed to spark reader.
+    - `setPositiveMultiplier(double)`: Defaults to **1.0**
+    - `setNegativeMultiplier(double)`: Defaults to **-1.0**
+    - `setIncrementMultiplier(double)`: Defaults to **2.0**
+    - `setDecrementMultiplier(double)`: Defaults to **-2.0**
+    - `setReverseMultiplier(double)`: Defaults to **-1.0**
     - `setLazyAnnotator(Boolean)`: Use `SentimentDetector` as a lazy annotator or not.
 
 * ***Parameter Getters***
@@ -1100,13 +1104,13 @@ Scores a sentence for a sentiment
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
 
-**Input:**
+<!-- **Input:**
 
 - superb,positive
 - bad,negative
 - lack of,revert
 - very,increment
-- barely,decrement
+- barely,decrement -->
 
 **Example:**
 
@@ -1729,7 +1733,7 @@ ClassifierDL is a generic Multi-class Text Classification. ClassifierDL uses the
     - `setDropout`: Dropout coefficient.
     - `setMaxEpochs`: Maximum number of epochs to train.
     - `setEnableOutputLogs`: Whether to output to annotators log folder.
-    - `setValidationSplit`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between 0.0 and 1.0 and by default it is `0.0` and off.
+    - `setValidationSplit`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
     - `setVerbose`: Level of verbosity during training.
     - `setOutputLogsPath`: Folder path to save training logs.
     - `setLazyAnnotator(Boolean)`: Use `ClassifierDL` as a lazy annotator or not.
@@ -1802,7 +1806,7 @@ Refer to the [ClassifierDLApproach](https://nlp.johnsnowlabs.com/api/index#com.j
     - `setBatchSize()`: Batch size for training.
     - `setMaxEpochs()`: Maximum number of epochs to train.
     - `setEnableOutputLogs()`: Whether to output to annotators log folder.
-    - `setValidationSplit()`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between 0.0 and 1.0 and by default it is 0.0 and off.
+    - `setValidationSplit()`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
     - `setVerbose()`: Level of verbosity during training.
     - `setOutputLogsPath()`: Folder path to save training logs.
     - `setLazyAnnotator(Boolean)`: Use `MultiClassifierDL` as a lazy annotator or not.
@@ -1882,7 +1886,7 @@ SentimentDL is an annotator for multi-class sentiment analysis. This annotator c
     - `setMaxEpochs`: Maximum number of epochs to train.
     - `setEnableOutputLogs`: Whether to output to annotators log folder.
     - `setOutputLogsPath`: Folder path to save training logs.
-    - `setValidationSplit`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between 0.0 and 1.0 and by default it is 0.0 and off.
+    - `setValidationSplit`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
     - `setVerbose`: Level of verbosity during training.
     - `setLazyAnnotator(Boolean)`: Use `SentimentDL` as a lazy annotator or not.
 
@@ -2154,11 +2158,11 @@ Neural Network architecture is Char CNNs - BiLSTM - CRF that achieves state-of-t
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setLabelColumn`: If DatasetPath is not provided, this Seq\[Annotation\] type of column should have labeled data per token.
+    - `setLabelColumn`: If DatasetPath is not provided, this `Seq\[Annotation\]` type of column should have labeled data per token.
     - `setTestDataset(path: String)`: Set Path to test dataset.
     - `setMaxEpochs`: Maximum number of epochs to train.
     - `setLr`: Initial learning rate.
-    - `setPo`: Learning rate decay coefficient. Real Learning Rate: lr / (1 + po \* epoch).
+    - `setPo`: Learning rate decay coefficient. Real Learning Rate: `lr / (1 + po \* epoch)`.
     - `setBatchSize`: Batch size for training.
     - `setDropout`: Dropout coefficient.
     - `setVerbose`: Verbosity level.
@@ -2298,11 +2302,11 @@ This annotator retrieves tokens and makes corrections automatically if not found
     - `setCaseSensitive(boolean)`: defaults to `false`. Might affect accuracy
     - `setDoubleVariants(boolean)`: enables extra check for word combinations, more accuracy at performance
     - `setShortCircuit(boolean)`: faster but less accurate mode
-    - `setWordSizeIgnore(int)`: Minimum size of word before moving on. Defaults to `3`.
-    - `setDupsLimit(int)`: Maximum duplicate of characters to account for. Defaults to `2`.
-    - `setReductLimit(int)`: Word reduction limit. Defaults to `3`
-    - `setIntersections(int)`: Hamming intersections to attempt. Defaults to `10`.
-    - `setVowelSwapLimit(int)`: Vowel swap attempts. Defaults to `6`.
+    - `setWordSizeIgnore(int)`: Minimum size of word before moving on. Defaults to **3**.
+    - `setDupsLimit(int)`: Maximum duplicate of characters to account for. Defaults to **2**.
+    - `setReductLimit(int)`: Word reduction limit. Defaults to **3**
+    - `setIntersections(int)`: Hamming intersections to attempt. Defaults to **10**.
+    - `setVowelSwapLimit(int)`: Vowel swap attempts. Defaults to **6**.
     - `setLazyAnnotator(Boolean)`: Use `Norvig SpellChecker` as a lazy annotator or not.
 
 * ***Parameter Getters***
@@ -2311,13 +2315,13 @@ This annotator retrieves tokens and makes corrections automatically if not found
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getCaseSensitive()`: Sensitivity on spell checking. Defaults to `false`. Might affect accuracy 
     - `getDoubleVariants()`: Increase search at cost of performance. Enables extra check for word combinations 
-    - `getDupsLimit()`: Maximum duplicate of characters in a word to consider. Defaults to `2` .Maximum duplicate of characters to account for. Defaults to `2`. 
+    - `getDupsLimit()`: Maximum duplicate of characters in a word to consider. Defaults to **2** .Maximum duplicate of characters to account for. Defaults to **2**. 
     - `getFrequencyPriority()`: Applies frequency over hamming in intersections. When false hamming takes priority 
-    - `getIntersections()`: Hamming intersections to attempt. Defaults to `10` 
-    - `getReductLimit()`: Word reduction limit. Defaults to `3` 
+    - `getIntersections()`: Hamming intersections to attempt. Defaults to **10**
+    - `getReductLimit()`: Word reduction limit. Defaults to **3**
     - `getShortCircuit()`: Increase performance at cost of accuracy. Faster but less accurate mode 
-    - `getVowelSwapLimit()`: Vowel swap attempts. Defaults to `6` 
-    - `getWordSizeIgnore()`: Minimum size of word before ignoring. Defaults to `3`, Minimum size of word before moving on. Defaults to `3`. 
+    - `getVowelSwapLimit()`: Vowel swap attempts. Defaults to **6** 
+    - `getWordSizeIgnore()`: Minimum size of word before ignoring. Defaults to **3**, Minimum size of word before moving on. Defaults to **3**. 
 
 **Example:**
 
@@ -2363,22 +2367,22 @@ This spell checker is inspired on Symmetric Delete algorithm. It retrieves token
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setDeletesThreshold(value: Int)`: minimum frequency of corrections a word needs to have to be considered from training. Increase if training set is LARGE. Defaults to `0`.
-    - `setFrequencyThreshold(value: Int)`: minimum frequency of words to be considered from training. Increase if training set is LARGE. Defaults to `0`. 
+    - `setDeletesThreshold(value: Int)`: minimum frequency of corrections a word needs to have to be considered from training. Increase if training set is LARGE. Defaults to **0**.
+    - `setFrequencyThreshold(value: Int)`: minimum frequency of words to be considered from training. Increase if training set is LARGE. Defaults to **0**. 
     - `setLongestWordLength(value: Int)`: length of longest word in corpus 
     - `setMaxFrequency(value: Long)`: maximum frequency of a word in the corpus 
     - `setMinFrequency(value: Long)`: minimum frequency of a word in the corpus 
     - `setDictionary(path, tokenPattern, readAs, options)`: Optional dictionary of properly written words. If provided, significantly boosts spell checking performance
-    - `setMaxEditDistance(distance)`: Maximum edit distance to calculate possible derived words. Defaults to ``3``.
+    - `setMaxEditDistance(distance)`: Maximum edit distance to calculate possible derived words. Defaults to **3**.
     - `setLazyAnnotator(Boolean)`: Use `Symmetric SpellChecker` as a lazy annotator or not.
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
-    - `getDeletesThreshold()`: minimum frequency of corrections a word needs to have to be considered from training. Increase if training set is `LARGE`. Defaults to `0` 
-    - `getDupsLimit()`: maximum duplicate of characters in a word to consider. Defaults to `2` 
-    - `getFrequencyThreshold()`: minimum frequency of words to be considered from training. Increase if training set is `LARGE`. Defaults to `0`. 
+    - `getDeletesThreshold()`: minimum frequency of corrections a word needs to have to be considered from training. Increase if training set is `LARGE`. Defaults to **0** 
+    - `getDupsLimit()`: maximum duplicate of characters in a word to consider. Defaults to **2**
+    - `getFrequencyThreshold()`: minimum frequency of words to be considered from training. Increase if training set is `LARGE`. Defaults to **0**. 
     - `getMaxEditDistance()`: max edit distance characters to derive strings from a word.
 
 **Example:**
@@ -2425,13 +2429,13 @@ Implements Noisy Channel Model Spell Algorithm. Correction candidates are extrac
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setLanguageModelClasses(languageModelClasses:Int)`: Number of classes to use during factorization of the softmax output in the LM. Defaults to `2000`.
-    - `setWordMaxDistance(dist:Int)`: Maximum distance for the generated candidates for every word. Defaults to `3`.
-    - `setMaxCandidates(candidates:Int)`: Maximum number of candidates for every word. Defaults to 6.
-    - `setCaseStrategy(strategy:Int)`: What case combinations to try when generating candidates. `ALL_UPPER_CASE = 0, FIRST_LETTER_CAPITALIZED = 1, ALL = 2`. Defaults to `2`.
-    - `setErrorThreshold(threshold:Float)`: Threshold perplexity for a word to be considered as an error. Defaults to 10f.
-    - `setTradeoff(alpha:Float)`: Tradeoff between the cost of a word error and a transition in the language model. Defaults to `18.0f`.
-    - `setMaxWindowLen(length:Integer)`: Maximum size for the window used to remember history prior to every correction. Defaults to `5`.
+    - `setLanguageModelClasses(languageModelClasses:Int)`: Number of classes to use during factorization of the softmax output in the LM. Defaults to **2000**.
+    - `setWordMaxDistance(dist:Int)`: Maximum distance for the generated candidates for every word. Defaults to **3**.
+    - `setMaxCandidates(candidates:Int)`: Maximum number of candidates for every word. Defaults to **6**.
+    - `setCaseStrategy(strategy:Int)`: What case combinations to try when generating candidates. `ALL_UPPER_CASE = 0, FIRST_LETTER_CAPITALIZED = 1, ALL = 2`. Defaults to **2**.
+    - `setErrorThreshold(threshold:Float)`: Threshold perplexity for a word to be considered as an error. Defaults to **10f**.
+    - `setTradeoff(alpha:Float)`: Tradeoff between the cost of a word error and a transition in the language model. Defaults to **18.0f**.
+    - `setMaxWindowLen(length:Integer)`: Maximum size for the window used to remember history prior to every correction. Defaults to **5**.
     - `setGamma(g:Float)`: Controls the influence of individual word frequency in the decision.
     - `updateVocabClass(label:String, vocab:Array(String), append:boolean)`: Update existing vocabulary classes so they can cover new words. If append set to `false` overwrite vocabulary class in the model by new words, if `true` extends existing vocabulary class. Defaults to `true`.  
     - `updateRegexClass(label:String, regex:String)`: Update existing regex rule for the class defined by regex.
@@ -2440,14 +2444,14 @@ Implements Noisy Channel Model Spell Algorithm. Correction candidates are extrac
 * Train:
 
     - `setWeightedDistPath(weightedDistPath:String)`: The path to the file containing the weights for the levenshtein distance.
-    - `setEpochs(epochs:Int)`: Number of epochs to train the language model. Defaults to `2`.
-    - `setInitialBatchSize(batchSize:Int)`: Batch size for the training in NLM. Defaults to `24`.
-    - `setInitialRate(initialRate:Float)`: Initial learning rate for the LM. Defaults to `.7f`.
-    - `setFinalRate(finalRate:Float)`: Final learning rate for the LM. Defaults to `0.0005f`.
-    - `setValidationFraction(validationFraction:Float)`: Percentage of datapoints to use for validation. Defaults to `.1f`.
-    - `setMinCount(minCount:Float)`: Min number of times a token should appear to be included in vocab. Defaults to `3.0f`.
-    - `setCompoundCount(compoundCount:Int)`: Min number of times a compound word should appear to be included in vocab. Defaults to `5`.
-    - `setClassCount(classCount:Int)`: Min number of times the word need to appear in corpus to not be considered of a special class. Defaults to `15`.
+    - `setEpochs(epochs:Int)`: Number of epochs to train the language model. Defaults to **2**.
+    - `setInitialBatchSize(batchSize:Int)`: Batch size for the training in NLM. Defaults to **24**.
+    - `setInitialRate(initialRate:Float)`: Initial learning rate for the LM. Defaults to **.7f**.
+    - `setFinalRate(finalRate:Float)`: Final learning rate for the LM. Defaults to **0.0005f**.
+    - `setValidationFraction(validationFraction:Float)`: Percentage of datapoints to use for validation. Defaults to **.1f**.
+    - `setMinCount(minCount:Float)`: Min number of times a token should appear to be included in vocab. Defaults to **3.0f**.
+    - `setCompoundCount(compoundCount:Int)`: Min number of times a compound word should appear to be included in vocab. Defaults to **5**.
+    - `setClassCount(classCount:Int)`: Min number of times the word need to appear in corpus to not be considered of a special class. Defaults to **15**.
 
 * ***Parameter Getters***
 
