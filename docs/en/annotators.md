@@ -315,14 +315,14 @@ Returns hard-stems out of words with the objective of retrieving the meaningful 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setLanguage(string)`: This is the language of the text. Defaults to English.
-    - `setLazyAnnotator(Boolean)`: Use `Stemmer` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `Stemmer` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
     
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getLanguage()`: Get language for text
-    - `getLazyAnnotator()`:  Whether `Stemmer` used as a lazy annotator or not.
+    - `getLazyAnnotator()`:  Whether `Stemmer` used as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -369,13 +369,13 @@ Retrieves lemmas out of words with the objective of returning a base dictionary 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setDictionary(path, keyDelimiter, valueDelimiter, readAs, options)`: Path and options to lemma dictionary, in lemma vs possible words format. readAs can be `LINE_BY_LINE` or `SPARK_DATASET`. options contain option passed to spark reader if readAs is `SPARK_DATASET`.
-    - `setLazyAnnotator(Boolean)`: Use `Lemmatizer` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `Lemmatizer` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
-    - `getLazyAnnotator()`: Whether `Lemmatizer` as a lazy annotator or not.
+    - `getLazyAnnotator()`: Whether `Lemmatizer` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
     - `getDictionary()`: Path and options to lemma dictionary, in lemma vs possible words format. readAs can be `LINE_BY_LINE` or `SPARK_DATASET`. options contain option passed to spark reader if readAs is `SPARK_DATASET`.
 
 **Example:**
@@ -429,7 +429,7 @@ This annotator excludes from a sequence of strings (e.g. the output of a `Tokeni
     - `setStopWords(Array[String])`: The words to be filtered out. 
     - `setCaseSensitive(Boolean)`: Whether to do a case sensitive comparison over the stop words.
     - `setLocale(String)`: Locale of the input for case insensitive matching. Ignored when `caseSensitive()` is `true` 
-    - `setLazyAnnotator(Boolean)`: Use `StopWordsCleaner` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `StopWordsCleaner` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -438,7 +438,7 @@ This annotator excludes from a sequence of strings (e.g. the output of a `Tokeni
     - `getCaseSensitive()`: Whether to do a case sensitive comparison over the stop words.
     - `getLocale()`: Locale of the input for case insensitive matching. Ignored when `caseSensitive()` is `true`.
     -  `getStopWords()`: The words to be filtered out.
-    - `getLazyAnnotator()`: Whether `StopWordsCleaner` used as a lazy annotator or not.
+    - `getLazyAnnotator()`: Whether `StopWordsCleaner` used as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -520,14 +520,14 @@ Uses a reference file to match a set of regular expressions and put them inside 
     - `setStrategy(strategy)`: Can be any of `MATCH_FIRST | MATCH_ALL | MATCH_COMPLETE`
     - `setRules(path, delimiter, readAs, options)`: Path to file containing a set of regex, key pair. `readAs` can be LINE_BY_LINE or SPARK_DATASET. `options` contain option passed to spark reader if `readAs` is SPARK_DATASET.
     - `setExternalRules(path, delimiter)`: Path to file containing a set of regex, key pair.
-    - `setLazyAnnotator(Boolean)`: Use `RegexMatcher` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `RegexMatcher` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getStrategy()`: Whether `strategy` was MATCH_FIRST | MATCH_ALL | MATCH_COMPLETE.
-    - `getLazyAnnotator()`: Whether `RegexMatcher` as a lazy annotator or not.
+    - `getLazyAnnotator()`: Whether `RegexMatcher` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -587,7 +587,7 @@ Annotator to match entire phrases (by token) provided in a file against a Docume
     - `setEntityValue(String)`: Value for the entity metadata field to indicate which chunk comes from which `textMatcher` when there are multiple `textMatchers`.
     - `setMergeOverlapping(Boolean)`: Whether to merge overlapping matched chunks. Defaults to `False`
     - `setCaseSensitive(Boolean)`: Whether to match regardless of case. Defaults to `True`
-    - `setLazyAnnotator(Boolean)`: Use `TextMatcher` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `TextMatcher` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -597,7 +597,7 @@ Annotator to match entire phrases (by token) provided in a file against a Docume
     - `getEntityValue()`: whether to match regardless of case.
     - `getCaseSensitive()`: Getter for Value for the entity metadata field.
     - `getMergeOverlapping()`: Whether to merge overlapping matched chunks.
-    - `getLazyAnnotator()`: Whether `TextMatcher` as a lazy annotator or not.
+    - `getLazyAnnotator()`: Whether `TextMatcher` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -657,14 +657,14 @@ This annotator matches a pattern of part-of-speech tags in order to return meani
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setRegexParsers(Array[String])`: A list of regex patterns to match chunks
     - `addRegexParser(String)`: adds a pattern to the current list of chunk patterns.
-    - `setLazyAnnotator(Boolean)`: Use `Chunker` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `Chunker` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getRegexParsers()`: A list of regex patterns to match chunks
-    - `getLazyAnnotator()`: Whether `Chunker` as a lazy annotator or not.
+    - `getLazyAnnotator()`: Whether `Chunker` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -711,7 +711,7 @@ Refer to the [Chunker](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlabs.n
     - `setN(int)`: Number elements per **n-gram (>=1)**
     - `setEnableCumulative(Boolean)`: Whether to calculate just the actual n-grams or all **n-grams from 1 through n**
     - `setDelimiter(String)`: Glue character used to join the tokens
-    - `setLazyAnnotator(Boolean)`: Use `NGramGenerator` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `NGramGenerator` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -720,6 +720,7 @@ Refer to the [Chunker](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlabs.n
     - `getDelimiter()`: Glue character used to join the tokens
     - `getEnableCumulative()`: Whether to calculate just the actual n-grams or all **n-grams from 1 through n**.
     - `getN()`: Number elements per **n-gram (>=1)**
+    - `getLazyAnnotator()`: Whether `NGramGenerator` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -785,7 +786,7 @@ Reads from different forms of date and time expressions and converts them to a p
     - `setAnchorDateYear()`: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: **2021**
     - `setAnchorDateMonth()`: Add an anchor month for the relative dates such as a day after tomorrow. If not set it will use the current month. Example: **1** which means January
     - `setAnchorDateDay()`: Add an anchor day of the day for the relative dates such as a day after tomorrow. If not set it will use the current day. Example: **11**
-    - `setLazyAnnotator(Boolean)`: Use `DateMatcher` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `DateMatcher` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -794,6 +795,7 @@ Reads from different forms of date and time expressions and converts them to a p
     - `getAnchorDateDay()`: Anchor day of the day for the relative dates such as a day after tomorrow. If not set it will get the current day.
     - `getAnchorDateMonth()`: Anchor month for the relative dates such as a day after tomorrow. If not set it will get the current month.
     - `getAnchorDateYear()`: Anchor year for the relative dates such as a day after tomorrow. If not set it will get the current year.
+    - `getLazyAnnotator()`: Whether `DateMatcher` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -855,7 +857,7 @@ Reads from multiple different forms of date and time expressions and converts th
     - `setAnchorDateYear()`: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: **2021**
     - `setAnchorDateMonth()`: Add an anchor month for the relative dates such as a day after tomorrow. If not set it will use the current month. Example: **1** which means January
     - `setAnchorDateDay()`: Add an anchor day of the day for the relative dates such as a day after tomorrow. If not set it will use the current day. Example: **11**
-    - `setLazyAnnotator(Boolean)`: Use `MultiDateMatcher` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `MultiDateMatcher` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -864,6 +866,7 @@ Reads from multiple different forms of date and time expressions and converts th
     - `getAnchorDateDay()`: Anchor day of the day for the relative dates such as a day after tomorrow. If not set it will get the current day.
     - `getAnchorDateMonth()`: Anchor month for the relative dates such as a day after tomorrow. If not set it will get the current month.
     - `getAnchorDateYear()`: Anchor year for the relative dates such as a day after tomorrow. If not set it will get the current year.
+    - `getLazyAnnotator()`: Whether `MultiDateMatcher` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -909,7 +912,7 @@ Finds sentence bounds in raw text. Applies rules from Pragmatic Segmenter.
     - `setUseCustomBoundsOnly(bool)`: Use only custom bounds without considering those of Pragmatic Segmenter. Defaults to `false`. Needs customBounds.
     - `setUseAbbreviations(bool)`: Whether to consider abbreviation strategies for better accuracy but slower performance. Defaults to `true`.
     - `setExplodeSentences(bool)`: Whether to split sentences into different Dataset rows. Useful for higher parallelism in fat rows. Defaults to `false`.
-    - `setLazyAnnotator(Boolean)`: Use `SentenceDetector` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `SentenceDetector` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -919,6 +922,7 @@ Finds sentence bounds in raw text. Applies rules from Pragmatic Segmenter.
     - `getExplodeSentences()`: Whether to split sentences into different Dataset rows.
     - `getUseAbbreviations()`: Whether to consider abbreviation strategies for better accuracy but slower performance.
     - `getsetUseCustomBoundsOnly()`: Use only custom bounds without considering those of Pragmatic Segmenter.
+    - `getLazyAnnotator()`: Whether `"SentenceDetector` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -960,13 +964,14 @@ Sets a POS tag to each word within a sentence. Its train data (train_pos) is a s
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setNIterations(number)`: Number of iterations for training. May improve accuracy but takes longer. Default **5**
     - `setPosColumn(colname)`: Column containing an array of POS Tags matching every token on the line.
-    - `setLazyAnnotator(Boolean)`: Use `POSTagger` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `POSTagger` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getNIterations()`: Number of iterations for training. May improve accuracy but takes longer. Default **5**.
+    - `getLazyAnnotator()`: Whether `POSTagger` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -1017,7 +1022,7 @@ Scores a sentence for a sentiment
     - `setSentimentCol(String)`: Column with the sentiment result of every row. Must be 'positive' or 'negative'
     - `setCorpusPrune(true)`: When training on small data you may want to disable this to not cut off infrequent words
     - `setFeatureLimit()`: Set content feature limit, to boost performance in very dirt text. Default disabled with **-1**.
-    - `setLazyAnnotator(Boolean)`: Use `ViveknSentimentDetector` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `ViveknSentimentDetector` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -1026,6 +1031,7 @@ Scores a sentence for a sentiment
     - `getFeatureLimit()`: Get content feature limit, to boost performance in very dirt text. Default disabled with **-1**
     - `getImportantFeatureRatio()`: Get Proportion of feature content to be considered relevant. Defaults to **0.5**
     - `getUnimportantFeatureStep()`: Get Proportion to lookahead in unimportant features. Defaults to **0.025**
+    - `getLazyAnnotator()`: Whether `ViveknSentimentDetector` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -1097,12 +1103,13 @@ Scores a sentence for a sentiment
     - `setIncrementMultiplier(double)`: Defaults to **2.0**
     - `setDecrementMultiplier(double)`: Defaults to **-2.0**
     - `setReverseMultiplier(double)`: Defaults to **-1.0**
-    - `setLazyAnnotator(Boolean)`: Use `SentimentDetector` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `SentimentDetector` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `SentimentDetector` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 <!-- **Input:**
 
@@ -1156,12 +1163,13 @@ Word Embeddings lookup annotator that maps tokens to vectors
         - *TEXT* -> This format is usually used by [Glove](https://nlp.stanford.edu/projects/glove/)
         - *BINARY* -> This format is usually used by [Word2Vec](https://code.google.com/archive/p/word2vec/)
     - `setCaseSensitive`: whether to ignore case in tokens for embeddings matching
-    - `setLazyAnnotator(Boolean)`: Use `WordEmbeddings` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `WordEmbeddings` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `WordEmbeddings` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -1221,7 +1229,7 @@ You can find the pre-trained models for `BertEmbeddings` in the [Spark NLP Model
     - `setDimension(int)`: Set Embeddings dimensions for the BERT model Only possible to set this when the first time is saved dimension is not changeable, it comes from BERT config file
     - `setMaxSentenceLength(int)`: Max sentence length to process
     - `setVocabulary(Map[String, Int])`: Vocabulary used to encode the words to ids with `WordPieceEncoder`
-    - `setLazyAnnotator(Boolean)`: Use `BertEmbeddings` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `BertEmbeddings` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -1231,6 +1239,7 @@ You can find the pre-trained models for `BertEmbeddings` in the [Spark NLP Model
     - `getMaxSentenceLength()`: Max sentence length to process
     - `getCaseSensitive()`: Whether to follow case sensitiveness for matching exceptions in text.
     - `getDimension()`: Getter for Embeddings dimensions for the BERT model.
+    - `getLazyAnnotator()`: Whether `BertEmbeddings` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -1278,7 +1287,7 @@ You can find the pre-trained models for `BertEmbeddings` in the [Spark NLP Model
     - `setDimension(int)`: Set Embeddings dimensions for the BERT model Only possible to set this when the first time is saved dimension is not changeable, it comes from BERT config file
     - `setMaxSentenceLength(int)`: Max sentence length to process
     - `setVocabulary(Map[String, Int])`: Vocabulary used to encode the words to ids with `WordPieceEncoder`
-    - `setLazyAnnotator(Boolean)`: Use `BertSentenceEmbeddings` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `BertSentenceEmbeddings` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -1288,6 +1297,7 @@ You can find the pre-trained models for `BertEmbeddings` in the [Spark NLP Model
     - `getMaxSentenceLength()`: Max sentence length to process
     - `getCaseSensitive()`: Whether to follow case sensitiveness for matching exceptions in text.
     - `getDimension()`: Getter for Embeddings dimensions for the BERT model.
+    - `getLazyAnnotator()`: Whether `BertSentenceEmbeddings` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -1337,7 +1347,7 @@ You can find the pre-trained model for `ElmoEmbeddings` in the  [Spark NLP Model
     - `setCaseSensitive(Boolean)`: Whether to lowercase tokens or not
     - `setDimension(int)`: Set Dimension of pooling layer. This is meta for the annotation and will not affect the actual embedding calculation.
     - `setPoolingLayer(String)`: Function used to set the embedding output layer of the ELMO model word_emb: the character-based word representations with shape `[batch_size, max_length, 512]`.
-    - `setLazyAnnotator(Boolean)`: Use `ElmoEmbeddings` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `ElmoEmbeddings` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -1347,6 +1357,7 @@ You can find the pre-trained model for `ElmoEmbeddings` in the  [Spark NLP Model
     - `getConfigProtoBytes()`: ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString()`
     - `getCaseSensitive()`: Whether to follow case sensitiveness for matching exceptions in text.
     - `getDimension()`: Getter for Embeddings dimensions for the BERT model.
+    - `getLazyAnnotator()`: Whether `ElmoEmbeddings` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -1398,12 +1409,13 @@ You can find the pre-trained model for `AlbertEmbeddings` in the  [Spark NLP Mod
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setBatchSize(int)`: Batch size. Large values allows faster processing but requires more memory.
     - `setMaxSentenceLength(int)`: Max sentence length to process
-    - `setLazyAnnotator(Boolean)`: Use `Albertembeddings` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `AlbertEmbeddings` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `AlbertEmbeddings` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Examples:**
 
@@ -1464,6 +1476,7 @@ You can find the pre-trained model for `XlnetEmbeddings` in the  [Spark NLP Mode
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getMaxSentenceLength()`: Max sentence length to process
     - `getModelIfNotSet()`: Gets XLNet tensorflow Model 
+    - `getLazyAnnotator()`: Whether `XlnetEmbeddings` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -1514,7 +1527,7 @@ The Universal Sentence Encoder encodes text into high dimensional vectors that c
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setConfigProtoBytes(bytes: Array[Int])`: ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString() `
     - `setLoadSP(value: Boolean)`: set loadSP 
-    - `setLazyAnnotator(Boolean)`: Use `UniversalSentenceEncoder` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `UniversalSentenceEncoder` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -1522,6 +1535,7 @@ The Universal Sentence Encoder encodes text into high dimensional vectors that c
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getConfigProtoBytes()`: ConfigProto from tensorflow, serialized into byte array.
     - `getLoadSP()`: Getter for LoadSP
+    - `getLazyAnnotator()`: Whether `UniversalSentenceEncoder` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -1563,13 +1577,14 @@ This annotator converts the results from `WordEmbeddings`, `BertEmbeddings`, `El
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setPoolingStrategy()`: Choose how you would like to aggregate Word Embeddings to Sentence Embeddings: `AVERAGE` or `SUM`
     - `setDimension(int)`: Number of embedding dimensions
-    - `setLazyAnnotator(Boolean)`: Use `SentenceEmbeddings` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `SentenceEmbeddings` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getDimension()`: Number of embedding dimensions 
+    - `getLazyAnnotator()`: Whether `SentenceEmbeddings` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -1648,7 +1663,7 @@ This annotator utilizes `WordEmbeddings` or `BertEmbeddings` to generate chunk e
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setPoolingStrategy(String)`: Choose how you would like to aggregate Word Embeddings to Sentence Embeddings: AVERAGE or SUM
     - `setSkipOOV(Boolean)`: Whether to discard default vectors for OOV words from the aggregation / pooling
-    - `setLazyAnnotator(Boolean)`: Use `ChunkEmbeddings` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `ChunkEmbeddings` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -1656,6 +1671,7 @@ This annotator utilizes `WordEmbeddings` or `BertEmbeddings` to generate chunk e
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getPoolingStrategy()`: Choose how you would like to aggregate Word Embeddings to Chunk Embeddings: AVERAGE or SUM 
     - `getSkipOOV()`: Whether to discard default vectors for OOV words from the aggregation / pooling 
+    - `getLazyAnnotator()`: Whether `ChunkEmbeddings` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -1736,7 +1752,7 @@ ClassifierDL is a generic Multi-class Text Classification. ClassifierDL uses the
     - `setValidationSplit`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
     - `setVerbose`: Level of verbosity during training.
     - `setOutputLogsPath`: Folder path to save training logs.
-    - `setLazyAnnotator(Boolean)`: Use `ClassifierDL` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `ClassifierDL` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -1744,6 +1760,7 @@ ClassifierDL is a generic Multi-class Text Classification. ClassifierDL uses the
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getClasses()`: get the tags used to trained this `NerDLModel` 
     - `getConfigProtoBytes()`: Tensorflow config Protobytes passed to the TF session 
+    - `getLazyAnnotator()`: Whether `ClassifierDL` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 > **NOTE**: This annotator accepts a label column of a single item in either type of String, Int, Float, or Double.
 
@@ -1824,6 +1841,7 @@ Refer to the [ClassifierDLApproach](https://nlp.johnsnowlabs.com/api/index#com.j
     - `getShufflePerEpoch()`: Max sequence length to feed into TensorFlow 
     - `getThreshold()`: The minimum threshold for each label to be accepted.
     - `getValidationSplit()`: Choose the proportion of training dataset to be validated against the model on each Epoch.
+    - `getLazyAnnotator()`: Whether `MultiClassifierDL` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 > **NOTE**: This annotator accepts a label column of a single item in either type of String, Int, Float, or Double.
 
@@ -1888,12 +1906,13 @@ SentimentDL is an annotator for multi-class sentiment analysis. This annotator c
     - `setOutputLogsPath`: Folder path to save training logs.
     - `setValidationSplit`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
     - `setVerbose`: Level of verbosity during training.
-    - `setLazyAnnotator(Boolean)`: Use `SentimentDL` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `SentimentDL` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `SentimentDL` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 > **NOTE**: This annotator accepts a label column of a single item in either type of String, Int, Float, or Double.
 
@@ -1954,15 +1973,16 @@ LanguageDetectorDL is a state-of-the-art language detection and identification a
     - `setThreshold`: The minimum threshold for the final result otheriwse it will be either neutral or the value set in thresholdLabel.
     - `setThresholdLabel`: In case the score is less than threshold, what should be the label. Default is Unknown.
     - `setCoalesceSentences`: If sets to true the output of all sentences will be averaged to one output instead of one output per sentence. Default to true.
-    - `setLazyAnnotator(Boolean)`: Use `LanguageDetectorDL` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `LanguageDetectorDL` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getConfigProtoBytes()`: ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString() `
-    - `getLanguage()`: Getter for languages 
+    - `getLanguage()`: Getter for languages
     - `getThreshold()`: Getter for Threshold
+    - `getLazyAnnotator()`: Whether `LanguageDetectorDL` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -2016,9 +2036,9 @@ You can tweak the following parameters to get the best result from the annotator
     - `setMaxNGrams(int)`: Select the maximum length of a extracted keyword
     - `setNKeywords(int)`: Extract the top N keywords
     - `setStopWords(list)`: Set the list of stop words
-    - `setThreshold(float)`: Each keyword will be given a keyword score greater than 0. (Lower the score better the keyword) Set an upper bound for the keyword score from this method.
-    - `setWindowSize(int)`: Yake will construct a co-occurrence matrix. You can set the window size for the co-occurrence matrix construction from this method. ex: windowSize=2 will look at two words to both left and right of a candidate word.
-    - `setLazyAnnotator(Boolean)`: Use `YakeModel` as a lazy annotator or not.
+    - `setThreshold(float)`: Each keyword will be given a keyword score greater than **0**. (Lower the score better the keyword) Set an upper bound for the keyword score from this method.
+    - `setWindowSize(int)`: Yake will construct a co-occurrence matrix. You can set the window size for the co-occurrence matrix construction from this method. ex: `windowSize=2` will look at two words to both left and right of a candidate word.
+    - `setLazyAnnotator(Boolean)`: Use `YakeModel` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -2026,8 +2046,9 @@ You can tweak the following parameters to get the best result from the annotator
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getBasicStats()`: Calculates basic statistics like total Sentences in the document and assign a tag for each token
     - `getCandidateKeywords()`: Generate candidate keywords
-    - `getCoOccurrence()`: Calculate Co Occurrence for left to right given a window size
+    - `getCoOccurrence()`: Calculate Co-Occurrence for left to right given a window size
     - `getSentences()`: Separate sentences given tokens with sentence metadata
+    - `getLazyAnnotator()`: Whether `Yake Model` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -2102,6 +2123,7 @@ Optionally the user can provide an entity dictionary file for better accuracy
     - `getMinW()`: Getter for Features with less weights then this param value will be filtered 
     - `getRandomSeed()`: Getter for Random seed 
     - `getVerbose()`: Getter for Level of verbosity during training 
+    - `getLazyAnnotator()`: Whether `NER CRF` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -2168,7 +2190,7 @@ Neural Network architecture is Char CNNs - BiLSTM - CRF that achieves state-of-t
     - `setVerbose`: Verbosity level.
     - `setRandomSeed`: Random seed.
     - `setOutputLogsPath`: Folder path to save training logs.
-    - `setLazyAnnotator(Boolean)`: Use `NER DL` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `NER DL` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -2188,6 +2210,7 @@ Neural Network architecture is Char CNNs - BiLSTM - CRF that achieves state-of-t
     - `getUseContrib()`: Getter for Whether to use contrib LSTM Cells.
     - `getValidationSplit()`: Getter to choose the proportion of training dataset to be validated against the model on each Epoch.
     - `getVerbose()`: Getter for Level of verbosity during training.
+    - `getLazyAnnotator()`: Whether `NER DL` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 > **Note:** Please check [here](graph.md) in case you get an **IllegalArgumentException** error with a description such as:
 
@@ -2249,12 +2272,13 @@ This NER converter can be used to the output of a NER model into the ner chunk f
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setWhiteList(Array(String))`: If defined, list of entities to process. The rest will be ignored. Do not include IOB prefix on labels.
     - `setPreservePosition(Boolean)`: Whether to preserve the original position of the tokens in the original document or use the modified tokens.
-    - `setLazyAnnotator(Boolean)`: Use `NER Converter` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `NER Converter` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `NER Converter` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -2307,7 +2331,7 @@ This annotator retrieves tokens and makes corrections automatically if not found
     - `setReductLimit(int)`: Word reduction limit. Defaults to **3**
     - `setIntersections(int)`: Hamming intersections to attempt. Defaults to **10**.
     - `setVowelSwapLimit(int)`: Vowel swap attempts. Defaults to **6**.
-    - `setLazyAnnotator(Boolean)`: Use `Norvig SpellChecker` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `Norvig SpellChecker` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -2322,6 +2346,7 @@ This annotator retrieves tokens and makes corrections automatically if not found
     - `getShortCircuit()`: Increase performance at cost of accuracy. Faster but less accurate mode 
     - `getVowelSwapLimit()`: Vowel swap attempts. Defaults to **6** 
     - `getWordSizeIgnore()`: Minimum size of word before ignoring. Defaults to **3**, Minimum size of word before moving on. Defaults to **3**. 
+    - `getLazyAnnotator()`: Whether `Norvig SpellChecker` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -2374,7 +2399,7 @@ This spell checker is inspired on Symmetric Delete algorithm. It retrieves token
     - `setMinFrequency(value: Long)`: minimum frequency of a word in the corpus 
     - `setDictionary(path, tokenPattern, readAs, options)`: Optional dictionary of properly written words. If provided, significantly boosts spell checking performance
     - `setMaxEditDistance(distance)`: Maximum edit distance to calculate possible derived words. Defaults to **3**.
-    - `setLazyAnnotator(Boolean)`: Use `Symmetric SpellChecker` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `Symmetric SpellChecker` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -2384,6 +2409,7 @@ This spell checker is inspired on Symmetric Delete algorithm. It retrieves token
     - `getDupsLimit()`: maximum duplicate of characters in a word to consider. Defaults to **2**
     - `getFrequencyThreshold()`: minimum frequency of words to be considered from training. Increase if training set is `LARGE`. Defaults to **0**. 
     - `getMaxEditDistance()`: max edit distance characters to derive strings from a word.
+    - `getLazyAnnotator()`: Whether `Symmetric SpellChecker` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -2439,7 +2465,7 @@ Implements Noisy Channel Model Spell Algorithm. Correction candidates are extrac
     - `setGamma(g:Float)`: Controls the influence of individual word frequency in the decision.
     - `updateVocabClass(label:String, vocab:Array(String), append:boolean)`: Update existing vocabulary classes so they can cover new words. If append set to `false` overwrite vocabulary class in the model by new words, if `true` extends existing vocabulary class. Defaults to `true`.  
     - `updateRegexClass(label:String, regex:String)`: Update existing regex rule for the class defined by regex.
-    - `setLazyAnnotator(Boolean)`: Use `Context SpellChecker` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `Context SpellChecker` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
     
 * Train:
 
@@ -2457,6 +2483,7 @@ Implements Noisy Channel Model Spell Algorithm. Correction candidates are extrac
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `Context SpellChecker` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -2512,7 +2539,7 @@ Unlabeled parser that finds a grammatical relation between two words in a senten
     - `setNumberOfIterations(int)`: Number of iterations in training, converges to better accuracy
     - `setDependencyTreeBank(String)`: Dependency treebank folder with files in [Penn Treebank format](http://www.nltk.org/nltk_data/)
     - `setConllU(String)`: Path to a file in [CoNLL-U format](https://universaldependencies.org/format.html)
-    - `setLazyAnnotator(Boolean)`: Use `Untyped Dependency Parser` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `Untyped Dependency Parser` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
@@ -2521,6 +2548,7 @@ Unlabeled parser that finds a grammatical relation between two words in a senten
     - `getNumberOfIterations()`: Number of iterations in training, converges to better accuracy 
     - `getFilesContentTreeBank()`: Gets a iterable TreeBank
     - `getTrainingSentences()`: Gets a list of ConnlU training sentences
+    - `getLazyAnnotator()`: Whether `Untyped Dependency Parser` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -2567,12 +2595,13 @@ Labeled parser that finds a grammatical relation between two words in a sentence
     - `setNumberOfIterations(int)`: Number of iterations in training, converges to better accuracy
     - `setConll2009(String)`: Path to a file in [CoNLL 2009 format](https://ufal.mff.cuni.cz/conll2009-st/trial-data.html)
     - `setConllU(String)`: Path to a file in [CoNLL-U format](https://universaldependencies.org/format.html)
-    - `setLazyAnnotator(Boolean)`: Use `Typed Dependency Parser` as a lazy annotator or not.
+    - `setLazyAnnotator(Boolean)`: Use `Typed Dependency Parser` as a lazy annotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `Typed Dependency Parser` used as LazyAnnotator or not. **LazyAnnotator** is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
