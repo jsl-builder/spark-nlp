@@ -33,6 +33,14 @@ This annotator classifies each clinically relevant named entity into its asserti
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setLazyAnnotator(Boolean)`: Use `AssertionLogReg` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `setLabelCol()`:
+    - `setMaxIter()`:
+    - `setReg()`:
+    - `setEnet()`:
+    - `setBefore()`:
+    - `setAfter()`:
+    - `setStartCol()`:
+    - `setEndCol()`:
 
 * ***Parameter Getters***
 
@@ -202,6 +210,20 @@ Assigns a standard code (ICD10 CM, PCS, ICDO; CPT) to chunk tokens identified fr
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setLazyAnnotator(Boolean)`: Use `ChunkEntityResolver` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `setLabelCol()`: 
+    - `setNormalizedCol()`:
+    - `setAlternatives()`:
+    - `setThreshold()`:
+    - `setExtramassPenalty()`:
+    - `setEnableWmd()`:
+    - `setEnableTfidf()`:
+    - `setEnableJaccard()`:
+    - `setEnableSorensenDice()`:
+    - `setEnableJaroWinkler()`:
+    - `setEnableLevenshtein()`:
+    - `setDistanceWeights()`:
+    - `setPoolingStrategy()`:
+    - `setMissAsEmpty)()`:
 
 * ***Parameter Getters***
 
@@ -278,7 +300,7 @@ This annotator is particularly handy when workING with BertSentenceEmbeddings fr
     - `setLazyAnnotator(Boolean)`: Use `SentenceEntityResolver` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
     - `setLabelCol()`:
     - `setNormalizedCol()`:
-    - `setDistanceFunction()`: Setter for what distance function to use for KNN: `EUCLIDEAN` or `COSINE`
+    - `setDistanceFunction(String)`: Setter for what distance function to use for KNN: `EUCLIDEAN` or `COSINE`
     - `setNeighbours()`: Setter for number of neighbours to consider in the KNN query to calculate WMD
     - `setThreshold()`: Setter for threshold value for the aggregated distance
     - `setMissAsEmpty(Boolean)`: Setter for whether or not to return an empty annotation on unmatched chunks
@@ -342,10 +364,10 @@ A convenient TFIDF-LogReg classifier that accepts "token" input type and outputs
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setLazyAnnotator(Boolean)`: Use `DocumentLogRegClassifier` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
-    - `setLabelCol()`:
-    - `setMaxIter()`:
-    - `setTol()`:
-    - `setFitIntercept()`:
+    - `setLabelCol(String)`:
+    - `setMaxIter(int)`:
+    - `setTol(Double)`:
+    - `setFitIntercept(Boolean)`:
 
 * ***Parameter Getters***
 
@@ -402,32 +424,32 @@ Identifies potential pieces of content with personal information about patients 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setLazyAnnotator(Boolean)`: Use `DeIdentificator` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
-    - `setRegexPatternsDictionary(path: ExternalResource)`: 
-    - `setMode(m: String)`:
-    - `setDateTag(s: String)`:
-    - `setObfuscateDate(s: Boolean)`:
-    - `setDays(k: Int)`:
-    - `setDateToYear(s: Boolean)`:
-    - `setMinYear(s: Int)`:
-    - `setDateFormats(s: Array[String])`:
-    - `setConsistentObfuscation(s: Boolean)`:
-    - `setSameEntityThreshold(s: Double)`:
+    - `setRegexPatternsDictionary(path: ExternalResource)`: Setter for dictionary with regular expression patterns that match some protected entity
+    - `setMode(m: String)`: Setter for Mode for Anonymizer: `mask` or `obfuscate`
+    - `setDateTag(s: String)`: Setter for Tag representing dates in the obfuscate reference file (default: `DATE`)
+    - `setObfuscateDate(s: Boolean)`: Setter for When `mode=="obfuscate"` whether to obfuscate dates or not.
+    - `setDays(k: Int)`: Setter for Number of days to obfuscate the dates by displacement.
+    - `setDateToYear(s: Boolean)`: `true` if dates must be converted to years, `false` otherwise
+    - `setMinYear(s: Int)`: Setter for Minimum year to use when converting date to year
+    - `setDateFormats(s: Array[String])`: Format of dates to displace
+    - `setConsistentObfuscation(s: Boolean)`: Whether to replace very similar entities in a document with the same randomized term (default: `true`)
+    - `setSameEntityThreshold(s: Double)`: Similarity threshold [0.0-1.0] to consider two appearances of an entity as the same (default: **0.9**)
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getLazyAnnotator()`:  Whether `DeIdentificator` used as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
-    - `getRegexPatternsDictionary()`:
-    - `getMode()`:
-    - `getDateTag()`:
-    - `getObfuscateDate()`:
-    - `getDays()`:
-    - `getDateToYear()`:
-    - `getMinYear()`:
-    - `getDateFormats()`:
-    - `getConsistentObfuscation()`:
-    - `getSameEntityThreshold()`:
+    - `getRegexPatternsDictionary()`: Getter for dictionary with regular expression patterns that match some protected entity
+    - `getMode()`: Getter for Mode for Anonymizer: `mask` or `obfuscate`
+    - `getDateTag()`: Getter for Tag representing dates in the obfuscate reference file (default: `DATE`)
+    - `getObfuscateDate()`: Getter for When `mode=="obfuscate"` whether to obfuscate dates or not.
+    - `getDays()`: Getter for Number of days to obfuscate the dates by displacement.
+    - `getDateToYear()`: `true` if dates must be converted to years, `false` otherwise
+    - `getMinYear()`: Getter for Minimum year to use when converting date to year
+    - `getDateFormats()`: Format of dates to displace
+    - `getConsistentObfuscation()`: Whether to replace very similar entities in a document with the same randomized term (default: `true`)
+    - `getSameEntityThreshold()`: Similarity threshold [0.0-1.0] to consider two appearances of an entity as the same (default: **0.9**)
 
 **Example:**
 
@@ -625,7 +647,7 @@ Similar to what we used to do in `POSChunker` with `POS tags`, now we can also e
 
 **Output Type:** Chunk  
 
-**Input Types:** Document, Named_Entity  
+**Input Types:** Document, POS
 
 **Reference:** [NerChunker](https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.ner.NerChunker)  
 
@@ -789,4 +811,100 @@ assertion_filterer = AssertionFilterer()\
 
 </div></div><div class="h3-box" markdown="1">
 
-Refer to the AssertionFilterer Scala docs for more details on the API.
+## DrugNormalizer
+
+Standardize units of drugs and handle abbreviations in raw text or drug chunks identified by any NER model. This normalization significantly improves performance of entity resolvers.
+
+**Output Type:** Document  
+
+**Input Types:** Document
+
+**Reference:** [DrugNormalizer](https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.DrugNormalizer)
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setPolicy(String)`: Setter for removalPolicy to remove patterns from text with a given policy
+    - `setLazyAnnotator(Boolean)`: Use `DrugNormalizer` as a lazy annotator or not.
+    - `setLowercase(Boolean)`: Lower case tokens, default `false` 
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `DrugNormalizer` used as a lazy annotator or not.
+    - `getPolicy()`: Getter for removalPolicy to remove patterns from text with a given policy
+    - `getLowercase()`: Lower case tokens, default `false` 
+
+**Example:**
+
+<div class="tabs-box" markdown="1">
+
+{% include programmingLanguageSelectScalaPython.html %}
+
+```python
+drug_normalizer = DrugNormalizer()\
+    .setInputCols("document")\
+    .setOutputCol("document_normalized")\
+    .setPolicy("all") #all/abbreviations/dosages
+```
+
+```scala
+drug_normalizer = DrugNormalizer()
+    .setInputCols("document")
+    .setOutputCol("document_normalized")
+    .setPolicy("all") // all/abbreviations/dosages
+```
+
+</div></div><div class="h3-box" markdown="1">
+
+##  ChunkMerge
+
+In order to use multiple NER models in the same pipeline, Spark NLP Healthcare has ChunkMerge Annotator that is used to return entities from each NER model by overlapping. Now it has a new parameter to avoid merging overlapping entities `setMergeOverlapping()` to return all the entities regardless of char indices. It will be quite useful to analyze what every NER module returns on the same text.
+
+**Output Type:** Chunk  
+
+**Input Types:** Chunk, Chunk
+
+**Reference:** [ChunkMergeApproach](https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.merge.ChunkMergeApproach) | [ChunkMergeModel](https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.merge.ChunkMergeModel)
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setMergeOverlapping(String)`: Setter for whether to merge overlapping matched chunks.
+    - `setLazyAnnotator(Boolean)`: Use `ChunkMerge` as a lazy annotator or not.
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getMergeOverlapping()`: Getter for whether to merge overlapping matched chunks.
+    - `getLazyAnnotator()`: Whether `ChunkMerge` used as a lazy annotator or not.
+
+**Example:**
+
+<div class="tabs-box" markdown="1">
+
+{% include programmingLanguageSelectScalaPython.html %}
+
+```python
+chunk_merger_NonOverlapped = ChunkMergeApproach()\
+  .setInputCols('clinical_bionlp_ner_chunk', "jsl_ner_chunk")\
+  .setOutputCol('nonOverlapped_ner_chunk')\
+  .setMergeOverlapping(False)
+```
+
+```scala
+chunk_merger_NonOverlapped = ChunkMergeApproach()
+  .setInputCols("clinical_bionlp_ner_chunk", "jsl_ner_chunk")
+  .setOutputCol("nonOverlapped_ner_chunk")
+  .setMergeOverlapping(False)
+```
+
+</div></div><div class="h3-box" markdown="1">
