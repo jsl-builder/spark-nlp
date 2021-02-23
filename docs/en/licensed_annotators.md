@@ -10,22 +10,35 @@ use_language_switcher: "Python-Scala"
 
 <div class="h3-box" markdown="1">
 
-A Spark NLP for Healthcare subscription includes access to several pretrained annotators. 
-Check out www.johnsnowlabs.com for more information.
+> A Spark NLP for Healthcare subscription includes access to several pretrained annotators. 
+Check out [www.johnsnowlabs.com](www.johnsnowlabs.com) for more information.
 
 </div><div class="h3-box" markdown="1">
 
-### AssertionLogReg 
-<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.assertion.logreg.AssertionLogRegApproach">Estimator scaladocs</a> | 
-<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.assertion.logreg.AssertionLogRegModel">Transformer scaladocs</a>
+## AssertionLogReg 
 
-This annotator classifies each clinically relevant named entity into its assertion:
+This annotator classifies each clinically relevant named entity into its assertion: `present`, `absent`, `hypothetical`, `conditional`, `associated_with_other_person`, etc.
 
-type: "present", "absent", "hypothetical", "conditional", "associated_with_other_person", etc.
+**Input types:** sentence, ner_chunk, embeddings
 
-**Input types:** `"sentence", "ner_chunk", "embeddings"`
+**Output type:** assertion
 
-**Output type:** `"assertion"`
+**Reference:** <a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.assertion.logreg.AssertionLogRegApproach">AssertionLogRegApproach</a> | 
+<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.assertion.logreg.AssertionLogRegModel">AssertionLogRegModel</a>
+
+**Functions**:
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setLazyAnnotator(Boolean)`: Use `AssertionLogReg` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`:  Whether `AssertionLogReg` used as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -63,15 +76,30 @@ val logRegAssert = new AssertionLogRegApproach()
 
 </div></div><div class="h3-box" markdown="1">
 
-### AssertionDL 
-<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.assertion.dl.AssertionDLApproach">Estimator scaladocs</a> | 
-<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.assertion.dl.AssertionDLModel">Transformer scaladocs</a>
+## AssertionDL 
 
-This annotator classifies each clinically relevant named entity into its assertion type: "present", "absent", "hypothetical", "conditional", "associated_with_other_person", etc.
+This annotator classifies each clinically relevant named entity into its assertion type: `present`, `absent`, `hypothetical`, `conditional`, `associated_with_other_person`, etc.
 
-**Input types:** "sentence", "ner_chunk", "embeddings"
+**Input types:** sentence, ner_chunk, embeddings
 
-**Output type:** "assertion"
+**Output type:** assertion
+
+**Reference:** <a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.assertion.dl.AssertionDLApproach">AssertionDLApproach</a> | 
+<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.assertion.dl.AssertionDLModel">AssertionDLModel</a>
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setLazyAnnotator(Boolean)`: Use `AssertionDL` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`:  Whether `AssertionDL` used as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -113,14 +141,29 @@ val dlAssert = new AssertionDLApproach()
 
 </div></div><div class="h3-box" markdown="1">
 
-### Chunk2Token
-<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.Chunk2Token">Transformer scaladocs</a>
+## Chunk2Token
 
 Transforms a complete chunk Annotation into a token Annotation without further tokenization, as opposed to ChunkTokenizer.
 
 **Input types:** "chunk",
 
 **Output type:** "token"
+
+**Reference:** <a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.Chunk2Token">Chunk2Token</a>
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setLazyAnnotator(Boolean)`: Use `Chunk2Token` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`:  Whether `Chunk2Token` used as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -141,15 +184,30 @@ val chunk2Token = new Chunk2Token()
 
 </div></div><div class="h3-box" markdown="1">
 
-### ChunkEntityResolver
-<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.resolution.ChunkEntityResolverApproach">Estimator scaladocs</a> | 
-<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.resolution.ChunkEntityResolverModel">Transformer scaladocs</a>
+## ChunkEntityResolver
 
 Assigns a standard code (ICD10 CM, PCS, ICDO; CPT) to chunk tokens identified from TextMatchers or the NER Models and embeddings pooled by ChunkEmbeddings
 
-**Input types:** "chunk_token", "embeddings"
+**Input types:** chunk_token, embeddings
 
-**Output type:** "resolution"
+**Output type:** resolution
+
+**Reference:** <a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.resolution.ChunkEntityResolverApproach">ChunkEntityResolverApproach</a> | 
+<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.resolution.ChunkEntityResolverModel">ChunkEntityResolverModel</a>
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setLazyAnnotator(Boolean)`: Use `ChunkEntityResolver` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`:  Whether `ChunkEntityResolver` used as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Example:**
 
@@ -199,16 +257,43 @@ val resolver = new ChunkEntityResolverApproach()
 ```
 </div></div><div class="h3-box" markdown="1">
 
-### SentenceEntityResolver
-<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.resolution.SentenceEntityResolverApproach">Estimator scaladocs</a> | 
-<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.resolution.SentenceEntityResolverModel">Transformer scaladocs</a>
+## SentenceEntityResolver
 
 Assigns a standard code (ICD10 CM, PCS, ICDO; CPT) to sentence embeddings pooled over chunks from TextMatchers or the NER Models.  
 This annotator is particularly handy when workING with BertSentenceEmbeddings from the upstream chunks.  
 
-**Input types:** "sentence_embeddings"
+**Input types:** sentence_embeddings
 
-**Output type:** "resolution"
+**Output type:** resolution
+
+**Reference:** <a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.resolution.SentenceEntityResolverApproach">SentenceEntityResolverApproach</a> | 
+<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.resolution.SentenceEntityResolverModel">SentenceEntityResolverModel</a>
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setLazyAnnotator(Boolean)`: Use `SentenceEntityResolver` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `setLabelCol()`:
+    - `setNormalizedCol()`:
+    - `setDistanceFunction()`: Setter for what distance function to use for KNN: `EUCLIDEAN` or `COSINE`
+    - `setNeighbours()`: Setter for number of neighbours to consider in the KNN query to calculate WMD
+    - `setThreshold()`: Setter for threshold value for the aggregated distance
+    - `setMissAsEmpty(Boolean)`: Setter for whether or not to return an empty annotation on unmatched chunks
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`:  Whether `SentenceEntityResolver` used as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
+    - `getLabelCol()`:
+    - `getNormalizedCol()`:
+    - `getDistanceFunction()`: Getter for what distance function to use for KNN: `EUCLIDEAN` or `COSINE`
+    - `getNeighbours()`: Getter for number of neighbours to consider in the KNN query to calculate WMD
+    - `getThreshold()`: Getter for threshold value for the aggregated distance
+    - `getMissAsEmpty()`: Getter for whether or not to return an empty annotation on unmatched chunks
 
 **Example:**
 
@@ -239,13 +324,38 @@ val resolver = new SentenceEntityResolverApproach()
 
 </div></div><div class="h3-box" markdown="1">
 
-### DocumentLogRegClassifier
+## DocumentLogRegClassifier
 
 A convenient TFIDF-LogReg classifier that accepts "token" input type and outputs "selector"; an input type mainly used in RecursivePipelineModels
 
-**Input types:** "token"
+**Input types:** token
 
-**Output type:** "category"
+**Output type:** category
+
+**Reference:** <a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.classification.DocumentLogRegClassifierApproach">DocumentLogRegClassifierApproach</a> | 
+<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.classification.DocumentLogRegClassifierModel">DocumentLogRegClassifierModel</a>
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setLazyAnnotator(Boolean)`: Use `DocumentLogRegClassifier` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `setLabelCol()`:
+    - `setMaxIter()`:
+    - `setTol()`:
+    - `setFitIntercept()`:
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`:  Whether `DocumentLogRegClassifier` used as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
+    - `getLabelCol()`:
+    - `getMaxIter()`:
+    - `getTol()`:
+    - `getFitIntercept()`:
 
 **Example:**
 
@@ -274,13 +384,50 @@ val logregClassifier = new DocumentLogRegClassifierApproach()
 
 </div></div><div class="h3-box" markdown="1">
 
-### DeIdentificator
+## DeIdentificator
 
 Identifies potential pieces of content with personal information about patients and remove them by replacing with semantic tags.
 
-**Input types:** "sentence", "token", "ner_chunk"
+**Input types:** sentence, token, ner_chunk
 
-**Output type:** "sentence"
+**Output type:** sentence
+
+**Reference:** <a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.deid.DeIdentification">DeIdentification</a> | 
+<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.deid.DeIdentificationModel">DeIdentificationModel</a>
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setLazyAnnotator(Boolean)`: Use `DeIdentificator` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `setRegexPatternsDictionary(path: ExternalResource)`: 
+    - `setMode(m: String)`:
+    - `setDateTag(s: String)`:
+    - `setObfuscateDate(s: Boolean)`:
+    - `setDays(k: Int)`:
+    - `setDateToYear(s: Boolean)`:
+    - `setMinYear(s: Int)`:
+    - `setDateFormats(s: Array[String])`:
+    - `setConsistentObfuscation(s: Boolean)`:
+    - `setSameEntityThreshold(s: Double)`:
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`:  Whether `DeIdentificator` used as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
+    - `getRegexPatternsDictionary()`:
+    - `getMode()`:
+    - `getDateTag()`:
+    - `getObfuscateDate()`:
+    - `getDays()`:
+    - `getDateToYear()`:
+    - `getMinYear()`:
+    - `getDateFormats()`:
+    - `getConsistentObfuscation()`:
+    - `getSameEntityThreshold()`:
 
 **Example:**
 
@@ -321,13 +468,42 @@ val deid = new DeIdentificationApproach()
 
 </div></div><div class="h3-box" markdown="1">
 
-### Contextual Parser
+## Contextual Parser
 
 This annotator provides Regex + Contextual Matching, based on a JSON file.
 
-**Output type:** "sentence", "token"  
+**Output type:** sentence, token
 
-**Input types:** "chunk"  
+**Input types:** chunk
+
+**Reference:** <a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.context.ContextualParserApproach">ContextualParserApproach</a> | 
+<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.context.ContextualParserModel">ContextualParserModel</a>
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setLazyAnnotator(Boolean)`: Use `Contextual Parser` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `setJsonPath(String)`: Path to json file with rules
+    - `setCaseSensitive(Boolean)`: optional: Whether to use case sensitive when matching values, default is false
+    - `setPrefixAndSuffixMatch(Boolean)`: optional: Whether to force both before AND after the regex match to annotate the hit
+    - `setContextMatch(Boolean)`: optional: Whether to include prior and next context to annotate the hit
+    - `setUpdateTokenizer(Boolean)`: optional: Whether to update tokenizer from pipeline when detecting multiple words on dictionary values
+    - `setDictionary(Array[Dictionary])`: optional: Path to dictionary file in tsv or csv format
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`:  Whether `Contextual Parser` used as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
+    - `getJsonPath()`: Getter for Path to json file with rules
+    - `getCaseSensitive()`: Getter for whether to use case sensitive when matching values, default is false
+    - `getPrefixAndSuffixMatch()`: Getter for whether to force both before AND after the regex match to annotate the hit
+    - `getContextMatch()`: Getter for whether to include prior and next context to annotate the hit
+    - `getUpdateTokenizer()`: Getter for whether to update tokenizer from pipeline when detecting multiple words on dictionary values
+    - `getDictionary()`: Getter for path to dictionary file in tsv or csv format
 
 **JSON format:**
 ```
@@ -338,13 +514,6 @@ This annotator provides Regex + Contextual Matching, based on a JSON file.
   "matchScope": "token"
 }
 ```
-
-- setJsonPath() -> Path to json file with rules
-- setCaseSensitive() -> optional: Whether to use case sensitive when matching values, default is false
-- setPrefixAndSuffixMatch() -> optional: Whether to force both before AND after the regex match to annotate the hit
-- setContextMatch() -> optional: Whether to include prior and next context to annotate the hit
-- setUpdateTokenizer() -> optional: Whether to update tokenizer from pipeline when detecting multiple words on dictionary values
-- setDictionary() -> optional: Path to dictionary file in tsv or csv format
 
 **Example:**
 
@@ -367,15 +536,50 @@ val contextualParser = new ContextualParserApproach()
 
 </div></div><div class="h3-box" markdown="1">
 
-### RelationExtraction 
-<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.re.RelationExtractionApproach">Estimator scaladocs</a> | 
-<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.re.RelationExtractionModel">Transformer scaladocs</a>
+## RelationExtraction 
 
 Extracts and classifier instances of relations between named entities.
 
-**Input types:** "pos", "ner_chunk", "embeddings", "dependency"
+**Input types:** pos, ner_chunk, embeddings, dependency
 
-**Output type:** "category"
+**Output type:** category
+
+**Reference:** <a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.re.RelationExtractionApproach">RelationExtractionApproach</a> | 
+<a href="https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.re.RelationExtractionModel">RelationExtractionModel</a>
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setLazyAnnotator(Boolean)`: Use `RelationExtraction` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `setLabelColumn(String)`: Column with label per each document
+    - `setEpochsNumber(int)`: Maximum number of epochs to train
+    - `setBatchSize(int)`: Setter for Batch Size
+    - `setDropout(dropout: Float)`: Dropout coefficient
+    - `setlearningRate(lr: Float)`: Learning Rate
+    - `setModelFile(modelFile: String)`: Set the model file name
+    - `setFixImbalance(fix: Boolean)`: Fix imbalance of training set
+    - `setValidationSplit(validationSplit: Float)`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
+    - `setFromEntity(beginCol: String, endCol: String, labelCol: String)`: Set from entity
+    - `setToEntity(beginCol: String, endCol: String, labelCol: String)`: Set to entity
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`:  Whether `RelationExtraction` used as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
+    - `getLabelColumn()`: Getter for Column with label per each document
+    - `getEpochsNumber()`: Getter for Maximum number of epochs to train
+    - `getBatchSize()`: Getter for Batch Size
+    - `getDropout()`: Getter for Dropout coefficient
+    - `getlearningRate()`: Getter for Learning Rate
+    - `getModelFile()`: Getter for the model file name
+    - `getFixImbalance()`: Getter for Fix imbalance of training set
+    - `getValidationSplit()`: Getter for proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
+    - `getFromEntity()`: Getter for from entity
+    - `getToEntity()`: Getter for to entity
 
 **Example:**
 
@@ -413,5 +617,176 @@ val reApproach = new RelationExtractionApproach()
   .setToEntity("to_begin", "to_end", "to_label")
 
 ```
-
 </div>
+
+## NerChunker
+
+Similar to what we used to do in `POSChunker` with `POS tags`, now we can also extract phrases that fits into a known pattern using the NER tags. `NerChunker` would be quite handy to extract entity groups with neighboring tokens when there is no pretrained NER model to address certain issues. Lets say we want to extract clinical findings and body parts together as a single chunk even if there are some unwanted tokens between.
+
+**Output Type:** Chunk  
+
+**Input Types:** Document, Named_Entity  
+
+**Reference:** [NerChunker](https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.ner.NerChunker)  
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setRegexParsers(Array[String])`: A list of regex patterns to match chunks
+    <!-- - `addRegexParser(String)`: adds a pattern to the current list of chunk patterns. -->
+    - `setLazyAnnotator(Boolean)`: Use `NerChunker` as a lazy annotator or not.
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getRegexParsers()`: A list of regex patterns to match chunks
+    - `getLazyAnnotator()`: Whether `NerChunker` as a lazy annotator or not.
+
+**Example:**
+
+<div class="tabs-box" markdown="1">
+
+{% include programmingLanguageSelectScalaPython.html %}
+
+```python
+ner_model = NerDLModel.pretrained("ner_radiology", "en", "clinical/models")\
+    .setInputCols("sentence","token","embeddings")\
+    .setOutputCol("ner")
+
+ner_chunker = NerChunker().\
+    .setInputCols(["sentence","ner"])\
+    .setOutputCol("ner_chunk")\
+    .setRegexParsers(["<IMAGINGFINDINGS>*<BODYPART>"])
+```
+
+```scala
+ner_model = NerDLModel.pretrained("ner_radiology", "en", "clinical/models")
+    .setInputCols("sentence","token","embeddings")
+    .setOutputCol("ner")
+
+ner_chunker = NerChunker().
+    .setInputCols(["sentence","ner"])
+    .setOutputCol("ner_chunk")
+    .setRegexParsers(["<IMAGINGFINDINGS>*<BODYPART>"])
+```
+
+</div></div><div class="h3-box" markdown="1">
+
+Refer to the NerChunker Scala docs for more details on the API.
+
+## ChunkFilterer
+
+ChunkFilterer will allow you to filter out named entities by some conditions or predefined look-up lists, so that you can feed these entities to other annotators like `Assertion Status` or `Entity Resolvers`. It can be used with two criteria: `isin` and `regex`.
+
+**Output Type:** Chunk  
+
+**Input Types:** Document, Chunk  
+
+**Reference:** [ChunkFilterer](https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.chunker.ChunkFilterer)
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setCriteria(String)`:
+    - `setWhiteList(Array[String])`: If defined, list of entities to process.
+    - `setLazyAnnotator(Boolean)`: Use `ChunkFilterer` as a lazy annotator or not.
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `ChunkFilterer` used as a lazy annotator or not.
+    - `getWhiteList()`: If defined, list of entities to process.
+
+**Example:**
+
+<div class="tabs-box" markdown="1">
+
+{% include programmingLanguageSelectScalaPython.html %}
+
+```python
+chunk_filterer = ChunkFilterer()\
+      .setInputCols("sentence","ner_chunk")\
+      .setOutputCol("chunk_filtered")\
+      .setCriteria("isin") \ 
+      .setWhiteList(['severe fever','sore throat'])
+```
+
+```scala
+chunk_filterer = ChunkFilterer()
+      .setInputCols("sentence","ner_chunk")
+      .setOutputCol("chunk_filtered")
+      .setCriteria("isin")
+      .setWhiteList(["severe fever","sore throat"])
+```
+
+</div></div><div class="h3-box" markdown="1">
+
+Refer to the ChunkFilterer Scala docs for more details on the API.
+
+## AssertionFilterer
+
+`AssertionFilterer` will allow you to filter out the named entities by the list of acceptable assertion statuses. This annotator would be quite handy if you want to set a white list for the acceptable assertion statuses like present or conditional; and do not want absent conditions get out of your pipeline.
+
+**Output Type:** Assertion  
+
+**Input Types:** Document, Chunk, Embeddings
+
+**Reference:** [AssertionFilterer](https://nlp.johnsnowlabs.com/licensed/api/index.html#com.johnsnowlabs.nlp.annotators.chunker.AssertionFilterer)
+
+**Functions:**
+
+* ***Parameter Setters***
+
+    - `setInputCol(String)`: Sets required input annotator types
+    - `setOutputCol(String)`: Sets expected output annotator types
+    - `setWhiteList(Array[String])`: If defined, list of entities to process.
+    - `setLazyAnnotator(Boolean)`: Use `AssertionFilterer` as a lazy annotator or not.
+    - `setRegex(Array[String])`: If defined, list of entities to process. The rest will be ignored.
+
+* ***Parameter Getters***
+
+    - `getInputCols()`: Input annotations columns currently used
+    - `getOutputCols()`: Gets annotation column name going to generate
+    - `getLazyAnnotator()`: Whether `AssertionFilterer` used as a lazy annotator or not.
+    - `getWhiteList()`: If defined, list of entities to process.
+    - `getRegex()`: If defined, list of entities to process. The rest will be ignored.
+
+**Example:**
+
+<div class="tabs-box" markdown="1">
+
+{% include programmingLanguageSelectScalaPython.html %}
+
+```python
+clinical_assertion = AssertionDLModel.pretrained("assertion_dl", "en", "clinical/models") \
+  .setInputCols(["sentence", "ner_chunk", "embeddings"]) \
+  .setOutputCol("assertion")
+
+assertion_filterer = AssertionFilterer()\
+  .setInputCols("sentence","ner_chunk","assertion")\
+  .setOutputCol("assertion_filtered")\
+  .setWhiteList(["present"])
+```
+
+```scala
+clinical_assertion = AssertionDLModel.pretrained("assertion_dl", "en", "clinical/models") \
+  .setInputCols(["sentence", "ner_chunk", "embeddings"]) \
+  .setOutputCol("assertion")
+
+assertion_filterer = AssertionFilterer()\
+  .setInputCols("sentence","ner_chunk","assertion")\
+  .setOutputCol("assertion_filtered")\
+  .setWhiteList(["present"])
+```
+
+</div></div><div class="h3-box" markdown="1">
+
+Refer to the AssertionFilterer Scala docs for more details on the API.
