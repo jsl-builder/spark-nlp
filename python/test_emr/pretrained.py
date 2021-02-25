@@ -9,7 +9,7 @@ class Pretrained(unittest.TestCase):
         pass
     def runTest(self):
         T5Transformer.pretrained()
-        ContextSpellCheckerModel.pretrained()
+        #ContextSpellCheckerModel.pretrained()
         WordEmbeddingsModel.pretrained()
         StopWordsCleaner.pretrained()
         PerceptronModel.pretrained()
