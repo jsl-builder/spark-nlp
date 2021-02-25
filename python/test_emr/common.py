@@ -11,4 +11,3 @@ def get_spark():
         .getOrCreate()
     return spark
 
-get_spark()

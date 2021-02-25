@@ -1,6 +1,4 @@
-from test.annotators import *
-from test.misc import *
-from test.base import *
+from test_emr.read_write_s3 import *
 
 # Read/Write S3.
 unittest.TextTestRunner().run(ReadWriteS3())
