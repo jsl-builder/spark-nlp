@@ -733,17 +733,19 @@ ngrams_cum = NGramGenerator() \
             .setInputCols(["token"]) \
             .setOutputCol("ngrams") \
             .setN(2) \
-            .setEnableCumulative(True)
+            .setEnableCumulative(True) \
+            .setLazyAnnotator(False)
             .setDelimiter("_") # Default is space
 ```
 
 ```scala
 val nGrams = new NGramGenerator()
-      .setInputCols("token")
-      .setOutputCol("ngrams")
-      .setN(2)
-      .setEnableCumulative(true)
-      .setDelimiter("_") // Default is space
+        .setInputCols("token")
+        .setOutputCol("ngrams")
+        .setN(2)
+        .setEnableCumulative(true)
+        .setLazyAnnotator(False)
+        .setDelimiter("_") // Default is space
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -933,13 +935,15 @@ Finds sentence bounds in raw text. Applies rules from Pragmatic Segmenter.
 ```python
 sentence_detector = SentenceDetector() \
     .setInputCols(["document"]) \
-    .setOutputCol("sentence")
+    .setOutputCol("sentence") \
+    .setLazyAnnotator(False)
 ```
 
 ```scala
 val sentenceDetector = new SentenceDetector()
     .setInputCols("document")
     .setOutputCol("sentence")
+    .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -984,7 +988,8 @@ pos_tagger = PerceptronApproach() \
     .setInputCols(["token", "sentence"]) \
     .setOutputCol("pos") \
     .setNIterations(2) \
-    .fit(train_pos)
+    .fit(train_pos) \
+    .setLazyAnnotator(False)
 ```
 
 ```scala
@@ -993,6 +998,7 @@ val posTagger = new PerceptronApproach()
     .setOutputCol("pos")
     .setNIterations(2)
     .fit(trainPOS)
+    .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -1046,15 +1052,17 @@ sentiment_detector = ViveknSentimentApproach() \
     .setInputCols(["sentence", "token"]) \
     .setOutputCol("sentiment") \
     .setSentimentCol("sentiment_label") \
-    .setCorpusPrune(0)
+    .setCorpusPrune(0) \
+    .setLazyAnnotator(False)
 ```
 
 ```scala
 val sentimentDetector = new ViveknSentimentApproach()
-      .setInputCols(Array("token", "sentence"))
-      .setOutputCol("vivekn")
-      .setSentimentCol("sentiment_label")
-      .setCorpusPrune(0)
+    .setInputCols(Array("token", "sentence"))
+    .setOutputCol("vivekn")
+    .setSentimentCol("sentiment_label")
+    .setCorpusPrune(0)
+    .setLazyAnnotator(False)
 ```
 
 </div>
@@ -1068,13 +1076,15 @@ val sentimentDetector = new ViveknSentimentApproach()
 ```python
 sentiment_detector = ViveknSentimentModel.pretrained() \
     .setInputCols(["sentence", "token"]) \
-    .setOutputCol("sentiment")
+    .setOutputCol("sentiment") \
+    .setLazyAnnotator(False)
 ```
 
 ```scala
 val sentimentDetector = new ViveknSentimentModel.pretrained
-      .setInputCols(Array("token", "sentence"))
-      .setOutputCol("vivekn")
+    .setInputCols(Array("token", "sentence"))
+    .setOutputCol("vivekn")
+    .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -1129,12 +1139,14 @@ Scores a sentence for a sentiment
 sentiment_detector = SentimentDetector() \
     .setInputCols(["token", "sentence"]) \
     .setOutputCol("sentiment")
+    .setLazyAnnotator(False)
 ```
 
 ```scala
 val sentimentDetector = new SentimentDetector
     .setInputCols(Array("token", "sentence"))
     .setOutputCol("sentiment")
+    .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -1179,20 +1191,22 @@ Word Embeddings lookup annotator that maps tokens to vectors
 
 ```python
 embeddings = WordEmbeddings()
-      .setStoragePath("/tmp/glove.6B.100d.txt", "TEXT")\
-      .setDimension(100)\
-      .setStorageRef("glove_100d") \
-      .setInputCols("document", "token") \
-      .setOutputCol("embeddings")
+    .setStoragePath("/tmp/glove.6B.100d.txt", "TEXT")\
+    .setDimension(100)\
+    .setStorageRef("glove_100d") \
+    .setInputCols("document", "token") \
+    .setOutputCol("embeddings") \
+    .setLazyAnnotator(False)
 ```
 
 ```scala
 val embeddings = new WordEmbeddings()
-      .setStoragePath("/tmp/glove.6B.100d.txt", "TEXT)
-      .setDimension(100)
-      .setStorageRef("glove_100d") // Use or save this WordEmbeddings with storageRef
-      .setInputCols("document", "token")
-      .setOutputCol("embeddings")
+    .setStoragePath("/tmp/glove.6B.100d.txt", "TEXT)
+    .setDimension(100)
+    .setStorageRef("glove_100d")  // Use or save this WordEmbeddings with storageRef
+    .setInputCols("document", "token")
+    .setOutputCol("embeddings")
+    .setLazyAnnotator(False)
 ```
 
 </div>
@@ -1250,14 +1264,16 @@ You can find the pre-trained models for `BertEmbeddings` in the [Spark NLP Model
 ```python
 
 bert = BertEmbeddings.pretrained() \
-      .setInputCols("sentence", "token") \
-      .setOutputCol("bert")
+    .setInputCols("sentence", "token") \
+    .setOutputCol("bert") \
+    .setLazyAnnotator(False)
 ```
 
 ```scala
 val bert = BertEmbeddings.pretrained()
-      .setInputCols("sentence", "token")
-      .setOutputCol("bert")
+    .setInputCols("sentence", "token")
+    .setOutputCol("bert")
+    .setLazyAnnotator(False)
 ```
 
 </div><div class="h3-box" markdown="1">
@@ -1310,14 +1326,16 @@ How to use pretrained BertEmbeddings:
 ```python
 
 bert = BertSentencembeddings.pretrained() \
-      .setInputCols("document") \
-      .setOutputCol("bert_sentence_embeddings")
+    .setInputCols("document") \
+    .setOutputCol("bert_sentence_embeddings") \
+    .setLazyAnnotator(False)
 ```
 
 ```scala
 val bert = BertEmbeddings.pretrained()
-      .setInputCols("document")
-      .setOutputCol("bert_sentence_embeddings")
+    .setInputCols("document")
+    .setOutputCol("bert_sentence_embeddings")
+    .setLazyAnnotator(False)                                                
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -1368,21 +1386,24 @@ You can find the pre-trained model for `ElmoEmbeddings` in the  [Spark NLP Model
 ```python
 # Online - Download the pretrained model
 elmo = ElmoEmbeddings.pretrained()
-      .setInputCols("sentence", "token") \
-      .setOutputCol("elmo")
+        .setInputCols("sentence", "token") \
+        .setOutputCol("elmo") \
+        .setLazyAnnotator(False)
 
 # Offline - Download the pretrained model manually and extract it
 elmo = ElmoEmbeddings.load("/elmo_en_2.4.0_2.4_1580488815299") \
         .setInputCols("sentence", "token") \
-        .setOutputCol("elmo")
+        .setOutputCol("elmo") \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 
 val elmo = ElmoEmbeddings.pretrained()
-      .setInputCols("sentence", "token")
-      .setOutputCol("elmo")
-      .setPoolingLayer("elmo") //  word_emb, lstm_outputs1, lstm_outputs2 or elmo
+        .setInputCols("sentence", "token")
+        .setOutputCol("elmo")
+        .setPoolingLayer("elmo") //  word_emb, lstm_outputs1, lstm_outputs2 or elmo
+        .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -1426,20 +1447,23 @@ You can find the pre-trained model for `AlbertEmbeddings` in the  [Spark NLP Mod
 ```python
 # Online - Download the pretrained model
 albert = AlbertEmbeddings.pretrained()
-      .setInputCols("sentence", "token") \
-      .setOutputCol("albert")
+        .setInputCols("sentence", "token") \
+        .setOutputCol("albert") \
+        .setLazyAnnotator(False)
 
 # Offline - Download the pretrained model manually and extract it
 albert = AlbertEmbeddings.load("/albert_base_uncased_en_2.5.0_2.4_1588073363475") \
         .setInputCols("sentence", "token") \
-        .setOutputCol("albert")
+        .setOutputCol("albert") \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 
 val albert = AlbertEmbeddings.pretrained()
-      .setInputCols("sentence", "token")
-      .setOutputCol("albert")
+        .setInputCols("sentence", "token")
+        .setOutputCol("albert")
+        .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -1489,20 +1513,23 @@ How to use pretrained XlnetEmbeddings:
 ```python
 # Online - Download the pretrained model
 xlnet = XlnetEmbeddings.pretrained()
-      .setInputCols("sentence", "token") \
-      .setOutputCol("xlnet")
+        .setInputCols("sentence", "token") \
+        .setOutputCol("xlnet") \
+        .setLazyAnnotator(False)
 
 # Offline - Download the pretrained model manually and extract it
 xlnet = XlnetEmbeddings.load("/xlnet_large_cased_en_2.5.0_2.4_1588074397954") \
         .setInputCols("sentence", "token") \
-        .setOutputCol("xlnet")
+        .setOutputCol("xlnet") \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 
 val xlnet = XlnetEmbeddings.pretrained()
-      .setInputCols("sentence", "token")
-      .setOutputCol("xlnet")
+        .setInputCols("sentence", "token")
+        .setOutputCol("xlnet")
+        .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -1545,14 +1572,16 @@ The Universal Sentence Encoder encodes text into high dimensional vectors that c
 
 ```python
 use = UniversalSentenceEncoder.pretrained() \
-            .setInputCols("sentence") \
-            .setOutputCol("use_embeddings")
+        .setInputCols("sentence") \
+        .setOutputCol("use_embeddings") \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 val use = new UniversalSentenceEncoder()
-      .setInputCols("document")
-      .setOutputCol("use_embeddings")
+        .setInputCols("document")
+        .setOutputCol("use_embeddings")
+        .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -1594,16 +1623,18 @@ This annotator converts the results from `WordEmbeddings`, `BertEmbeddings`, `El
 
 ```python
 sentence_embeddings = SentenceEmbeddings() \
-            .setInputCols(["document", "embeddings"]) \
-            .setOutputCol("sentence_embeddings") \
-            .setPoolingStrategy("AVERAGE")
+        .setInputCols(["document", "embeddings"]) \
+        .setOutputCol("sentence_embeddings") \
+        .setPoolingStrategy("AVERAGE") \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 val embeddingsSentence = new SentenceEmbeddings()
-      .setInputCols(Array("document", "embeddings"))
-      .setOutputCol("sentence_embeddings")
-      .setPoolingStrategy("AVERAGE")
+        .setInputCols(Array("document", "embeddings"))
+        .setOutputCol("sentence_embeddings")
+        .setPoolingStrategy("AVERAGE")
+        .setLazyAnnotator(False)
 ```
 
 > **NOTE:** If you choose `document` as your input for `Tokenizer`, `WordEmbeddings/BertEmbeddings`, and `SentenceEmbeddings` then it averages/sums all the embeddings into one array of embeddings. However, if you choose `sentence` as `inputCols` then for each sentence `SentenceEmbeddings` generates one array of embeddings.
@@ -1681,16 +1712,18 @@ This annotator utilizes `WordEmbeddings` or `BertEmbeddings` to generate chunk e
 
 ```python
 chunk_embeddings = ChunkEmbeddings() \
-            .setInputCols(["chunk", "embeddings"]) \
-            .setOutputCol("chunk_embeddings") \
-            .setPoolingStrategy("AVERAGE")
+        .setInputCols(["chunk", "embeddings"]) \
+        .setOutputCol("chunk_embeddings") \
+        .setPoolingStrategy("AVERAGE") \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 val chunkSentence = new ChunkEmbeddings()
-      .setInputCols(Array("chunk", "embeddings"))
-      .setOutputCol("chunk_embeddings")
-      .setPoolingStrategy("AVERAGE")
+        .setInputCols(Array("chunk", "embeddings"))
+        .setOutputCol("chunk_embeddings")
+        .setPoolingStrategy("AVERAGE")
+        .setLazyAnnotator(False)
 ```
 
 > **TIP:** Here is how you can explode and convert these embeddings into `Vectors` or what's known as `Feature` column so it can be used in Spark ML regression or clustering functions
@@ -1774,24 +1807,26 @@ ClassifierDL is a generic Multi-class Text Classification. ClassifierDL uses the
 
 ```python
 docClassifier = ClassifierDLApproach()\
-      .setInputCols("sentence_embeddings")\
-      .setOutputCol("category")\
-      .setLabelColumn("label")\
-      .setBatchSize(64)\
-      .setMaxEpochs(20)\
-      .setLr(0.5)\
-      .setDropout(0.5)
+        .setInputCols("sentence_embeddings")\
+        .setOutputCol("category")\
+        .setLabelColumn("label")\
+        .setBatchSize(64)\
+        .setMaxEpochs(20)\
+        .setLr(0.5)\
+        .setDropout(0.5) \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 val docClassifier = new ClassifierDLApproach()
-      .setInputCols("sentence_embeddings")
-      .setOutputCol("category")
-      .setLabelColumn("label")
-      .setBatchSize(64)
-      .setMaxEpochs(20)
-      .setLr(5e-3f)
-      .setDropout(0.5f)
+        .setInputCols("sentence_embeddings")
+        .setOutputCol("category")
+        .setLabelColumn("label")
+        .setBatchSize(64)
+        .setMaxEpochs(20)
+        .setLr(5e-3f)
+        .setDropout(0.5f)
+        .setLazyAnnotator(False)
 ```
 
 </div>
@@ -1855,22 +1890,24 @@ Refer to the [ClassifierDLApproach](https://nlp.johnsnowlabs.com/api/index#com.j
 
 ```python
 docMultiClassifier = MultiClassifierDLApproach()\
-      .setInputCols("sentence_embeddings")\
-      .setOutputCol("category")\
-      .setLabelColumn("label")\
-      .setBatchSize(64)\
-      .setMaxEpochs(20)\
-      .setLr(0.5)
+        .setInputCols("sentence_embeddings")\
+        .setOutputCol("category")\
+        .setLabelColumn("label")\
+        .setBatchSize(64)\
+        .setMaxEpochs(20)\
+        .setLr(0.5) \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 val docMultiClassifier = new MultiClassifierDLApproach()
-      .setInputCols("sentence_embeddings")
-      .setOutputCol("category")
-      .setLabelColumn("label")
-      .setBatchSize(64)
-      .setMaxEpochs(20)
-      .setLr(5e-3f)
+        .setInputCols("sentence_embeddings")
+        .setOutputCol("category")
+        .setLabelColumn("label")
+        .setBatchSize(64)
+        .setMaxEpochs(20)
+        .setLr(5e-3f)
+        .setLazyAnnotator(False)
 ```
 
 Please refer to [existing notebooks](https://github.com/JohnSnowLabs/spark-nlp-workshop/tree/master/jupyter/training/english/classification) for more examples.
@@ -1926,24 +1963,26 @@ SentimentDL is an annotator for multi-class sentiment analysis. This annotator c
 
 ```python
 sentimentClassifier = SentimentDLApproach()\
-      .setInputCols("sentence_embeddings")\
-      .setOutputCol("category")\
-      .setLabelColumn("label")\
-      .setBatchSize(64)\
-      .setMaxEpochs(20)\
-      .setLr(0.5)\
-      .setDropout(0.5)
+        .setInputCols("sentence_embeddings")\
+        .setOutputCol("category")\
+        .setLabelColumn("label")\
+        .setBatchSize(64)\
+        .setMaxEpochs(20)\
+        .setLr(0.5)\
+        .setDropout(0.5) \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 val sentimentClassifier = new SentimentDLApproach()
-      .setInputCols("sentence_embeddings")
-      .setOutputCol("category")
-      .setLabelColumn("label")
-      .setBatchSize(64)
-      .setMaxEpochs(20)
-      .setLr(5e-3f)
-      .setDropout(0.5f)
+        .setInputCols("sentence_embeddings")
+        .setOutputCol("category")
+        .setLabelColumn("label")
+        .setBatchSize(64)
+        .setMaxEpochs(20)
+        .setLr(5e-3f)
+        .setDropout(0.5f)
+        .setLazyAnnotator(False)
 ```
 
 </div>
@@ -1992,18 +2031,20 @@ LanguageDetectorDL is a state-of-the-art language detection and identification a
 
 ```python
 languageDetector = LanguageDetectorDL.pretrained("ld_wiki_20")
-      .setInputCols("document")\
-      .setOutputCol("language")\
-      .setThreshold(0.3)\
-      .setCoalesceSentences(True)
+        .setInputCols("document")\
+        .setOutputCol("language")\
+        .setThreshold(0.3)\
+        .setCoalesceSentences(True) \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
  val languageDetector = LanguageDetectorDL.pretrained("ld_wiki_20")
-      .setInputCols("document")
-      .setOutputCol("language")
-      .setThreshold(0.3f)
-      .setCoalesceSentences(true)
+        .setInputCols("document")
+        .setOutputCol("language")
+        .setThreshold(0.3f)
+        .setCoalesceSentences(true)
+        .setLazyAnnotator(False)
 ```
 
 </div><div class="h3-box" markdown="1">
@@ -2058,22 +2099,24 @@ You can tweak the following parameters to get the best result from the annotator
 
 ```python
 keywords = YakeModel() \
-    .setInputCols("token") \
-    .setOutputCol("keywords") \
-    .setMinNGrams(1) \
-    .setMaxNGrams(3)\
-    .setNKeywords(20)\
-    .setStopWords(stopwords)
+        .setInputCols("token") \
+        .setOutputCol("keywords") \
+        .setMinNGrams(1) \
+        .setMaxNGrams(3)\
+        .setNKeywords(20)\
+        .setStopWords(stopwords) \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
  val keywords = new YakeModel()
-    .setInputCols("token")
-    .setOutputCol("keywords")
-    .setMinNGrams(1)
-    .setMaxNGrams(3)
-    .setNKeywords(20)
-    .setStopWords(stopwords)
+        .setInputCols("token")
+        .setOutputCol("keywords")
+        .setMinNGrams(1)
+        .setMaxNGrams(3)
+        .setNKeywords(20)
+        .setStopWords(stopwords)
+        .setLazyAnnotator(False)
 ```
 
 </div><div class="h3-box" markdown="1">
@@ -2133,30 +2176,32 @@ Optionally the user can provide an entity dictionary file for better accuracy
 
 ```python
 nerTagger = NerCrfApproach()\
-    .setInputCols(["sentence", "token", "pos", "embeddings"])\
-    .setLabelColumn("label")\
-    .setOutputCol("ner")\
-    .setMinEpochs(1)\
-    .setMaxEpochs(20)\
-    .setLossEps(1e-3)\
-    .setDicts(["ner-corpus/dict.txt"])\
-    .setL2(1)\
-    .setC0(1250000)\
-    .setRandomSeed(0)\
-    .setVerbose(2)
-    .fit(train_ner)
+        .setInputCols(["sentence", "token", "pos", "embeddings"])\
+        .setLabelColumn("label")\
+        .setOutputCol("ner")\
+        .setMinEpochs(1)\
+        .setMaxEpochs(20)\
+        .setLossEps(1e-3)\
+        .setDicts(["ner-corpus/dict.txt"])\
+        .setL2(1)\
+        .setC0(1250000)\
+        .setRandomSeed(0)\
+        .setVerbose(2) \
+        .fit(train_ner) \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 val nerTagger = new NerCrfApproach()
-    .setInputCols("sentence", "token", "pos", "embeddings")
-    .setLabelColumn("label")
-    .setMinEpochs(1)
-    .setMaxEpochs(3)
-    .setC0(34)
-    .setL2(3.0)
-    .setOutputCol("ner")
-    .fit(trainNer)
+        .setInputCols("sentence", "token", "pos", "embeddings")
+        .setLabelColumn("label")
+        .setMinEpochs(1)
+        .setMaxEpochs(3)
+        .setC0(34)
+        .setL2(3.0)
+        .setOutputCol("ner")
+        .fit(trainNer)
+        .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -2224,13 +2269,14 @@ Neural Network architecture is Char CNNs - BiLSTM - CRF that achieves state-of-t
 
 ```python
 nerTagger = NerDLApproach()\
-    .setInputCols(["sentence", "token", "embeddings"])\
-    .setLabelColumn("label")\
-    .setOutputCol("ner")\
-    .setMaxEpochs(10)\
-    .setRandomSeed(0)\
-    .setVerbose(2)
-    .fit(train_ner)
+        .setInputCols(["sentence", "token", "embeddings"])\
+        .setLabelColumn("label")\
+        .setOutputCol("ner")\
+        .setMaxEpochs(10)\
+        .setRandomSeed(0)\
+        .setVerbose(2) \
+        .fit(train_ner) \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
@@ -2246,6 +2292,7 @@ val nerTagger = new NerDLApproach()
         .setBatchSize(9)
         .setVerbose(Verbose.Epochs)
         .fit(trainNer)
+        .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -2288,14 +2335,16 @@ This NER converter can be used to the output of a NER model into the ner chunk f
 
 ```python
 nerConverter = NerConverter()\
-    .setInputCols(["sentence", "token", "ner_src"])\
-    .setOutputCol("ner_chunk")
+        .setInputCols(["sentence", "token", "ner_src"])\
+        .setOutputCol("ner_chunk")
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 val nerConverter = new NerConverter()
         .setInputCols("sentence", "token", "ner_src")
         .setOutputCol("ner_chunk")
+        .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -2356,16 +2405,18 @@ This annotator retrieves tokens and makes corrections automatically if not found
 
 ```python
 spell_checker = NorvigSweetingApproach() \
-    .setInputCols(["token"]) \
-    .setOutputCol("checked") \
-    .setDictionary("coca2017.txt", "[a-zA-Z]+")
+        .setInputCols(["token"]) \
+        .setOutputCol("checked") \
+        .setDictionary("coca2017.txt", "[a-zA-Z]+") \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 val symSpellChecker = new NorvigSweetingApproach()
-      .setInputCols("token")
-      .setOutputCol("checked")
-      .setDictionary("coca2017.txt", "[a-zA-Z]+")
+        .setInputCols("token")
+        .setOutputCol("checked")
+        .setDictionary("coca2017.txt", "[a-zA-Z]+")
+        .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -2421,7 +2472,8 @@ This spell checker is inspired on Symmetric Delete algorithm. It retrieves token
 spell_checker = SymmetricDeleteApproach() \
     .setInputCols(["token"]) \
     .setOutputCol("spell") \
-    .fit(train_corpus)
+    .fit(train_corpus) \
+    .setLazyAnnotator(False)
 ```
 
 ```scala
@@ -2429,6 +2481,7 @@ val spellChecker = new SymmetricDeleteApproach()
     .setInputCols(Array("normalized"))
     .setOutputCol("spell")
     .fit(trainCorpus)
+    .setLazyAnnotator(False)
 ```  
 
 </div></div><div class="h3-box" markdown="1">
@@ -2495,7 +2548,8 @@ Implements Noisy Channel Model Spell Algorithm. Correction candidates are extrac
 spell_checker = ContextSpellCheckerApproach() \
     .setInputCols(["token"]) \
     .setOutputCol("spell") \
-    .fit(train_corpus)
+    .fit(train_corpus) \
+    .setLazyAnnotator(False)
 ```
 
 ```scala
@@ -2503,6 +2557,7 @@ val spellChecker = new ContextSpellCheckerApproach()
     .setInputCols(Array("token"))
     .setOutputCol("spell")
     .fit(trainCorpus)
+    .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -2558,18 +2613,20 @@ Unlabeled parser that finds a grammatical relation between two words in a senten
 
 ```python
 dependency_parser = DependencyParserApproach() \
-            .setInputCols(["sentence", "pos", "token"]) \
-            .setOutputCol("dependency") \
-            .setDependencyTreeBank("file://parser/dependency_treebank") \
-            .setNumberOfIterations(10)
+        .setInputCols(["sentence", "pos", "token"]) \
+        .setOutputCol("dependency") \
+        .setDependencyTreeBank("file://parser/dependency_treebank") \
+        .setNumberOfIterations(10) \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 val dependencyParser = new DependencyParserApproach()
-    .setInputCols(Array("sentence", "pos", "token"))
-    .setOutputCol("dependency")
-    .setDependencyTreeBank("parser/dependency_treebank")
-    .setNumberOfIterations(10)
+        .setInputCols(Array("sentence", "pos", "token"))
+        .setOutputCol("dependency")
+        .setDependencyTreeBank("parser/dependency_treebank")
+        .setNumberOfIterations(10)
+        .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -2611,17 +2668,19 @@ Labeled parser that finds a grammatical relation between two words in a sentence
 
 ```python
 typed_dependency_parser = TypedDependencyParserApproach() \
-            .setInputCols(["token", "pos", "dependency"]) \
-            .setOutputCol("labdep") \
-            .setConll2009("file://conll2009/eng.train") \
-            .setNumberOfIterations(10)
+        .setInputCols(["token", "pos", "dependency"]) \
+        .setOutputCol("labdep") \
+        .setConll2009("file://conll2009/eng.train") \
+        .setNumberOfIterations(10) \
+        .setLazyAnnotator(False)
 ```
 
 ```scala
 val typedDependencyParser = new TypedDependencyParserApproach()
-    .setInputCols(Array("token", "pos", "dependency"))
-    .setOutputCol("labdep")
-    .setConll2009("conll2009/eng.train"))
+        .setInputCols(Array("token", "pos", "dependency"))
+        .setOutputCol("labdep")
+        .setConll2009("conll2009/eng.train"))
+        .setLazyAnnotator(False)
 ```
 
 </div></div><div class="h3-box" markdown="1">
