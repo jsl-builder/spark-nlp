@@ -4,7 +4,7 @@ from test_emr.common import get_spark
 import os
 import unittest
 
-class ReadWriteS3(unittest.TestCase):
+class ReadWriteS3TestSpec(unittest.TestCase):
     def setUp(self):
         self.target_file = "s3://auxdata.johnsnowlabs.com/public/test/sentences.parquet"
         os.system("aws s3 rm " + self.target_file + " --recursive")
