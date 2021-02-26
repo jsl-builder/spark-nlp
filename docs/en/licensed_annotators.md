@@ -33,14 +33,14 @@ This annotator classifies each clinically relevant named entity into its asserti
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setLazyAnnotator(Boolean)`: Use `AssertionLogReg` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
-    - `setLabelCol()`:
+    <!-- - `setLabelCol()`:
     - `setMaxIter()`:
     - `setReg()`:
     - `setEnet()`:
     - `setBefore()`:
     - `setAfter()`:
     - `setStartCol()`:
-    - `setEndCol()`:
+    - `setEndCol()`: -->
 
 * ***Parameter Getters***
 
@@ -210,7 +210,7 @@ Assigns a standard code (ICD10 CM, PCS, ICDO; CPT) to chunk tokens identified fr
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setLazyAnnotator(Boolean)`: Use `ChunkEntityResolver` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
-    - `setLabelCol()`: 
+    <!-- - `setLabelCol()`: 
     - `setNormalizedCol()`:
     - `setAlternatives()`:
     - `setThreshold()`:
@@ -223,7 +223,7 @@ Assigns a standard code (ICD10 CM, PCS, ICDO; CPT) to chunk tokens identified fr
     - `setEnableLevenshtein()`:
     - `setDistanceWeights()`:
     - `setPoolingStrategy()`:
-    - `setMissAsEmpty)()`:
+    - `setMissAsEmpty)()`: -->
 
 * ***Parameter Getters***
 
@@ -364,20 +364,20 @@ A convenient TFIDF-LogReg classifier that accepts "token" input type and outputs
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setLazyAnnotator(Boolean)`: Use `DocumentLogRegClassifier` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
-    - `setLabelCol(String)`:
+    <!-- - `setLabelCol(String)`:
     - `setMaxIter(int)`:
     - `setTol(Double)`:
-    - `setFitIntercept(Boolean)`:
+    - `setFitIntercept(Boolean)`: -->
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
     - `getLazyAnnotator()`:  Whether `DocumentLogRegClassifier` used as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
-    - `getLabelCol()`:
+    <!-- - `getLabelCol()`:
     - `getMaxIter()`:
     - `getTol()`:
-    - `getFitIntercept()`:
+    - `getFitIntercept()`: -->
 
 **Example:**
 
@@ -716,7 +716,7 @@ ChunkFilterer will allow you to filter out named entities by some conditions or 
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setCriteria(String)`:
+    <!-- - `setCriteria(String)`: -->
     - `setWhiteList(Array[String])`: If defined, list of entities to process.
     - `setLazyAnnotator(Boolean)`: Use `ChunkFilterer` as a lazy annotator or not.
 
