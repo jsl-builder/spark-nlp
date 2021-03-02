@@ -104,13 +104,27 @@ The types are:
 
 Identifies tokens with tokenization open standards. A few rules will help customizing it if defaults do not fit user needs.  
 
-**Output Type:** Token  
+**Output Annotator Type:** Token  
 
-**Input Types:** Document  
+**Input Annotator Types:** Document  
 
 **Reference:** [Tokenizer](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/Tokenizer.scala) | [TokenizerModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/TokenizerModel.scala)  
 
 **Functions:**
+
+* ***Parameters***
+    - `caseSensitiveExceptions: BooleanParam`: Whether to care for case sensitiveness in exceptions
+    - ` contextChars: StringArrayParam`: Character list used to separate from token boundaries 
+    - ` exceptions: StringArrayParam`: Words that won't be affected by tokenization rules 
+    - ` exceptionsPath: ExternalResourceParam`: Path to file containing list of exceptions
+    - ` infixPatterns: StringArrayParam`: Regex patterns that match tokens within a single target. groups identify different sub-tokens. multiple defaults
+    - ` maxLength: IntParam`: Set the maximum allowed length for each token 
+    - ` minLength: IntParam`: Set the minimum allowed length for each token 
+    - ` prefixPattern: Param[String]`: Regex with groups and begins with `\\A` to match target prefix. Overrides contextCharacters Param
+    - ` splitChars: StringArrayParam`: Character list used to separate from the inside of tokens 
+    - ` splitPattern: Param[String]`: Pattern to separate from the inside of tokens. takes priority over splitChars. 
+    - ` suffixPattern: Param[String]`: Regex with groups and ends with `\\z` to match target suffix. Overrides contextCharacters Param 
+    - ` targetPattern: Param[String]`:     Pattern to grab from text as token candidates. Defaults `\\S+`
 
 * ***Parameter Setters***
     - `setInputCol(String)`: Sets required input annotator types
@@ -186,16 +200,23 @@ Refer to the [Tokenizer](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlabs
 
 Annotator which normalizes raw text from tagged text, e.g. scraped web pages or xml documents, from document type columns into Sentence.  
 
-**Output Type:** Document  
+**Output Annotator Type:** Document  
 
-**Input Types:** Document  
+**Input Annotator Types:** Document  
 
 **Reference:** [DocumentNormalizer](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/DocumentNormalizer.scala)  
 
 **Functions:**
 
-* ***Parameter Setters***
+* ***Parameters***
+    - `patterns: StringArrayParam`: normalization regex patterns which match will be removed from document 
+    - ` action: Param[String]`: action to perform applying regex patterns on text 
+    - ` encoding: Param[String]`: file encoding to apply on normalized documents 
+    - ` lowercase: BooleanParam `: whether to convert strings to lowercase 
+    - ` policy: Param[String] `: removalPolicy to remove patterns from text with a given policy 
+    - ` replacement: Param[String] `: replacement string to apply when regexes match 
 
+* ***Parameter Setters***
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setPatterns(Array[String])`: normalization regex patterns which match will be removed from document. Defaults is `<[^>]*>`.
@@ -245,13 +266,19 @@ Refer to the [DocumentNormalizer](https://nlp.johnsnowlabs.com/api/index#com.joh
 
 Removes all dirty characters from text following a regex pattern and transforms words based on a provided dictionary  
 
-**Output Type:** Token  
+**Output Annotator Type:** Token  
 
-**Input Types:** Token  
+**Input Annotator Types:** Token  
 
 **Reference:** [Normalizer](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/Normalizer.scala) | [NormalizerModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/NormalizerModel.scala) 
  
 **Functions:**
+
+* ***Parameters***
+    - ` cleanupPatterns: StringArrayParam `: normalization regex patterns which match will be removed from token 
+    - `  lowercase: BooleanParam `: whether to convert strings to lowercase 
+    - `  slangDictionary: ExternalResourceParam  `: delimited file with list of custom words to be manually corrected 
+    - `  slangMatchCase: BooleanParam `: whether or not to be case sensitive to match slangs. Defaults to false.
 
 * ***Parameter Setters***
 
@@ -302,13 +329,17 @@ Refer to the [Normalizer](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlab
 
 Returns hard-stems out of words with the objective of retrieving the meaningful part of the word 
  
-**Output Type:** Token  
+**Output Annotator Type:** Token  
 
-**Input Types:** Token  
+**Input Annotator Types:** Token  
 
 **Reference:** [Stemmer](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/Stemmer.scala)  
 
 **Functions:**
+
+* ***Parameters***
+    - ` language: Param[String] `: This is the language of the text. Default is `English` 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -354,15 +385,20 @@ Refer to the [Stemmer](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlabs.n
 
 Retrieves lemmas out of words with the objective of returning a base dictionary word  
 
-**Output Type:** Token  
+**Output Annotator Type:** Token  
 
-**Input Types:** Token
+**Input Annotator Types:** Token
 
 <!-- **Input**: abduct -> abducted abducting abduct abducts -->
 
 **Reference:** [Lemmatizer](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/Lemmatizer.scala) | [LemmatizerModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/LemmatizerModel.scala)  
 
 **Functions:** 
+
+
+* ***Parameters***
+    - `  dictionary: ExternalResourceParam `: lemmatizer external dictionary, needs '`keyDelimiter`' and '`valueDelimiter`' in options for parsing target text
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -414,13 +450,19 @@ Refer to the [Lemmatizer](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlab
 
 This annotator excludes from a sequence of strings (e.g. the output of a `Tokenizer()`, `Normalizer()`, `Lemmatizer()`, and `Stemmer()`) and drops all the stop words from the input sequences.
 
-**Output Type:** token
+**Output Annotator Type:** token
 
-**Input Type:** token
+**Input Annotator Types:** token
 
 **Reference:** [StopWordsCleaner](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/StopWordsCleaner.scala)
 
 **Functions:**
+
+* ***Parameters***
+    - `   caseSensitive: BooleanParam `: whether to do a case-sensitive comparison over the stop words 
+    - `   locale: Param[String] `: Locale of the input for case insensitive matching.
+    -  `stopWords: StringArrayParam` : the words to be filtered out. by default it's english stop words from Spark ML 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -503,9 +545,9 @@ val stopWordsCleaner = new StopWordsCleaner()
 
 Uses a reference file to match a set of regular expressions and put them inside a provided key. File must be comma separated.  
 
-**Output Type:** Regex  
+**Output Annotator Type:** Regex  
 
-**Input Types:** Document  
+**Input Annotator Types:** Document  
 
 <!-- **Input:** `the\\s\\w+`, "followed by 'the'"   -->
 
@@ -513,11 +555,17 @@ Uses a reference file to match a set of regular expressions and put them inside 
 
 **Functions:**
 
+* ***Parameters***
+
+    -  `rules: ExternalResourceParam `: external resource to rules, needs 'delimiter' in options
+    - `Strategy(Param[String])`: Can be any of `MATCH_FIRST | MATCH_ALL | MATCH_COMPLETE`
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+
 * ***Parameter Setters***
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setStrategy(strategy)`: Can be any of `MATCH_FIRST | MATCH_ALL | MATCH_COMPLETE`
+    - `setStrategy(String)`: Can be any of `MATCH_FIRST | MATCH_ALL | MATCH_COMPLETE`
     - `setRules(path, delimiter, readAs, options)`: Path to file containing a set of regex, key pair. `readAs` can be LINE_BY_LINE or SPARK_DATASET. `options` contain option passed to spark reader if `readAs` is SPARK_DATASET.
     - `setExternalRules(path, delimiter)`: Path to file containing a set of regex, key pair.
     - `setLazyAnnotator(Boolean)`: Use `RegexMatcher` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
@@ -569,9 +617,9 @@ Refer to the [RegexMatcher](https://nlp.johnsnowlabs.com/api/index#com.johnsnowl
 
 Annotator to match entire phrases (by token) provided in a file against a Document  
 
-**Output Type:** Entity  
+**Output Annotator Type:** Entity  
 
-**Input Types:** Document, Token 
+**Input Annotator Types:** Document, Token 
 
 <!-- **Input**: hello world, I am looking for you -->
 
@@ -579,14 +627,26 @@ Annotator to match entire phrases (by token) provided in a file against a Docume
 
 **Functions:**
 
+* ***Parameters***
+
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    -  `buildFromTokens: BooleanParam `: Whether the TextMatcher should take the CHUNK from TOKEN or not 
+    - ` caseSensitive: BooleanParam `: whether to match regardless of case. 
+    - ` entities: ExternalResourceParam  `: entities external resource.
+    - ` entityValue: Param[String] `: Value for the entity metadata field 
+    - ` mergeOverlapping: BooleanParam  `: whether to merge overlapping matched chunks. Defaults false 
+    -  `tokenizer: StructFeature[TokenizerModel]`: Tokenizer 
+
 * ***Parameter Setters***
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
+    - `setBuildFromTokens(Boolean)`: Setter for buildFromTokens param 
     - `setEntities(path, readAs, options)`: Provides a file with phrases to match. `readAs` gives the format of the file, can be one of {ReadAs.LINE_BY_LINE, ReadAs.SPARK_DATASET}. Defaults to LINE_BY_LINE. `option` is a map of additional parameters. Defaults to {“format”: “text”}
     - `setEntityValue(String)`: Value for the entity metadata field to indicate which chunk comes from which `textMatcher` when there are multiple `textMatchers`.
     - `setMergeOverlapping(Boolean)`: Whether to merge overlapping matched chunks. Defaults to `False`
     - `setCaseSensitive(Boolean)`: Whether to match regardless of case. Defaults to `True`
+    - `setTokenizer(tokenizer)`: Tokenizer
     - `setLazyAnnotator(Boolean)`: Use `TextMatcher` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
@@ -643,13 +703,19 @@ Refer to the [TextMatcher](https://nlp.johnsnowlabs.com/api/index#com.johnsnowla
 
 This annotator matches a pattern of part-of-speech tags in order to return meaningful phrases from document
 
-**Output Type:** Chunk  
+**Output Annotator Type:** Chunk  
 
-**Input Types:** Document, POS  
+**Input Annotator Types:** Document, POS  
 
 **Reference:** [Chunker](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/Chunker.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `inputAnnotatorTypes: Array[AnnotatorType] `: Input annotator type : `DOCUMENT`, `POS`
+    -  `outputAnnotatorType: AnnotatorType `: Output annotator type : `CHUNK` 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -696,13 +762,20 @@ Refer to the [Chunker](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlabs.n
 
 `NGramGenerator` annotator takes as input a sequence of strings (e.g. the output of a `Tokenizer`, `Normalizer`, `Stemmer`, `Lemmatizer`, and `StopWordsCleaner`). The parameter `n` is used to determine the number of terms in each n-gram. The output will consist of a sequence of n-grams where each n-gram is represented by a space-delimited string of n consecutive words with annotatorType `CHUNK` same as the `Chunker` annotator.
 
-**Output Type:** CHUNK  
+**Output Annotator Type:** CHUNK  
 
-**Input Types:** TOKEN  
+**Input Annotator Types:** TOKEN  
 
 **Reference:** [NGramGenerator](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/NGramGenerator.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `delimiter: Param[String] `: Glue character used to join the tokens 
+    -  `enableCumulative: BooleanParam `: whether to calculate just the actual n-grams or all n-grams from 1 through n 
+    - `n: IntParam`: Minimum n-gram length, greater than or equal to 1.
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -756,9 +829,9 @@ Refer to the [NGramGenerator](https://nlp.johnsnowlabs.com/api/index#com.johnsno
 
 Reads from different forms of date and time expressions and converts them to a provided date format. Extracts only ONE date per sentence. Use with sentence detector for more matches. 
 
-**Output Type:** Date  
+**Output Annotator Type:** Date  
 
-**Input Types:** Document  
+**Input Annotator Types:** Document  
 
 **Reference:** [DateMatcher](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/DateMatcher.scala)  
 
@@ -779,6 +852,12 @@ Reads from different forms of date and time expressions and converts them to a p
 |next thursday|the day before||
   
 **Functions:**
+
+* ***Parameters***
+    -  `anchorDateDay: Param[Int] `: Add an anchor year for the relative dates such as a day after tomorrow. The first day of the month has value 1 Example: 11 By default it will use the current day Default: `-1`
+    -  `anchorDateMonth: Param[Int] `: Add an anchor month for the relative dates such as a day after tomorrow. Month value is 1-based. e.g., 1 for January. By default it will use the current month Default: `-1`
+    -  `anchorDateYear: Param[Int] `: Add an anchor year for the relative dates such as a day after tomorrow.
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -827,9 +906,9 @@ Refer to the [DateMatcher](https://nlp.johnsnowlabs.com/api/index#com.johnsnowla
 
 Reads from multiple different forms of date and time expressions and converts them to a provided date format. Extracts multiple dates per sentence.
 
-**Output Type:** Date  
+**Output Annotator Type:** Date  
 
-**Input Types:** Document  
+**Input Annotator Types:** Document  
 
 **Reference:** [MultiDateMatcher](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/MultiDateMatcher.scala)  
 
@@ -850,6 +929,13 @@ Reads from multiple different forms of date and time expressions and converts th
 |Sun, Nov 21|next year|5 am tomorrow|
   
 **Functions:**
+
+* ***Parameters***
+
+    -  `anchorDateDay: Param[Int] `: Add an anchor year for the relative dates such as a day after tomorrow. The first day of the month has value 1 Example: 11 By default it will use the current day Default: `-1`
+    -  `anchorDateMonth: Param[Int] `: Add an anchor month for the relative dates such as a day after tomorrow. Month value is 1-based. e.g., 1 for January. By default it will use the current month Default: `-1`
+    -  `anchorDateYear: Param[Int] `: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: 2021 By default it will use the current year Default: `-1`
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -898,13 +984,23 @@ Refer to the [MultiDateMatcher](https://nlp.johnsnowlabs.com/api/index#com.johns
 
 Finds sentence bounds in raw text. Applies rules from Pragmatic Segmenter.  
 
-**Output Type:** Sentence
+**Output Annotator Type:** Sentence
 
-**Input Types:** Document  
+**Input Annotator Types:** Document  
 
 **Reference:** [SentenceDetector](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/sbd/pragmatic/SentenceDetector.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `customBounds: StringArrayParam `: characters used to explicitly mark sentence bounds
+    -  `detectLists: BooleanParam `: whether take lists into consideration at sentence detection
+    -  `explodeSentences: BooleanParam `: whether to explode each sentence into a different row, for better parallelization. Defaults to `false`.
+    -  `splitLength: IntParam `: length at which sentences will be forcibly split.
+    -  `useAbbrevations: BooleanParam `: whether to apply abbreviations at sentence detection
+    -  `useCustomBoundsOnly: BooleanParam `: whether to only utilize custom bounds for sentence detection
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -954,18 +1050,28 @@ Refer to the [SentenceDetector](https://nlp.johnsnowlabs.com/api/index#com.johns
 
 Sets a POS tag to each word within a sentence. Its train data (train_pos) is a spark dataset of [POS format values](#TrainPOS) with Annotation columns.  
 
-**Output Type:** POS  
+**Output Annotator Type:** POS  
 
-**Input Types:** Document, Token  
+**Input Annotator Types:** Document, Token  
 
 **Reference:** [PerceptronApproach](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/pos/perceptron/PerceptronApproach.scala) | [PerceptronModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/pos/perceptron/PerceptronModel.scala)  
 
 **Functions:**
 
+* ***Parameters***
+
+    -  `ambiguityThreshold: DoubleParam `: How much percentage of total amount of words are covered to be marked as frequent 
+    -  `frequencyThreshold: IntParam `: How many times at least a tag on a word to be marked as frequent 
+    -  `nIterations: IntParam `: Number of iterations in training, converges to better accuracy
+    -  `posCol: Param[String] `: Column of Array of POS tags that match tokens
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+
 * ***Parameter Setters***
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
+    - `setAmbiguityThreshold(Double)`: Setter for how much percentage of total amount of words are covered to be marked as frequent 
+    - `setFrequencyThreshold(int)`: Setter for how many times at least a tag on a word to be marked as frequent 
     - `setNIterations(number)`: Number of iterations for training. May improve accuracy but takes longer. Default **5**
     - `setPosColumn(colname)`: Column containing an array of POS Tags matching every token on the line.
     - `setLazyAnnotator(Boolean)`: Use `POSTagger` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
@@ -988,6 +1094,8 @@ pos_tagger = PerceptronApproach() \
     .setInputCols(["token", "sentence"]) \
     .setOutputCol("pos") \
     .setNIterations(2) \
+    .setFrequencyThreshold(30)\
+    .setFrequencyThreshold(3)\
     .fit(train_pos) \
     .setLazyAnnotator(False)
 ```
@@ -997,6 +1105,8 @@ val posTagger = new PerceptronApproach()
     .setInputCols(Array("sentence", "token"))
     .setOutputCol("pos")
     .setNIterations(2)
+    .setFrequencyThreshold(30)
+    .setFrequencyThreshold(3)
     .fit(trainPOS)
     .setLazyAnnotator(False)
 ```
@@ -1009,15 +1119,23 @@ Refer to the [PerceptronApproach](https://nlp.johnsnowlabs.com/api/index#com.joh
 
 Scores a sentence for a sentiment
   
-**Output Type:** sentiment  
+**Output Annotator Type:** sentiment  
 
-**Input Types:** Document, Token  
+**Input Annotator Types:** Document, Token  
 
 <!-- **Input:** File or folder of text files of positive and negative data   -->
 
 **Reference:** [ViveknSentimentApproach](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/sda/vivekn/ViveknSentimentApproach.scala) | [ViveknSentimentModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/sda/vivekn/ViveknSentimentModel.scala)
   
 **Functions:**
+
+* ***Parameters***
+
+    -  `pruneCorpus: IntParam `: Removes unfrequent scenarios from scope. The higher the better performance. Defaults `1`
+    -  `sentimentCol: Param[String]`: column with the sentiment result of every row. Must be '`positive`' or '`negative`'
+    - `importantFeatureRatio(Double)`: Proportion to lookahead in unimportant features.
+    - `unimportantFeatureStep(Double)`: Proportion to lookahead in unimportant features.
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1053,6 +1171,7 @@ sentiment_detector = ViveknSentimentApproach() \
     .setOutputCol("sentiment") \
     .setSentimentCol("sentiment_label") \
     .setCorpusPrune(0) \
+    .setImportantFeatureRatio(16.66) \
     .setLazyAnnotator(False)
 ```
 
@@ -1062,6 +1181,7 @@ val sentimentDetector = new ViveknSentimentApproach()
     .setOutputCol("vivekn")
     .setSentimentCol("sentiment_label")
     .setCorpusPrune(0)
+    .setImportantFeatureRatio(16.66)
     .setLazyAnnotator(False)
 ```
 
@@ -1095,13 +1215,24 @@ Refer to the [ViveknSentimentApproach](https://nlp.johnsnowlabs.com/api/index#co
 
 Scores a sentence for a sentiment  
 
-**Output Type:** Sentiment  
+**Output Annotator Type:** Sentiment  
 
-**Input Types:** Document, Token  
+**Input Annotator Types:** Document, Token  
 
 **Reference:** [SentimentDetector](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/sda/pragmatic/SentimentDetector.scala) | [SentimentDetectorModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/sda/pragmatic/SentimentDetectorModel.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `decrementMultiplier: DoubleParam`: multiplier for decrement sentiments. Defaults **-2.0**
+    -  `dictionary: ExternalResourceParam`: delimited file with a list sentiment tags per word. Requires `delimiter` in options 
+    -  `enableScore: BooleanParam`: if true, score will show as the double value, else will output string `positive` or `negative`. Defaults `false` 
+    - ` incrementMultiplier: DoubleParam`: multiplier for increment sentiments.
+    -  `negativeMultiplier: DoubleParam `: "multiplier for negative sentiments. Defaults **-1.0** 
+    -  `positiveMultiplier: DoubleParam`: multiplier for positive sentiments. Defaults **1.0**
+    -  `reverseMultiplier: DoubleParam `: multiplier for revert sentiments. Defaults **-1.0** 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1122,7 +1253,6 @@ Scores a sentence for a sentiment
     - `getLazyAnnotator()`: Whether `SentimentDetector` used as LazyAnnotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 <!-- **Input:**
-
 - superb,positive
 - bad,negative
 - lack of,revert
@@ -1138,8 +1268,13 @@ Scores a sentence for a sentiment
 ```python
 sentiment_detector = SentimentDetector() \
     .setInputCols(["token", "sentence"]) \
-    .setOutputCol("sentiment")
-    .setLazyAnnotator(False)
+    .setOutputCol("sentiment") \
+    .setLazyAnnotator(False)\
+    .setPositiveMultiplier(1.0)\
+    .setNegativeMultiplier(-1.0)\
+    .setIncrementMultiplier(2.0)\
+    .setDecrementMultiplier(-2.0)\
+    .setReverseMultiplier(-1.0)\
 ```
 
 ```scala
@@ -1147,6 +1282,11 @@ val sentimentDetector = new SentimentDetector
     .setInputCols(Array("token", "sentence"))
     .setOutputCol("sentiment")
     .setLazyAnnotator(False)
+    .setPositiveMultiplier(1.0)
+    .setNegativeMultiplier(-1.0)
+    .setIncrementMultiplier(2.0)
+    .setDecrementMultiplier(-2.0)
+    .setReverseMultiplier(-1.0)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -1157,18 +1297,26 @@ Refer to the [SentimentDetector](https://nlp.johnsnowlabs.com/api/index#com.john
 
 Word Embeddings lookup annotator that maps tokens to vectors  
 
-**Output Type:** Word_Embeddings  
+**Output Annotator Type:** Word_Embeddings  
 
-**Input Types:** Document, Token  
+**Input Annotator Types:** Document, Token  
 
 **Reference:**  [WordEmbeddings](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/WordEmbeddings.scala) | [WordEmbeddingsModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/WordEmbeddingsModel.scala)  
 
 **Functions:**
 
+* ***Parameters***
+
+    -  `readCacheSize: IntParam `: cache size for items retrieved from storage. Increase for performance but higher memory consumption 
+    - ` writeBufferSize: IntParam`: buffer size limit before dumping to disk storage while writing 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+
 * ***Parameter Setters***
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
+    - `setReadCacheSize(int)`: Cache size for items retrieved from storage. Increase for performance but higher memory consumption. 
+    - `setWriteBufferSize(int)`: Buffer size limit before dumping to disk storage while writing.
     - `setStoragePath(path, format)`: sets [word embeddings](https://en.wikipedia.org/wiki/Word_embedding) options. 
       - *path*: word embeddings file  
       - *format*: format of word embeddings files:
@@ -1226,13 +1374,21 @@ BERT (Bidirectional Encoder Representations from Transformers) provides dense ve
 
 You can find the pre-trained models for `BertEmbeddings` in the [Spark NLP Models](https://github.com/JohnSnowLabs/spark-nlp-models) repository
 
-**Output Type:** Word_Embeddings  
+**Output Annotator Type:** Word_Embeddings  
 
-**Input Types:** Document, Token
+**Input Annotator Types:** Document, Token
 
 **Reference:** [BertEmbeddings](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/BertEmbeddings.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `batchSize: IntParam `: Batch size. Large values allows faster processing but requires more memory. 
+    -  `configProtoBytes: IntArrayParam `: ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString()` 
+    -  `maxSentenceLength: IntParam `: Max sentence length to process 
+    -  `vocabulary: MapFeature[String, Int] `: vocabulary 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1286,13 +1442,22 @@ BERT (Bidirectional Encoder Representations from Transformers) provides dense ve
 
 You can find the pre-trained models for `BertEmbeddings` in the [Spark NLP Models](https://github.com/JohnSnowLabs/spark-nlp-models) repository
 
-**Output Type:** Sentence_Embeddings  
+**Output Annotator Type:** Sentence_Embeddings  
 
-**Input Types:** Document
+**Input Annotator Types:** Document
 
 **Reference:** [BertSentenceEmbeddings](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/BertSentenceEmbeddings.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `batchSize: IntParam `: Batch size. Large values allows faster processing but requires more memory. 
+    -  `configProtoBytes: IntArrayParam `: ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString() `
+    -  `isLong: BooleanParam `: Use Long type instead of Int type for inputs 
+    - ` maxSentenceLength: IntParam` : Max sentence length to process 
+    -  `vocabulary: MapFeature[String, Int]`: vocabulary 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1348,13 +1513,20 @@ Computes contextualized word representations using character-based word represen
 
 You can find the pre-trained model for `ElmoEmbeddings` in the  [Spark NLP Models](https://github.com/JohnSnowLabs/spark-nlp-models#english---models) repository
 
-**Output Type:** Word_Embeddings
+**Output Annotator Type:** Word_Embeddings
 
-**Input Types:** Document, Token
+**Input Annotator Types:** Document, Token
 
 **Reference:** [ElmoEmbeddings](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/ElmoEmbeddings.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `batchSize: IntParam`: Batch size. Large values allows faster processing but requires more memory. 
+    -  `configProtoBytes: IntArrayParam`: ConfigProto from tensorflow, serialized into byte array.
+    -  `poolingLayer: Param[String]`: Set ELMO pooling layer to: `word_emb`, `lstm_outputs1`, `lstm_outputs2`, or `elmo` 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1416,13 +1588,22 @@ Computes contextualized word representations using "A Lite" implementation of BE
 
 You can find the pre-trained model for `AlbertEmbeddings` in the  [Spark NLP Models](https://github.com/JohnSnowLabs/spark-nlp-models#english---models) repository
 
-**Output Type:** Word_Embeddings
+**Output Annotator Type:** Word_Embeddings
 
-**Input Types:** Document, Token
+**Input Annotator Types:** Document, Token
 
 **Reference:** [AlbertEmbeddings](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/AlbertEmbeddings.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `batchSize: IntParam`: Batch size. Large values allows faster processing but requires more memory
+    -  `caseSensitive: BooleanParam` : whether to ignore case in tokens for embeddings matching
+    -  `dimension: IntParam `: Number of embedding dimensions
+    -  `configProtoBytes: IntArrayParam`: ConfigProto from tensorflow, serialized into byte array.
+    -  `maxSentenceLength: IntParam `: Max sentence length to process
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1430,12 +1611,16 @@ You can find the pre-trained model for `AlbertEmbeddings` in the  [Spark NLP Mod
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setBatchSize(int)`: Batch size. Large values allows faster processing but requires more memory.
     - `setMaxSentenceLength(int)`: Max sentence length to process
+    - `setDimension(int)`: Number of embedding dimensions
+    - `setCaseSensitive(Boolean)`: whether to ignore case in tokens for embeddings matching
     - `setLazyAnnotator(Boolean)`: Use `AlbertEmbeddings` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
 
     - `getInputCols()`: Input annotations columns currently used
     - `getOutputCols()`: Gets annotation column name going to generate
+    - `getCaseSensitive()`: whether to ignore case in tokens for embeddings matching
+    - `getDimension()`: Number of embedding dimensions
     - `getLazyAnnotator()`: Whether `AlbertEmbeddings` used as LazyAnnotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 **Examples:**
@@ -1476,13 +1661,23 @@ Computes contextualized word representations using combination of Autoregressive
 
 You can find the pre-trained model for `XlnetEmbeddings` in the  [Spark NLP Models](https://github.com/JohnSnowLabs/spark-nlp-models#english---models) repository
 
-**Output Type:** Word_Embeddings
+**Output Annotator Type:** Word_Embeddings
 
-**Input Types:** Document, Token
+**Input Annotator Types:** Document, Token
 
 **Reference:** [XlnetEmbeddings](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/XlnetEmbeddings.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `batchSize: IntParam`: Batch size. Large values allows faster processing but requires more memory
+    -  `caseSensitive: BooleanParam` : whether to ignore case in tokens for embeddings matching
+    - `modelIfNotSet`: XLNet tensorflow Model.
+    -  `dimension: IntParam `: Number of embedding dimensions
+    -  `configProtoBytes: IntArrayParam`: ConfigProto from tensorflow, serialized into byte array.
+    -  `maxSentenceLength: IntParam `: Max sentence length to process
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1491,7 +1686,7 @@ You can find the pre-trained model for `XlnetEmbeddings` in the  [Spark NLP Mode
     - `setBatchSize(int)`: Batch size. Large values allows faster processing but requires more memory.
     - `setMaxSentenceLength(int)`: Max sentence length to process.
     - `setModelIfNotSet()`: Sets `XLNet` tensorflow Model.
-    - `setDimension(value: Int)`: Set dimension of Embeddings Since output shape depends on the model selected, see https://github.com/zihangdai/xlnet for further reference
+    - `setDimension(value: Int)`: Set dimension of Embeddings Since output shape depends on the model selected, see `https://github.com/zihangdai/xlnet `for further reference
     - `setLazyAnnotator(Boolean)`: Use `XlnetEmbeddings` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 * ***Parameter Getters***
@@ -1540,13 +1735,20 @@ Refer to the [XlnetEmbeddings](https://nlp.johnsnowlabs.com/api/index#com.johnsn
 
 The Universal Sentence Encoder encodes text into high dimensional vectors that can be used for text classification, semantic similarity, clustering and other natural language tasks.
 
-**Output Type:** SENTENCE_EMBEDDINGS
+**Output Annotator Type:** SENTENCE_EMBEDDINGS
 
-**Input Types:** Document
+**Input Annotator Types:** Document
 
 **Reference:** [UniversalSentenceEncoder](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/UniversalSentenceEncoder.scala)
 
 **Functions:**
+
+* ***Parameters***
+
+    - `modelIfNotSet`: XLNet tensorflow Model.
+    -  `dimension: IntParam `: Number of embedding dimensions
+    -  `configProtoBytes: IntArrayParam`: ConfigProto from tensorflow, serialized into byte array.
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1592,13 +1794,19 @@ Refer to the [UniversalSentenceEncoder](https://nlp.johnsnowlabs.com/api/index#c
 
 This annotator converts the results from `WordEmbeddings`, `BertEmbeddings`, `ElmoEmbeddings`, `AlbertEmbeddings`, or `XlnetEmbeddings` into `sentence` or `document` embeddings by either summing up or averaging all the word embeddings in a sentence or a document (depending on the `inputCols`).
 
-**Output Type:** SENTENCE_EMBEDDINGS
+**Output Annotator Type:** SENTENCE_EMBEDDINGS
 
-**Input Types:** Document
+**Input Annotator Types:** Document
 
 **Reference:** [SentenceEmbeddings](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/SentenceEmbeddings.scala)
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `dimension: IntParam `: Number of embedding dimensions
+    - `poolingStrategy: Param[String] `: Choose how you would like to aggregate Word Embeddings to Sentence Embeddings: AVERAGE or SUM 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1680,13 +1888,19 @@ Refer to the [SentenceEmbeddings](https://nlp.johnsnowlabs.com/api/index#com.joh
 
 This annotator utilizes `WordEmbeddings` or `BertEmbeddings` to generate chunk embeddings from either `Chunker`, `NGramGenerator`, or `NerConverter` outputs.
 
-**Output Type:** CHUNK
+**Output Annotator Type:** CHUNK
 
-**Input Types:** CHUNK, Word_Embeddings
+**Input Annotator Types:** CHUNK, Word_Embeddings
 
 **Reference:** [ChunkEmbeddings](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/embeddings/ChunkEmbeddings.scala)
 
 **Functions:**
+
+* ***Parameters***
+
+    - `skipOOV: BooleanParam`: Whether to discard default vectors for OOV words from the aggregation / pooling
+    - `poolingStrategy: Param[String] `: Choose how you would like to aggregate Word Embeddings to Chunk Embeddings: AVERAGE or SUM 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1764,27 +1978,41 @@ Refer to the [ChunkEmbeddings](https://nlp.johnsnowlabs.com/api/index#com.johnsn
 
 ClassifierDL is a generic Multi-class Text Classification. ClassifierDL uses the state-of-the-art Universal Sentence Encoder as an input for text classifications. The ClassifierDL annotator uses a deep learning model (DNNs) we have built inside TensorFlow and supports up to 100 classes
 
-**Output Type:** CATEGORY
+**Output Annotator Type:** CATEGORY
 
-**Input Types:** SENTENCE_EMBEDDINGS
+**Input Annotator Types:** SENTENCE_EMBEDDINGS
 
 **Reference:** [ClassifierDLApproach](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/classifier/dl/ClassifierDLApproach.scala) | [ClassifierDLModel](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/classifier/dl/ClassifierDLModel.scala)
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `batchSize: IntParam `: Batch size 
+    -  `configProtoBytes: IntArrayParam` : ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString()` 
+    -  `dropout: FloatParam` : Dropout coefficient 
+    -  `enableOutputLogs: BooleanParam` : Whether to output to annotators log folder 
+    -  `labelColumn: Param[String]`: Column with label per each document 
+    -  `lr: FloatParam`: Learning Rate 
+    -  `maxEpochs: IntParam`: Maximum number of epochs to train 
+    -  `randomSeed: IntParam`: Random seed 
+    -  `validationSplit: FloatParam` : Choose the proportion of training dataset to be validated against the model on each Epoch.
+    -  `verbose: IntParam`: Level of verbosity during training 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
     - `setLabelColumn`: If DatasetPath is not provided, this Seq\[Annotation\] type of column should have labeled data per token.
-    - `setLr`: Initial learning rate.
-    - `setBatchSize`: Batch size for training.
-    - `setDropout`: Dropout coefficient.
-    - `setMaxEpochs`: Maximum number of epochs to train.
-    - `setEnableOutputLogs`: Whether to output to annotators log folder.
-    - `setValidationSplit`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
-    - `setVerbose`: Level of verbosity during training.
-    - `setOutputLogsPath`: Folder path to save training logs.
+    - `setLr(float)`: Initial learning rate.
+    - `setBatchSize(int)`: Batch size for training.
+    - `setDropout(float)`: Dropout coefficient.
+    - `setMaxEpochs(int)`: Maximum number of epochs to train.
+    - `setEnableOutputLogs(Boolean)`: Whether to output to annotators log folder.
+    - `setValidationSplit(float)`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
+    - `setVerbose(int)`: Level of verbosity during training.
+    - `setOutputLogsPath(String)`: Folder path to save training logs.
     - `setLazyAnnotator(Boolean)`: Use `ClassifierDL` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
@@ -1841,26 +2069,41 @@ Refer to the [ClassifierDLApproach](https://nlp.johnsnowlabs.com/api/index#com.j
 
  MultiClassifierDL is a Multi-label Text Classification. MultiClassifierDL uses a Bidirectional GRU with Convolution model that we have built inside TensorFlow and supports up to 100 classes. The input to MultiClassifierDL is Sentence Embeddings such as state-of-the-art UniversalSentenceEncoder, BertSentenceEmbeddings, or SentenceEmbeddings
 
-**Output Type:** CATEGORY
+**Output Annotator Type:** CATEGORY
 
-**Input Types:** SENTENCE_EMBEDDINGS
+**Input Annotator Types:** SENTENCE_EMBEDDINGS
 
 **Reference:** [MultiClassifierDLApproach](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/classifier/dl/MultiClassifierDLApproach.scala) | [MultiClassifierDLModel](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/classifier/dl/MultiClassifierDLModel.scala)
 
 **Functions:**
 
+* ***Parameters***
+
+    -  `batchSize: IntParam `: Batch size 
+    -  `configProtoBytes: IntArrayParam` : ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString()` 
+    -  `enableOutputLogs: BooleanParam` : Whether to output to annotators log folder 
+    -  `labelColumn: Param[String]`: Column with label per each document 
+    -  `lr: FloatParam`: Learning Rate 
+    -  `maxEpochs: IntParam`: Maximum number of epochs to train 
+    -  `randomSeed: IntParam`: Random seed 
+    -  `shufflePerEpoch: BooleanParam `: Whether to shuffle the training data on each Epoch 
+    -  `threshold: FloatParam `: The minimum threshold for each label to be accepted. Default is **0.5** 
+    -  `validationSplit: FloatParam` : Choose the proportion of training dataset to be validated against the model on each Epoch.
+    -  `verbose: IntParam`: Level of verbosity during training 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+
 * ***Parameter Setters***
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setLabelColumn()`: If DatasetPath is not provided, this Seq\[Annotation\] type of column should have labeled data per token.
-    - `setLr()`: Initial learning rate.
-    - `setBatchSize()`: Batch size for training.
-    - `setMaxEpochs()`: Maximum number of epochs to train.
-    - `setEnableOutputLogs()`: Whether to output to annotators log folder.
-    - `setValidationSplit()`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
-    - `setVerbose()`: Level of verbosity during training.
-    - `setOutputLogsPath()`: Folder path to save training logs.
+    - `setLabelColumn(String)`: If DatasetPath is not provided, this Seq\[Annotation\] type of column should have labeled data per token.
+    - `setLr(float)`: Initial learning rate.
+    - `setBatchSize(int)`: Batch size for training.
+    - `setMaxEpochs(int)`: Maximum number of epochs to train.
+    - `setEnableOutputLogs(Boolean)`: Whether to output to annotators log folder.
+    - `setValidationSplit(float)`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
+    - `setVerbose(int)`: Level of verbosity during training.
+    - `setOutputLogsPath(String)`: Folder path to save training logs.
     - `setLazyAnnotator(Boolean)`: Use `MultiClassifierDL` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`.
 
 * ***Parameter Getters***
@@ -1920,29 +2163,45 @@ Refer to the [MultiClassifierDLApproach](https://nlp.johnsnowlabs.com/api/index#
 
 SentimentDL is an annotator for multi-class sentiment analysis. This annotator comes with 2 available pre-trained models trained on IMDB and Twitter datasets
 
-**Output Type:** CATEGORY
+**Output Annotator Type:** CATEGORY
 
-**Input Types:** SENTENCE_EMBEDDINGS
+**Input Annotator Types:** SENTENCE_EMBEDDINGS
 
 **Reference:** [SentimentDLApproach](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/classifier/dl/SentimentDLApproach.scala) | [SentimentDLModel](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/classifier/dl/SentimentDLModel.scala)
 
 **Functions:**
 
+* ***Parameters***
+
+    -  `batchSize: IntParam `: Batch size 
+    -  `configProtoBytes: IntArrayParam` : ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString()` 
+    -  `dropout: FloatParam` : Dropout coefficient 
+    -  `enableOutputLogs: BooleanParam` : Whether to output to annotators log folder 
+    -  `labelColumn: Param[String]`: Column with label per each document 
+    -  `lr: FloatParam`: Learning Rate 
+    -  `maxEpochs: IntParam`: Maximum number of epochs to train 
+    -  `randomSeed: IntParam`: Random seed 
+    -  `shufflePerEpoch: BooleanParam `: Whether to shuffle the training data on each Epoch 
+    -  `threshold: FloatParam `: The minimum threshold for each label to be accepted. Default is **0.5** 
+    -  `validationSplit: FloatParam` : Choose the proportion of training dataset to be validated against the model on each Epoch.
+    -  `verbose: IntParam`: Level of verbosity during training 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+
 * ***Parameter Setters***
 
     - `setInputCol(String)`: Sets required input annotator types
     - `setOutputCol(String)`: Sets expected output annotator types
-    - `setLabelColumn`: If DatasetPath is not provided, this Seq\[Annotation\] type of column should have labeled data per token.
-    - `setLr`: Initial learning rate.
-    - `setBatchSize`: Batch size for training.
-    - `setDropout`: Dropout coefficient.
-    - `setThreshold`: The minimum threshold for the final result otherwise it will be either neutral or the value set in thresholdLabel.
-    - `setThresholdLabel`: In case the score is less than threshold, what should be the label. Default is neutral.
-    - `setMaxEpochs`: Maximum number of epochs to train.
-    - `setEnableOutputLogs`: Whether to output to annotators log folder.
-    - `setOutputLogsPath`: Folder path to save training logs.
-    - `setValidationSplit`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
-    - `setVerbose`: Level of verbosity during training.
+    - `setLabelColumn()`: If DatasetPath is not provided, this Seq\[Annotation\] type of column should have labeled data per token.
+    - `setLr(Float)`: Initial learning rate.
+    - `setBatchSize(int)`: Batch size for training.
+    - `setDropout(Float)`: Dropout coefficient.
+    - `setThreshold(Float)`: The minimum threshold for the final result otherwise it will be either neutral or the value set in thresholdLabel.
+    - `setThresholdLabel(String)`: In case the score is less than threshold, what should be the label. Default is neutral.
+    - `setMaxEpochs(int)`: Maximum number of epochs to train.
+    - `setEnableOutputLogs(Boolean)`: Whether to output to annotators log folder.
+    - `setOutputLogsPath(String)`: Folder path to save training logs.
+    - `setValidationSplit(Float)`: Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between **0.0** and **1.0** and by default it is **0.0** and off.
+    - `setVerbose(int)`: Level of verbosity during training.
     - `setLazyAnnotator(Boolean)`: Use `SentimentDL` as a lazy annotator or not. *LazyAnnotator* is a Param in Annotators allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Getters***
@@ -1997,13 +2256,22 @@ Refer to the [SentimentDLApproach](https://nlp.johnsnowlabs.com/api/index#com.jo
 
 LanguageDetectorDL is a state-of-the-art language detection and identification annotator trained by using TensorFlow/keras neural networks.
 
-**Output Type:** LANGUAGE
+**Output Annotator Type:** LANGUAGE
 
-**Input Types:** DOCUMENT or SENTENCE
+**Input Annotator Types:** DOCUMENT or SENTENCE
 
 **Reference:** [LanguageDetectorDL](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/ld/dl/LanguageDetectorDL.scala)
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `coalesceSentences: BooleanParam` : coalesceSentences, output of all sentences will be averaged to one output instead of one output per sentence
+    -  `threshold: FloatParam` : The minimum threshold for each label to be accepted.
+    -  `language: MapFeature[String, Int] `: language
+    -  `configProtoBytes: IntArrayParam `: ConfigProto from tensorflow, serialized into byte array.
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+
 
 * ***Parameter Setters***
 
@@ -2061,13 +2329,23 @@ The algorithm makes use of the position of a sentence and token. Therefore, to u
 
 You can tweak the following parameters to get the best result from the annotator.
 
-**Output Type:** KEYWORD
+**Output Annotator Type:** KEYWORD
 
-**Input Types:** TOKEN
+**Input Annotator Types:** TOKEN
 
 **Reference:** [YakeModel](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/keyword.yake/YakeModel.scala)
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `minNGrams: IntParam`: minimum length of a extracted keyword 
+    -  `maxNGrams: IntParam` : maximum length of a extracted keyword
+    -  `nKeywords: IntParam` :  top N keywords
+    -  `threshold: FloatParam`: Each keyword will be given a keyword score greater than **0**. Lower the score better the keyword
+    -  `stopWords: StringArrayParam` : list of stop words
+    -  `windowSize: IntParam `: Yake will construct a co-occurrence matrix. You can set the window size for the co-occurrence matrix construction from this method. ex: `windowSize=2` will look at two words to both left and right of a candidate word.
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2128,13 +2406,29 @@ Refer to the [YakeModel](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlabs
 This Named Entity recognition annotator allows for a generic model to be trained by utilizing a CRF machine learning algorithm. Its train data (train_ner) is either a labeled or an [external CoNLL 2003 IOB based](#conll-dataset) spark dataset with Annotations columns. Also the user has to provide [word embeddings annotation](#WordEmbeddings) column.  
 Optionally the user can provide an entity dictionary file for better accuracy  
 
-**Output Type:** Named_Entity  
+**Output Annotator Type:** Named_Entity  
 
-**Input Types:** Document, Token, POS, Word_Embeddings  
+**Input Annotator Types:** Document, Token, POS, Word_Embeddings  
 
 **Reference:** [NerCrfApproach](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/ner/crf/NerCrfApproach.scala) | [NerCrfModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/ner/crf/NerCrfModel.scala) 
  
 **Functions:**
+
+* ***Parameters***
+
+    -  `c0: IntParam `: c0 params defining decay speed for gradient 
+    -  `entities: StringArrayParam` : Entities to recognize 
+    -  `externalFeatures: ExternalResourceParam` : Additional dictionaries to use as a features 
+    -  `includeConfidence: BooleanParam` : Whether to include confidence scores in annotation metadata
+    -  `l2: DoubleParam `: L2 regularization coefficient 
+    - ` labelColumn: Param[String]` : Column with label per each token 
+    -  `lossEps: DoubleParam`: If Epoch relative improvement less than eps then training is stopped 
+    - ` maxEpochs: IntParam `: Maximum number of epochs to train 
+    -  `minEpochs: IntParam` : Minimum number of epochs to train 
+    - ` minW: DoubleParam  `: Features with less weights then this param value will be filtered 
+    - `randomSeed: IntParam` : Random seed 
+    -  `verbose: IntParam` : Level of verbosity during training 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2213,13 +2507,34 @@ Refer to the [NerCrfApproach](https://nlp.johnsnowlabs.com/api/index#com.johnsno
 This Named Entity recognition annotator allows to train generic NER model based on Neural Networks. Its train data (train_ner) is either a labeled or an [external CoNLL 2003 IOB based](#conll-dataset) spark dataset with Annotations columns. Also the user has to provide [word embeddings annotation](#WordEmbeddings) column.  
 Neural Network architecture is Char CNNs - BiLSTM - CRF that achieves state-of-the-art in most datasets. 
  
-**Output Type:** Named_Entity
+**Output Annotator Type:** Named_Entity
 
-**Input Types:** Document, Token, Word_Embeddings
+**Input Annotator Types:** Document, Token, Word_Embeddings
 
 **Reference:** [NerDLApproach](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/ner/dl/NerDLApproach.scala) | [NerDLModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/ner/dl/NerDLModel.scala)
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `batchSize: IntParam`: Batch size 
+    -  `configProtoBytes: IntArrayParam` : ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString() `
+    -  `dropout: FloatParam` : Dropout coefficient 
+    -  `entities: StringArrayParam` : Entities to recognize 
+    -  `evaluationLogExtended: BooleanParam` : Whether logs for validation to be extended: it displays time and evaluation of each label. Default is `false`. 
+    -  `graphFolder: Param[String]` : Folder path that contain external graph files 
+    -  `includeConfidence: BooleanParam` : Whether to include confidence scores in annotation metadata
+    -  `labelColumn: Param[String]` : Column with label per each token 
+    -  `lr: FloatParam` : Learning Rate 
+    -  `maxEpochs: IntParam` : Maximum number of epochs to train 
+    -  `minEpochs: IntParam` : Minimum number of epochs to train 
+    -  `po: FloatParam` : Learning rate decay coefficient.
+    -  `randomSeed: IntParam` : Random seed 
+    -  `testDataset: ExternalResourceParam` : Path to test dataset. If set used to calculate statistic on it during training.
+    -  `useContrib: BooleanParam` : whether to use contrib LSTM Cells. Might slightly improve accuracy. 
+    -  `validationSplit: FloatParam` : Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between 0.0 and 1.0 and by default it is 0.0 and off. 
+    -  `verbose: IntParam` : Level of verbosity during training 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2305,13 +2620,19 @@ NER Converter used to finalize work of NER annotators. Combines entites with typ
 
 This NER converter can be used to the output of a NER model into the ner chunk format.
 
-**Output Type:** Chunk
+**Output Annotator Type:** Chunk
 
-**Input Types:** Document, Token, Named_Entity
+**Input Annotator Types:** Document, Token, Named_Entity
 
 **Reference:** [NerConverter](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/ner/NerConverter.scala)
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `preservePosition: BooleanParam `: Whether to preserve the original position of the tokens in the original document or use the modified tokens 
+    -  `whiteList: StringArrayParam` : If defined, list of entities to process. The rest will be ignored. Do not include IOB prefix on labels 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2355,9 +2676,9 @@ Refer to the [NerConverter](https://nlp.johnsnowlabs.com/api/index#com.johnsnowl
 
 This annotator retrieves tokens and makes corrections automatically if not found in an English dictionary  
 
-**Output Type:** Token
+**Output Annotator Type:** Token
 
-**Input Types:** Token
+**Input Annotator Types:** Token
 
 **Inputs:** Any text for corpus. A list of words for dictionary. A comma separated custom dictionary.
 
@@ -2366,6 +2687,20 @@ This annotator retrieves tokens and makes corrections automatically if not found
 **Reference:** [NorvigSweetingApproach](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/spell/norvig/NorvigSweetingApproach.scala) | [NorvigSweetingModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/spell/norvig/NorvigSweetingModel.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `caseSensitive: BooleanParam` : Sensitivity on spell checking. Defaults to false. Might affect accuracy 
+    -  `dictionary: ExternalResourceParam` : file with a list of correct words 
+    -  `doubleVariants: BooleanParam` : Increase search at cost of performance. Enables extra check for word combinations, More accuracy at performance 
+    -  `dupsLimit: IntParam` : Maximum duplicate of characters in a word to consider.
+    -  `frequencyPriority: BooleanParam` : Applies frequency over hamming in intersections. When false hamming takes priority 
+    -  `intersections: IntParam` : Hamming intersections to attempt. Defaults to **10** 
+    -  `reductLimit: IntParam` : Word reduction limit. Defaults to **3** 
+    -  `shortCircuit: BooleanParam` : Increase performance at cost of accuracy. Faster but less accurate mode 
+    -  `vowelSwapLimit: IntParam` : Vowel swap attempts. Defaults to **6** 
+    -  `wordSizeIgnore: IntParam` : Minimum size of word before ignoring. Defaults to **3** ,Minimum size of word before moving on. Defaults to **3**. 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2427,9 +2762,9 @@ Refer to the [NorvigSweetingApproach](https://nlp.johnsnowlabs.com/api/index#com
 
 This spell checker is inspired on Symmetric Delete algorithm. It retrieves tokens and utilizes distance metrics to compute possible derived words  
 
-**Output Type:** Token  
+**Output Annotator Type:** Token  
 
-**Input Types:** Token
+**Input Annotator Types:** Token
 
 **Inputs:** Any text for corpus. A list of words for dictionary. A comma separated custom dictionary.
 
@@ -2438,6 +2773,18 @@ This spell checker is inspired on Symmetric Delete algorithm. It retrieves token
 **Reference:** [SymmetricDeleteApproach](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/spell/symmetric/SymmetricDeleteApproach.scala) | [SymmetricDeleteModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/spell/symmetric/SymmetricDeleteModel.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    - ` deletesThreshold: IntParam` : minimum frequency of corrections a word needs to have to be considered from training. Increase if training set is LARGE.
+    -  `dictionary: ExternalResourceParam` : file with a list of correct words 
+    -  `dupsLimit: IntParam` : maximum duplicate of characters in a word to consider
+    -  `frequencyThreshold: IntParam` : minimum frequency of words to be considered from training. Increase if training set is LARGE
+    -  `longestWordLength: IntParam` : length of longest word in corpus 
+    -  `maxEditDistance: IntParam` : max edit distance characters to derive strings from a word 
+    -  `maxFrequency: LongParam`: maximum frequency of a word in the corpus 
+    -  `minFrequency: LongParam` : minimum frequency of a word in the corpus 
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2492,9 +2839,9 @@ Refer to the [SymmetricDeleteApproach](https://nlp.johnsnowlabs.com/api/index#co
 
 Implements Noisy Channel Model Spell Algorithm. Correction candidates are extracted combining context information and word information  
 
-**Output Type:** Token  
+**Output Annotator Type:** Token  
 
-**Input Types:** Token  
+**Input Annotator Types:** Token  
 
 **Inputs:** Any text for corpus. A list of words for dictionary. A comma separated custom dictionary.
 
@@ -2503,6 +2850,18 @@ Implements Noisy Channel Model Spell Algorithm. Correction candidates are extrac
 **Reference:** [ContextSpellCheckerApproach](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/spell/context/ContextSpellCheckerApproach.scala) | [ContextSpellCheckerModel](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/main/scala/com/johnsnowlabs/nlp/annotators/spell/context/ContextSpellCheckerModel.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    - `languageModelClasses: IntParam`: Number of classes to use during factorization of the softmax output in the LM.
+    - `wordMaxDistance :IntParam`: Maximum distance for the generated candidates for every word.
+    - `maxCandidates :IntParam`: Maximum number of candidates for every word.
+    - `caseStrategy :IntParam`: What case combinations to try when generating candidates. `ALL_UPPER_CASE = 0, FIRST_LETTER_CAPITALIZED = 1, ALL = 2`. 
+    - `errorThreshold :Float`: Threshold perplexity for a word to be considered as an error.
+    - `tradeoff :Float`: Tradeoff between the cost of a word error and a transition in the language model.
+    - `maxWindowLen :IntParam`: Maximum size for the window used to remember history prior to every correction.
+    - `gamma: Float`: Controls the influence of individual word frequency in the decision.
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2549,7 +2908,9 @@ spell_checker = ContextSpellCheckerApproach() \
     .setInputCols(["token"]) \
     .setOutputCol("spell") \
     .fit(train_corpus) \
-    .setLazyAnnotator(False)
+    .setLazyAnnotator(False)\
+    .setErrorThreshold(4.0)\
+    .setTradeoff(6.0)
 ```
 
 ```scala
@@ -2557,7 +2918,9 @@ val spellChecker = new ContextSpellCheckerApproach()
     .setInputCols(Array("token"))
     .setOutputCol("spell")
     .fit(trainCorpus)
-    .setLazyAnnotator(False)
+    .setLazyAnnotator(false)
+    .setErrorThreshold(4.0)
+    .setTradeoff(6.0)
 ```
 
 </div></div><div class="h3-box" markdown="1">
@@ -2579,13 +2942,20 @@ Relations among the words are illustrated above the sentence with directed, labe
 
 Unlabeled parser that finds a grammatical relation between two words in a sentence. Its input is a directory with dependency treebank files.  
 
-**Output Type:** Dependency  
+**Output Annotator Type:** Dependency  
 
-**Input Types:** Document, POS, Token  
+**Input Annotator Types:** Document, POS, Token  
 
 **Reference:** [DependencyParserApproach](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/parser/dep/DependencyParserApproach.scala) | [DependencyParserModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/parser/dep/DependencyParserModel.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `conllU: ExternalResourceParam` : Universal Dependencies source files 
+    -  `dependencyTreeBank: ExternalResourceParam `: Dependency treebank source files 
+    -  `numberOfIterations: IntParam `: Number of iterations in training, converges to better accuracy
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2637,13 +3007,20 @@ Refer to the [DependencyParserApproach](https://nlp.johnsnowlabs.com/api/index#c
 
 Labeled parser that finds a grammatical relation between two words in a sentence. Its input is a CoNLL2009 or ConllU dataset.  
 
-**Output Type:** Labeled Dependency  
+**Output Annotator Type:** Labeled Dependency  
 
-**Input Types:** Token, POS, Dependency  
+**Input Annotator Types:** Token, POS, Dependency  
 
 **Reference:** [TypedDependencyParserApproach](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/parser/typdep/TypedDependencyParserApproach.scala) | [TypedDependencyParserModel](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/parser/typdep/TypedDependencyParserModel.scala)  
 
 **Functions:**
+
+* ***Parameters***
+
+    -  `conllU: ExternalResourceParam` : Universal Dependencies source files 
+    -  ` conll2009: ExternalResourceParam `: Path to file with CoNLL 2009 format 
+    -  `numberOfIterations: IntParam `: Number of iterations in training, converges to better accuracy
+    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
