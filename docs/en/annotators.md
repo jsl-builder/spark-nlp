@@ -339,7 +339,7 @@ Returns hard-stems out of words with the objective of retrieving the meaningful 
 
 * ***Parameters***
     - ` language: Param[String] `: This is the language of the text. Default is `English` 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -398,7 +398,7 @@ Retrieves lemmas out of words with the objective of returning a base dictionary 
 
 * ***Parameters***
     - `  dictionary: ExternalResourceParam `: lemmatizer external dictionary, needs '`keyDelimiter`' and '`valueDelimiter`' in options for parsing target text
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -462,7 +462,7 @@ This annotator excludes from a sequence of strings (e.g. the output of a `Tokeni
     - `   caseSensitive: BooleanParam `: whether to do a case-sensitive comparison over the stop words 
     - `   locale: Param[String] `: Locale of the input for case insensitive matching.
     -  `stopWords: StringArrayParam` : the words to be filtered out. by default it's english stop words from Spark ML 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -559,7 +559,7 @@ Uses a reference file to match a set of regular expressions and put them inside 
 
     -  `rules: ExternalResourceParam `: external resource to rules, needs 'delimiter' in options
     - `Strategy(Param[String])`: Can be any of `MATCH_FIRST | MATCH_ALL | MATCH_COMPLETE`
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -629,7 +629,7 @@ Annotator to match entire phrases (by token) provided in a file against a Docume
 
 * ***Parameters***
 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
     -  `buildFromTokens: BooleanParam `: Whether the TextMatcher should take the CHUNK from TOKEN or not 
     - ` caseSensitive: BooleanParam `: whether to match regardless of case. 
     - ` entities: ExternalResourceParam  `: entities external resource.
@@ -715,7 +715,7 @@ This annotator matches a pattern of part-of-speech tags in order to return meani
 
     -  `inputAnnotatorTypes: Array[AnnotatorType] `: Input annotator type : `DOCUMENT`, `POS`
     -  `outputAnnotatorType: AnnotatorType `: Output annotator type : `CHUNK` 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -775,7 +775,7 @@ Refer to the [Chunker](https://nlp.johnsnowlabs.com/api/index#com.johnsnowlabs.n
     -  `delimiter: Param[String] `: Glue character used to join the tokens 
     -  `enableCumulative: BooleanParam `: whether to calculate just the actual n-grams or all n-grams from 1 through n 
     - `n: IntParam`: Minimum n-gram length, greater than or equal to 1.
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -857,7 +857,7 @@ Reads from different forms of date and time expressions and converts them to a p
     -  `anchorDateDay: Param[Int] `: Add an anchor year for the relative dates such as a day after tomorrow. The first day of the month has value 1 Example: 11 By default it will use the current day Default: `-1`
     -  `anchorDateMonth: Param[Int] `: Add an anchor month for the relative dates such as a day after tomorrow. Month value is 1-based. e.g., 1 for January. By default it will use the current month Default: `-1`
     -  `anchorDateYear: Param[Int] `: Add an anchor year for the relative dates such as a day after tomorrow.
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -935,7 +935,7 @@ Reads from multiple different forms of date and time expressions and converts th
     -  `anchorDateDay: Param[Int] `: Add an anchor year for the relative dates such as a day after tomorrow. The first day of the month has value 1 Example: 11 By default it will use the current day Default: `-1`
     -  `anchorDateMonth: Param[Int] `: Add an anchor month for the relative dates such as a day after tomorrow. Month value is 1-based. e.g., 1 for January. By default it will use the current month Default: `-1`
     -  `anchorDateYear: Param[Int] `: Add an anchor year for the relative dates such as a day after tomorrow. If not set it will use the current year. Example: 2021 By default it will use the current year Default: `-1`
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1000,7 +1000,7 @@ Finds sentence bounds in raw text. Applies rules from Pragmatic Segmenter.
     -  `splitLength: IntParam `: length at which sentences will be forcibly split.
     -  `useAbbrevations: BooleanParam `: whether to apply abbreviations at sentence detection
     -  `useCustomBoundsOnly: BooleanParam `: whether to only utilize custom bounds for sentence detection
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1064,7 +1064,7 @@ Sets a POS tag to each word within a sentence. Its train data (train_pos) is a s
     -  `frequencyThreshold: IntParam `: How many times at least a tag on a word to be marked as frequent 
     -  `nIterations: IntParam `: Number of iterations in training, converges to better accuracy
     -  `posCol: Param[String] `: Column of Array of POS tags that match tokens
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1135,7 +1135,7 @@ Scores a sentence for a sentiment
     -  `sentimentCol: Param[String]`: column with the sentiment result of every row. Must be '`positive`' or '`negative`'
     - `importantFeatureRatio(Double)`: Proportion to lookahead in unimportant features.
     - `unimportantFeatureStep(Double)`: Proportion to lookahead in unimportant features.
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1232,7 +1232,7 @@ Scores a sentence for a sentiment
     -  `negativeMultiplier: DoubleParam `: "multiplier for negative sentiments. Defaults **-1.0** 
     -  `positiveMultiplier: DoubleParam`: multiplier for positive sentiments. Defaults **1.0**
     -  `reverseMultiplier: DoubleParam `: multiplier for revert sentiments. Defaults **-1.0** 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1309,7 +1309,7 @@ Word Embeddings lookup annotator that maps tokens to vectors
 
     -  `readCacheSize: IntParam `: cache size for items retrieved from storage. Increase for performance but higher memory consumption 
     - ` writeBufferSize: IntParam`: buffer size limit before dumping to disk storage while writing 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1388,7 +1388,7 @@ You can find the pre-trained models for `BertEmbeddings` in the [Spark NLP Model
     -  `configProtoBytes: IntArrayParam `: ConfigProto from tensorflow, serialized into byte array. Get with `config_proto.SerializeToString()` 
     -  `maxSentenceLength: IntParam `: Max sentence length to process 
     -  `vocabulary: MapFeature[String, Int] `: vocabulary 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1457,7 +1457,7 @@ You can find the pre-trained models for `BertEmbeddings` in the [Spark NLP Model
     -  `isLong: BooleanParam `: Use Long type instead of Int type for inputs 
     - ` maxSentenceLength: IntParam` : Max sentence length to process 
     -  `vocabulary: MapFeature[String, Int]`: vocabulary 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1526,7 +1526,7 @@ You can find the pre-trained model for `ElmoEmbeddings` in the  [Spark NLP Model
     -  `batchSize: IntParam`: Batch size. Large values allows faster processing but requires more memory. 
     -  `configProtoBytes: IntArrayParam`: ConfigProto from tensorflow, serialized into byte array.
     -  `poolingLayer: Param[String]`: Set ELMO pooling layer to: `word_emb`, `lstm_outputs1`, `lstm_outputs2`, or `elmo` 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1603,7 +1603,7 @@ You can find the pre-trained model for `AlbertEmbeddings` in the  [Spark NLP Mod
     -  `dimension: IntParam `: Number of embedding dimensions
     -  `configProtoBytes: IntArrayParam`: ConfigProto from tensorflow, serialized into byte array.
     -  `maxSentenceLength: IntParam `: Max sentence length to process
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1677,7 +1677,7 @@ You can find the pre-trained model for `XlnetEmbeddings` in the  [Spark NLP Mode
     -  `dimension: IntParam `: Number of embedding dimensions
     -  `configProtoBytes: IntArrayParam`: ConfigProto from tensorflow, serialized into byte array.
     -  `maxSentenceLength: IntParam `: Max sentence length to process
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1748,7 +1748,7 @@ The Universal Sentence Encoder encodes text into high dimensional vectors that c
     - `modelIfNotSet`: XLNet tensorflow Model.
     -  `dimension: IntParam `: Number of embedding dimensions
     -  `configProtoBytes: IntArrayParam`: ConfigProto from tensorflow, serialized into byte array.
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1806,7 +1806,7 @@ This annotator converts the results from `WordEmbeddings`, `BertEmbeddings`, `El
 
     -  `dimension: IntParam `: Number of embedding dimensions
     - `poolingStrategy: Param[String] `: Choose how you would like to aggregate Word Embeddings to Sentence Embeddings: AVERAGE or SUM 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1900,7 +1900,7 @@ This annotator utilizes `WordEmbeddings` or `BertEmbeddings` to generate chunk e
 
     - `skipOOV: BooleanParam`: Whether to discard default vectors for OOV words from the aggregation / pooling
     - `poolingStrategy: Param[String] `: Choose how you would like to aggregate Word Embeddings to Chunk Embeddings: AVERAGE or SUM 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -1998,7 +1998,7 @@ ClassifierDL is a generic Multi-class Text Classification. ClassifierDL uses the
     -  `randomSeed: IntParam`: Random seed 
     -  `validationSplit: FloatParam` : Choose the proportion of training dataset to be validated against the model on each Epoch.
     -  `verbose: IntParam`: Level of verbosity during training 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2090,7 +2090,7 @@ Refer to the [ClassifierDLApproach](https://nlp.johnsnowlabs.com/api/index#com.j
     -  `threshold: FloatParam `: The minimum threshold for each label to be accepted. Default is **0.5** 
     -  `validationSplit: FloatParam` : Choose the proportion of training dataset to be validated against the model on each Epoch.
     -  `verbose: IntParam`: Level of verbosity during training 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2185,7 +2185,7 @@ SentimentDL is an annotator for multi-class sentiment analysis. This annotator c
     -  `threshold: FloatParam `: The minimum threshold for each label to be accepted. Default is **0.5** 
     -  `validationSplit: FloatParam` : Choose the proportion of training dataset to be validated against the model on each Epoch.
     -  `verbose: IntParam`: Level of verbosity during training 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2270,7 +2270,7 @@ LanguageDetectorDL is a state-of-the-art language detection and identification a
     -  `threshold: FloatParam` : The minimum threshold for each label to be accepted.
     -  `language: MapFeature[String, Int] `: language
     -  `configProtoBytes: IntArrayParam `: ConfigProto from tensorflow, serialized into byte array.
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 
 * ***Parameter Setters***
@@ -2345,7 +2345,7 @@ You can tweak the following parameters to get the best result from the annotator
     -  `threshold: FloatParam`: Each keyword will be given a keyword score greater than **0**. Lower the score better the keyword
     -  `stopWords: StringArrayParam` : list of stop words
     -  `windowSize: IntParam `: Yake will construct a co-occurrence matrix. You can set the window size for the co-occurrence matrix construction from this method. ex: `windowSize=2` will look at two words to both left and right of a candidate word.
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2428,7 +2428,7 @@ Optionally the user can provide an entity dictionary file for better accuracy
     - ` minW: DoubleParam  `: Features with less weights then this param value will be filtered 
     - `randomSeed: IntParam` : Random seed 
     -  `verbose: IntParam` : Level of verbosity during training 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2534,7 +2534,7 @@ Neural Network architecture is Char CNNs - BiLSTM - CRF that achieves state-of-t
     -  `useContrib: BooleanParam` : whether to use contrib LSTM Cells. Might slightly improve accuracy. 
     -  `validationSplit: FloatParam` : Choose the proportion of training dataset to be validated against the model on each Epoch. The value should be between 0.0 and 1.0 and by default it is 0.0 and off. 
     -  `verbose: IntParam` : Level of verbosity during training 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2632,7 +2632,7 @@ This NER converter can be used to the output of a NER model into the ner chunk f
 
     -  `preservePosition: BooleanParam `: Whether to preserve the original position of the tokens in the original document or use the modified tokens 
     -  `whiteList: StringArrayParam` : If defined, list of entities to process. The rest will be ignored. Do not include IOB prefix on labels 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2700,7 +2700,7 @@ This annotator retrieves tokens and makes corrections automatically if not found
     -  `shortCircuit: BooleanParam` : Increase performance at cost of accuracy. Faster but less accurate mode 
     -  `vowelSwapLimit: IntParam` : Vowel swap attempts. Defaults to **6** 
     -  `wordSizeIgnore: IntParam` : Minimum size of word before ignoring. Defaults to **3** ,Minimum size of word before moving on. Defaults to **3**. 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2784,7 +2784,7 @@ This spell checker is inspired on Symmetric Delete algorithm. It retrieves token
     -  `maxEditDistance: IntParam` : max edit distance characters to derive strings from a word 
     -  `maxFrequency: LongParam`: maximum frequency of a word in the corpus 
     -  `minFrequency: LongParam` : minimum frequency of a word in the corpus 
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2861,7 +2861,7 @@ Implements Noisy Channel Model Spell Algorithm. Correction candidates are extrac
     - `tradeoff :Float`: Tradeoff between the cost of a word error and a transition in the language model.
     - `maxWindowLen :IntParam`: Maximum size for the window used to remember history prior to every correction.
     - `gamma: Float`: Controls the influence of individual word frequency in the decision.
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -2955,7 +2955,7 @@ Unlabeled parser that finds a grammatical relation between two words in a senten
     -  `conllU: ExternalResourceParam` : Universal Dependencies source files 
     -  `dependencyTreeBank: ExternalResourceParam `: Dependency treebank source files 
     -  `numberOfIterations: IntParam `: Number of iterations in training, converges to better accuracy
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
@@ -3020,7 +3020,7 @@ Labeled parser that finds a grammatical relation between two words in a sentence
     -  `conllU: ExternalResourceParam` : Universal Dependencies source files 
     -  ` conll2009: ExternalResourceParam `: Path to file with CoNLL 2009 format 
     -  `numberOfIterations: IntParam `: Number of iterations in training, converges to better accuracy
-    - `LazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
+    - `lazyAnnotator: Boolean`: *LazyAnnotator* is a Param in Annotators that allows them to stand idle in the Pipeline and do nothing. Can be called by other Annotators in a `RecursivePipeline`
 
 * ***Parameter Setters***
 
