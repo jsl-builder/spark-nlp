@@ -134,4 +134,39 @@ object TensorResources {
     source.asRawTensor.data.asFloats.read(buffer)
     buffer
   }
+
+  // TODO improve this !!
+  def extractTensorOfFloats3d(source: Tensor, size: Option[Int] = None):Array[Array[Array[Float]]] = {
+    val realSize = calculateTensorSize(source ,size)
+
+    val width = source.shape.asArray()(0).toInt
+    val height = source.shape.asArray()(0).toInt
+    val depth = source.shape.asArray()(0).toInt
+
+    val buffer = Array.ofDim[Float](width, height, depth)
+    var offset = 0L
+    for (w <- 0 to width; h <- 0 to height) {
+       source.asRawTensor.data.offset(offset).asFloats.read(buffer(w)(h))
+       offset +=  depth
+    }
+    buffer
+  }
+
+  def extractTensorOfFloats2d(source: Tensor, size: Option[Int] = None):Array[Array[Float]] = {
+    val realSize = calculateTensorSize(source ,size)
+
+    val width = source.shape.asArray()(0).toInt
+    val height = source.shape.asArray()(0).toInt
+
+
+    val buffer = Array.ofDim[Float](width, height)
+    var offset = 0L
+    for (w <- 0 to width) {
+      source.asRawTensor.data.offset(offset).asFloats.read(buffer(w))
+      offset +=  height
+    }
+    buffer
+  }
+
+
 }
