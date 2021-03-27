@@ -11,11 +11,12 @@ import com.johnsnowlabs.tags.{FastTest, SlowTest}
 import org.apache.commons.io.FileUtils
 import org.apache.spark.ml.Pipeline
 import org.scalatest._
-
 import java.io._
-
+import org.apache.spark.sql.SparkSession
+import scala.io.Source
 
 class ContextSpellCheckerTestSpec extends FlatSpec {
+
 
   trait Scope extends WeightedLevenshtein {
     val weights = Map("1" -> Map("l" -> 0.5f), "!" -> Map("l" -> 0.4f),
@@ -25,6 +26,42 @@ class ContextSpellCheckerTestSpec extends FlatSpec {
   trait distFile extends WeightedLevenshtein {
     val weights = loadWeights("src/test/resources/dist.psv")
   }
+
+
+  "Spell Checker" should "deserialize" in {
+    val spark = SparkSession
+      .builder()
+      .appName("test")
+      .master("local[*]")
+      .config("spark.driver.memory", "4G")
+      .config("spark.kryoserializer.buffer.max","200M")
+      .config("spark.serializer","org.apache.spark.serializer.KryoSerializer")
+      .getOrCreate()
+
+    val spellChecker = ContextSpellCheckerModel.load("./spellcheck_2.12_")
+
+    if(util.Properties.versionString.contains("2.11")) {
+      // save classes to file - Scala 2.11
+      val file = new File("classes.txt")
+      val bw = new BufferedWriter(new FileWriter(file))
+      spellChecker.classes.getOrDefault.foreach { case (i, (j, k)) =>
+        bw.write(s"$i,$j,$k\n")
+      }
+      bw.close()
+    }else {
+
+      var map = Map.empty[Int, (Int, Int)]
+      // load classes from file - Scala 2.12
+      for (line <- Source.fromFile("classes.txt").getLines) {
+        val nums = line.split(",").map(_.toInt)
+        map += nums.head -> (nums.tail.head, nums.last)
+      }
+      spellChecker.setClasses(Map.empty)
+      spellChecker.write.save("spellcheck_2.12")
+    }
+  }
+
+
   // This test fails in GitHub Actions
   "Spell Checker" should "provide appropriate scores - sentence level" taggedAs SlowTest in {
 
@@ -69,7 +106,6 @@ class ContextSpellCheckerTestSpec extends FlatSpec {
   // This test fails in GitHub Actions
   "Special classes" should "serialize/deserialize properly during model save" taggedAs SlowTest in {
     import SparkAccessor.spark
-
     val specialClasses = Seq(new AgeToken, new UnitToken, new NumberToken,
       new LocationClass("./src/test/resources/spell/locations.txt"),
       new NamesClass("./src/test/resources/spell/names.txt"),

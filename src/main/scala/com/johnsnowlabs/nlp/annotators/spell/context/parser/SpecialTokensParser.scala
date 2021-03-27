@@ -12,9 +12,9 @@ import com.johnsnowlabs.nlp.annotators.spell.context.WeightedLevenshtein
 import org.apache.hadoop.fs.FileSystem
 import org.apache.spark.sql.{Encoder, Encoders, SparkSession}
 
-import scala.collection.JavaConversions._
-import scala.collection.mutable
 import scala.collection.mutable.Set
+import scala.collection.convert.{DecorateAsJava, DecorateAsScala}
+
 
 
 class TransducerSeqFeature(model: HasFeatures, override val name: String)
@@ -39,7 +39,7 @@ class TransducerSeqFeature(model: HasFeatures, override val name: String)
   }
 
   override def deserializeObject(spark: SparkSession, path: String, field: String): Option[Seq[SpecialClassParser]] = {
-    import scala.collection.JavaConversions._
+
     val uri = new java.net.URI(path.replaceAllLiterally("\\", "/"))
     val fs: FileSystem = FileSystem.get(uri, spark.sparkContext.hadoopConfiguration)
     val dataPath = getFieldPath(path, field)
@@ -116,7 +116,7 @@ trait SpecialClassParser {
   def generateTransducer: ITransducer[Candidate]
 
   def replaceWithLabel(tmp: String): String = {
-    if(transducer.transduce(tmp, 0).toList.isEmpty)
+    if(!transducer.transduce(tmp, 0).iterator.hasNext)
       tmp
     else
       label
@@ -127,23 +127,22 @@ trait SpecialClassParser {
       this
   }
 
-  def inVocabulary(word:String): Boolean = !transducer.transduce(word, 0).toList.isEmpty
+  def inVocabulary(word:String): Boolean = transducer.transduce(word, 0).iterator.hasNext
 }
 
-trait RegexParser extends SpecialClassParser {
+trait RegexParser extends SpecialClassParser with DecorateAsJava with DecorateAsScala{
 
   var regex:String
 
   override def generateTransducer: ITransducer[Candidate] = {
-    import scala.collection.JavaConversions._
 
     // first step, enumerate the regular language
     val generator = new GreexGenerator(regex)
-    val matches = generator.generateAll
+    val matches = generator.generateAll.asScala
 
     // second step, create the transducer
     new TransducerBuilder().
-      dictionary(matches.toList.sorted, true).
+      dictionary(matches.toList.sorted.asJavaCollection, true).
       algorithm(Algorithm.STANDARD).
       defaultMaxDistance(maxDist).
       includeDistance(true).
@@ -152,16 +151,15 @@ trait RegexParser extends SpecialClassParser {
 
 }
 
-trait VocabParser extends SpecialClassParser {
+trait VocabParser extends SpecialClassParser with DecorateAsJava{
 
   var vocab: Set[String]
 
   def generateTransducer: ITransducer[Candidate] = {
-    import scala.collection.JavaConversions._
-
+    
     // second step, create the transducer
     new TransducerBuilder().
-      dictionary(vocab.toList.sorted, true).
+      dictionary(vocab.toList.sorted.asJavaCollection, true).
       algorithm(Algorithm.STANDARD).
       defaultMaxDistance(maxDist).
       includeDistance(true).
