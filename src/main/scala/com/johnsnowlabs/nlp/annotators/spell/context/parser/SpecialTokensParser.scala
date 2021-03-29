@@ -13,7 +13,7 @@ import org.apache.hadoop.fs.FileSystem
 import org.apache.spark.sql.{Encoder, Encoders, SparkSession}
 
 import scala.collection.mutable.Set
-import scala.collection.convert.{DecorateAsJava, DecorateAsScala}
+import collection.JavaConverters._
 
 
 
@@ -130,7 +130,7 @@ trait SpecialClassParser {
   def inVocabulary(word:String): Boolean = transducer.transduce(word, 0).iterator.hasNext
 }
 
-trait RegexParser extends SpecialClassParser with DecorateAsJava with DecorateAsScala{
+trait RegexParser extends SpecialClassParser {
 
   var regex:String
 
@@ -142,7 +142,7 @@ trait RegexParser extends SpecialClassParser with DecorateAsJava with DecorateAs
 
     // second step, create the transducer
     new TransducerBuilder().
-      dictionary(matches.toList.sorted.asJavaCollection, true).
+      dictionary(matches.toList.sorted.asJava, true).
       algorithm(Algorithm.STANDARD).
       defaultMaxDistance(maxDist).
       includeDistance(true).
@@ -151,7 +151,7 @@ trait RegexParser extends SpecialClassParser with DecorateAsJava with DecorateAs
 
 }
 
-trait VocabParser extends SpecialClassParser with DecorateAsJava{
+trait VocabParser extends SpecialClassParser {
 
   var vocab: Set[String]
 
@@ -159,7 +159,7 @@ trait VocabParser extends SpecialClassParser with DecorateAsJava{
     
     // second step, create the transducer
     new TransducerBuilder().
-      dictionary(vocab.toList.sorted.asJavaCollection, true).
+      dictionary(vocab.toList.sorted.asJava, true).
       algorithm(Algorithm.STANDARD).
       defaultMaxDistance(maxDist).
       includeDistance(true).
@@ -254,7 +254,6 @@ class MainVocab() extends VocabParser with SerializableClass {
     serializeTransducer(aOutputStream, transducer)
   }
 }
-
 
 
 class NamesClass extends VocabParser with SerializableClass {
