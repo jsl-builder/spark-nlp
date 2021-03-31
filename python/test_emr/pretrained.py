@@ -4,7 +4,7 @@ from test_emr.common import get_spark
 import os
 import unittest
 
-class Pretrained(unittest.TestCase):
+class PretrainedTestSpec(unittest.TestCase):
 
     def runTest(self):
         models = [T5Transformer,
@@ -40,8 +40,13 @@ class Pretrained(unittest.TestCase):
 		MultiClassifierDLModel,
 		SentenceDetectorDLModel,
 		MarianTransformer]
+        models = models[:5]
+        failed = []
         for model in models:
             try:
+                self.spark = get_spark()
                 model.pretrained()
             except:
-                print("pretrained failed: " + str(model) )
+                failed.append(model)
+        for f in failed:
+            print("pretrained failed: " + str(f) )
