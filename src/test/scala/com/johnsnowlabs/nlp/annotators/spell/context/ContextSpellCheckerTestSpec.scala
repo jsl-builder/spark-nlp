@@ -26,40 +26,7 @@ class ContextSpellCheckerTestSpec extends FlatSpec {
   trait distFile extends WeightedLevenshtein {
     val weights = loadWeights("src/test/resources/dist.psv")
   }
-
-
-  "Spell Checker" should "deserialize" in {
-    val spark = SparkSession
-      .builder()
-      .appName("test")
-      .master("local[*]")
-      .config("spark.driver.memory", "4G")
-      .config("spark.kryoserializer.buffer.max","200M")
-      .config("spark.serializer","org.apache.spark.serializer.KryoSerializer")
-      .getOrCreate()
-
-    val spellChecker = ContextSpellCheckerModel.load("./spellcheck_2.12_")
-
-    if(util.Properties.versionString.contains("2.11")) {
-      // save classes to file - Scala 2.11
-      val file = new File("classes.txt")
-      val bw = new BufferedWriter(new FileWriter(file))
-      spellChecker.classes.getOrDefault.foreach { case (i, (j, k)) =>
-        bw.write(s"$i,$j,$k\n")
-      }
-      bw.close()
-    }else {
-
-      var map = Map.empty[Int, (Int, Int)]
-      // load classes from file - Scala 2.12
-      for (line <- Source.fromFile("classes.txt").getLines) {
-        val nums = line.split(",").map(_.toInt)
-        map += nums.head -> (nums.tail.head, nums.last)
-      }
-      spellChecker.setClasses(Map.empty)
-      spellChecker.write.save("spellcheck_2.12")
-    }
-  }
+  
 
 
   // This test fails in GitHub Actions
