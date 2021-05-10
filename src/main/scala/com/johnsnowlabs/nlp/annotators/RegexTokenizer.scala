@@ -23,10 +23,10 @@ import org.apache.spark.ml.param.{BooleanParam, IntParam, Param, ParamValidators
 import org.apache.spark.ml.util.Identifiable
 
 /**
-  * A tokenizer that splits text by regex pattern.
-  *
-  * @see [[RegexTokenizer]]
-  */
+ * A tokenizer that splits text by regex pattern.
+ *
+ * @see [[RegexTokenizer]]
+ */
 class RegexTokenizer(override val uid: String)
   extends AnnotatorModel[RegexTokenizer]
     with HasSimpleAnnotate[RegexTokenizer] {
@@ -35,25 +35,25 @@ class RegexTokenizer(override val uid: String)
 
 
   /** Output annotator type: TOKEN
-    *
-    * @group anno
-    **/
+   *
+   * @group anno
+   **/
   override val outputAnnotatorType: AnnotatorType = TOKEN
 
   /** Input annotator type: TOKEN
-    *
-    * @group anno
-    **/
+   *
+   * @group anno
+   **/
   override val inputAnnotatorTypes: Array[AnnotatorType] = Array(DOCUMENT)
 
   def this() = this(Identifiable.randomUID("RegexTokenizer"))
 
 
   /**
-    * Regex pattern used to match delimiters
-    * Default: `"\\s+"`
-    * @group param
-    */
+   * Regex pattern used to match delimiters
+   * Default: `"\\s+"`
+   * @group param
+   */
   val pattern: Param[String] = new Param(this, "pattern", "regex pattern used for tokenizing")
 
   /** @group setParam */
@@ -63,10 +63,10 @@ class RegexTokenizer(override val uid: String)
   def getPattern: String = $(pattern)
 
   /**
-    * Indicates whether to convert all characters to lowercase before tokenizing.
-    * Default: true
-    * @group param
-    **/
+   * Indicates whether to convert all characters to lowercase before tokenizing.
+   * Default: true
+   * @group param
+   **/
   val toLowercase: BooleanParam = new BooleanParam(this, "toLowercase",
     "Indicates whether to convert all characters to lowercase before tokenizing.\n")
 
@@ -77,10 +77,10 @@ class RegexTokenizer(override val uid: String)
   def getToLowercase: Boolean = $(toLowercase)
 
   /**
-    * Minimum token length, greater than or equal to 0.
-    * Default: 1, to avoid returning empty strings
-    * @group param
-    */
+   * Minimum token length, greater than or equal to 0.
+   * Default: 1, to avoid returning empty strings
+   * @group param
+   */
   val minLength: IntParam = new IntParam(this, "minLength", "minimum token length (>= 0)",
     ParamValidators.gtEq(0))
 
@@ -91,9 +91,9 @@ class RegexTokenizer(override val uid: String)
   def getMinLength: Int = $(minLength)
 
   /**
-    * Maximum token length, greater than or equal to 1.
-    * @group param
-    */
+   * Maximum token length, greater than or equal to 1.
+   * @group param
+   */
   val maxLength: IntParam = new IntParam(this, "maxLength", "maximum token length (>= 1)",
     ParamValidators.gtEq(1))
 
@@ -104,14 +104,24 @@ class RegexTokenizer(override val uid: String)
   def getMaxLength: Int = $(maxLength)
 
   /**
-    * Indicates whether to apply the regex tokenization using a positional mask to guarantee the incremental progression
-    * Default: false
-    * @group param
-    **/
+   * Indicates whether to apply the regex tokenization using a positional mask to guarantee the incremental progression
+   * Default: false
+   * @group param
+   **/
   val positionalMask: BooleanParam =
     new BooleanParam(this,
       "positionalMask",
       "Using a positional mask to guarantee the incremental progression of the tokenization.")
+
+  /**
+   * Indicates whether to apply pre-tokenization clean up, normalizing multiple spaces, tabs and EOL chars
+   * Default: false
+   * @group param
+   **/
+  val preTokenizationNormalization: BooleanParam =
+    new BooleanParam(this,
+      "preTokenizationNormalization",
+      "Indicates whether to apply pre-tokenization clean up, normalizing multiple spaces, tabs and EOL chars.")
 
   /** @group setParam */
   def setPositionalMask(value: Boolean): this.type = set(positionalMask, value)
@@ -119,21 +129,28 @@ class RegexTokenizer(override val uid: String)
   /** @group getParam */
   def getPositionalMask: Boolean = $(positionalMask)
 
+  /** @group setParam */
+  def setPreTokenizationNormalization(value: Boolean): this.type = set(preTokenizationNormalization, value)
+
+  /** @group getParam */
+  def getPreTokenizationNormalization: Boolean = $(preTokenizationNormalization)
+
   setDefault(
     inputCols -> Array(DOCUMENT),
     outputCol -> "regexToken",
     toLowercase -> false,
     minLength -> 1,
     pattern -> "\\s+",
-    positionalMask -> false
+    positionalMask -> false,
+    preTokenizationNormalization -> false
   )
 
   /**
-    * This func generates a Seq of TokenizedSentences from a Seq of Sentences preserving positional progression
-    *
-    * @param sentences to tag
-    * @return Seq of TokenizedSentence objects
-    */
+   * This func generates a Seq of TokenizedSentences from a Seq of Sentences preserving positional progression
+   *
+   * @param sentences to tag
+   * @return Seq of TokenizedSentence objects
+   */
   def tagWithPositionalMask(sentences: Seq[Sentence]): Seq[TokenizedSentence] = {
 
     def calculateIndex(indexType: String, mask: Array[Int], text: String, token: String) = {
@@ -167,11 +184,11 @@ class RegexTokenizer(override val uid: String)
   }
 
   /**
-    * This func generates a Seq of TokenizedSentences from a Seq of Sentences.
-    *
-    * @param sentences to tag
-    * @return Seq of TokenizedSentence objects
-    */
+   * This func generates a Seq of TokenizedSentences from a Seq of Sentences.
+   *
+   * @param sentences to tag
+   * @return Seq of TokenizedSentence objects
+   */
   def tag(sentences: Seq[Sentence]): Seq[TokenizedSentence] = {
     sentences.map { text =>
       var curPos = 0
@@ -191,9 +208,42 @@ class RegexTokenizer(override val uid: String)
     }
   }
 
+  /**
+   * Apply pre-tokenization normalization to the sentence content to prevent index mismatch in tokenization.
+   * */
+  def applyPreTokenizationNormalization: Seq[Sentence] => Seq[Sentence] = {
+    val MultiSpaces = " +"
+    val Space = " "
+    val EmptyStr = ""
+    val Tab = "\t"
+
+    def processSentenceContentNormalization: String => String =
+      content => {
+        val normalizedContent =
+          if (content == null || content.length() == 0) {
+            ""
+          }
+          else {
+            val startWithSpace = if (content.startsWith(Space)) true else false
+            val endWithSpace = if (content.endsWith(Space)) true else false
+
+            val normalized = content.trim.replaceAll(MultiSpaces, Space).replaceAll(Tab, EmptyStr).stripLineEnd
+
+            val prefixed = if (startWithSpace) Space + normalized else normalized
+            val suffixed = if (endWithSpace) prefixed + Space else prefixed
+
+            suffixed
+          }
+        normalizedContent
+      }
+
+    sentences => { sentences.map { s => s.copy(content = processSentenceContentNormalization(s.content)) } }
+  }
+
   override def annotate(annotations: Seq[Annotation]): Seq[Annotation] = {
     val sentences = SentenceSplit.unpack(annotations)
-    val tokenized = if(getPositionalMask) tagWithPositionalMask(sentences) else tag(sentences)
+    val preTokenized = if(getPreTokenizationNormalization) applyPreTokenizationNormalization(sentences) else sentences
+    val tokenized = if(getPositionalMask) tagWithPositionalMask(preTokenized) else tag(preTokenized)
     TokenizedWithSentence.pack(tokenized)
   }
 }
