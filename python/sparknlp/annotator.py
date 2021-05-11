@@ -355,7 +355,8 @@ class RegexTokenizer(AnnotatorModel):
             toLowercase=False,
             minLength=1,
             pattern="\\s+",
-            positionalMask=False
+            positionalMask=False,
+            preTokenizationNormalization=False
         )
 
     minLength = Param(Params._dummy(),
@@ -383,6 +384,12 @@ class RegexTokenizer(AnnotatorModel):
                            "Using a positional mask to guarantee the incremental progression of the tokenization.",
                            typeConverter=TypeConverters.toBoolean)
 
+    preTokenizationNormalization = Param(Params._dummy(),
+                           "preTokenizationNormalization",
+                           "Indicates whether to apply pre-tokenization clean up, normalizing multiple spaces, "
+                           "tabs and EOL chars.",
+                           typeConverter=TypeConverters.toBoolean)
+
     def setMinLength(self, value):
         return self._set(minLength=value)
 
@@ -397,6 +404,9 @@ class RegexTokenizer(AnnotatorModel):
 
     def setPositionalMask(self, value):
         return self._set(positionalMask=value)
+
+    def setPreTokenizationNormalization(self, value):
+        return self._set(preTokenizationNormalization=value)
 
 
 class ChunkTokenizer(Tokenizer):
