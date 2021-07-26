@@ -328,7 +328,7 @@ trait ReadXlmRobertaTensorflowModel extends ReadTensorflowModel with ReadSentenc
 
   addReader(readTensorflow)
 
-  def loadSavedModel(tfModelPath: String, spark: SparkSession): XlmRoBertaEmbeddings = {
+  def loadSavedModel(tfModelPath: String, spark: SparkSession, useTfIo: Boolean = false): XlmRoBertaEmbeddings = {
 
     val f = new File(tfModelPath)
     val savedModel = new File(tfModelPath, "saved_model.pb")
@@ -343,7 +343,12 @@ trait ReadXlmRobertaTensorflowModel extends ReadTensorflowModel with ReadSentenc
     require(sppModel.exists(), s"SentencePiece model 30k-clean.model not found in folder $sppModelPath")
 
 
-    val (wrapper, signatures) = TensorflowWrapper.read(tfModelPath, zipped = false, useBundle = true)
+    val (wrapper, signatures) =
+      if(useTfIo)
+        TensorflowWrapperWithTfIo.read(tfModelPath, zipped = false, useBundle = true)
+      else
+        TensorflowWrapper.read(tfModelPath, zipped = false, useBundle = true)
+
     val spp = SentencePieceWrapper.read(sppModel.toString)
 
     val _signatures = signatures match {
