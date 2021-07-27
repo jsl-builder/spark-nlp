@@ -1,6 +1,6 @@
 package com.johnsnowlabs.nlp.annotators.classifier.dl
 
-import com.johnsnowlabs.ml.tensorflow.{ClassifierDatasetEncoder, ClassifierDatasetEncoderParams, ReadTensorflowModel, TensorflowMultiClassifier, TensorflowWrapper, WriteTensorflowModel}
+import com.johnsnowlabs.ml.tensorflow.{ClassifierDatasetEncoder, ClassifierDatasetEncoderParams, ReadTensorflowModel, TFWrapper, TensorflowMultiClassifier, TensorflowWrapper, WriteTensorflowModel}
 import com.johnsnowlabs.nlp.AnnotatorType.{CATEGORY, SENTENCE_EMBEDDINGS}
 import com.johnsnowlabs.nlp._
 import com.johnsnowlabs.nlp.annotators.ner.Verbose
@@ -182,7 +182,7 @@ class MultiClassifierDLModel(override val uid: String)
 
   private var _model: Option[Broadcast[TensorflowMultiClassifier]] = None
 
-  def setModelIfNotSet(spark: SparkSession, tf: TensorflowWrapper): this.type = {
+  def setModelIfNotSet(spark: SparkSession, tf: TFWrapper[_]): this.type = {
     if (_model.isEmpty) {
 
       require(datasetParams.isSet, "datasetParams must be set before usage")

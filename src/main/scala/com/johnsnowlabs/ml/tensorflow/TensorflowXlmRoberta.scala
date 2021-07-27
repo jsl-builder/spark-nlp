@@ -59,7 +59,7 @@ import scala.collection.JavaConverters._
  * @param configProtoBytes     Configuration for TensorFlow session
  */
 
-class TensorflowXlmRoberta(val tensorflowWrapper: TensorflowWrapper,
+class TensorflowXlmRoberta(val tensorflowWrapper: TFWrapper[_],
                            val spp: SentencePieceWrapper,
                            batchSize: Int,
                            configProtoBytes: Option[Array[Byte]] = None,
@@ -117,7 +117,15 @@ class TensorflowXlmRoberta(val tensorflowWrapper: TensorflowWrapper,
     val tokenTensors = tensors.createIntBufferTensor(shape, tokenBuffers)
     val maskTensors = tensorsMasks.createIntBufferTensor(shape, maskBuffers)
 
-    val runner = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false).runner
+    val runner =
+      if(tensorflowWrapper.getUseTFIO)
+        tensorflowWrapper.asInstanceOf[TensorflowWrapperWithTfIo]
+          .getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false)
+          .runner
+      else
+        tensorflowWrapper.asInstanceOf[TensorflowWrapper]
+          .getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false)
+          .runner
 
     runner
       .feed(_tfRoBertaSignatures.getOrElse(ModelSignatureConstants.InputIds.key, "missing_input_id_key"), tokenTensors)

@@ -165,7 +165,7 @@ class ClassifierDLModel(override val uid: String)
 
   private var _model: Option[Broadcast[TensorflowClassifier]] = None
 
-  def setModelIfNotSet(spark: SparkSession, tf: TensorflowWrapper): this.type = {
+  def setModelIfNotSet(spark: SparkSession, tfWrapper: TFWrapper[_]): this.type = {
     if (_model.isEmpty) {
 
       require(datasetParams.isSet, "datasetParams must be set before usage")
@@ -175,7 +175,7 @@ class ClassifierDLModel(override val uid: String)
       _model = Some(
         spark.sparkContext.broadcast(
           new TensorflowClassifier(
-            tf,
+            tfWrapper,
             encoder,
             Verbose.Silent
           )

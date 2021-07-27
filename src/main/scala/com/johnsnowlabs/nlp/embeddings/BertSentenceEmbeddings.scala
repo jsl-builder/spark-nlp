@@ -267,7 +267,7 @@ class BertSentenceEmbeddings(override val uid: String)
   def getModelIfNotSet: TensorflowBert = _model.get.value
 
   /** @group setParam */
-  def setModelIfNotSet(spark: SparkSession, tensorflow: TensorflowWrapper): this.type = {
+  def setModelIfNotSet(spark: SparkSession, tensorflow: TFWrapper[_]): this.type = {
     if (_model.isEmpty) {
 
       _model = Some(spark.sparkContext.broadcast(

@@ -235,7 +235,7 @@ class AlbertEmbeddings(override val uid: String)
   private var _model: Option[Broadcast[TensorflowAlbert]] = None
 
   /** @group setParam */
-  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TensorflowWrapper, spp: SentencePieceWrapper): AlbertEmbeddings = {
+  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TFWrapper[_], spp: SentencePieceWrapper): AlbertEmbeddings = {
     if (_model.isEmpty) {
 
       _model = Some(

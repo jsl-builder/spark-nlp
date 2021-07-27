@@ -220,19 +220,12 @@ class XlmRoBertaEmbeddingsTestSpec extends FlatSpec {
       .setInputCols(Array("document"))
       .setOutputCol("token")
 
-    //    val embeddings = XlmRoBertaEmbeddings.pretrained()
-    //      .setInputCols("document", "token")
-    //      .setOutputCol("embeddings")
-    //      .setCaseSensitive(true)
-    //      .setMaxSentenceLength(512)
-    //      .setBatchSize(12)
-
     val savedModelPath = "/home/wolliqeonii/workspace/dev/jsl/hugs/jplu-tf-xlm-roberta-large/saved_model/1"
-    val embeddings = XlmRoBertaEmbeddings.loadSavedModel(savedModelPath, ResourceHelper.spark)
+    val embeddings = XlmRoBertaEmbeddings.loadSavedModel(savedModelPath, ResourceHelper.spark, useTfIo = true)
 
-    //    val pipeline = new Pipeline().setStages(Array(document, tokenizer, embeddings))
-    //
-    //    val pipelineModel = pipeline.fit(ddd)
-    //    pipelineModel.transform(ddd).show()
+    val pipeline = new Pipeline().setStages(Array(document, tokenizer, embeddings))
+
+    val pipelineModel = pipeline.fit(ddd)
+    pipelineModel.transform(ddd).show()
   }
 }

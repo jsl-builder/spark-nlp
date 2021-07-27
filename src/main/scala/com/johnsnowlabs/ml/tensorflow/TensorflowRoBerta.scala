@@ -55,7 +55,7 @@ import scala.collection.JavaConverters._
  * @param configProtoBytes ProtoBytes for TensorFlow session config
  * @param signatures Model's inputs and output(s) signatures
  */
-class TensorflowRoBerta(val tensorflowWrapper: TensorflowWrapper,
+class TensorflowRoBerta(val tensorflowWrapper: TFWrapper[_],
                         sentenceStartTokenId: Int,
                         sentenceEndTokenId: Int,
                         padTokenId: Int,
@@ -100,7 +100,13 @@ class TensorflowRoBerta(val tensorflowWrapper: TensorflowWrapper,
         maskBuffers.offset(offset).write(sentence.map(x => if (x == padTokenId) 0 else 1))
       }
 
-    val runner = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, initAllTables = false).runner
+    val runner =
+      tensorflowWrapper
+        .getTFHubSession(configProtoBytes = configProtoBytes,
+          initAllTables = false,
+          loadSP = false,
+          savedSignatures = None)
+        .runner
 
     val tokenTensors = tensors.createIntBufferTensor(shape, tokenBuffers)
     val maskTensors = tensors.createIntBufferTensor(shape, maskBuffers)
@@ -159,7 +165,13 @@ class TensorflowRoBerta(val tensorflowWrapper: TensorflowWrapper,
       maskBuffers.offset(offset).write(sentence.map(x => if (x == 0) 0 else 1))
     }
 
-    val runner = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false).runner
+    val runner =
+      tensorflowWrapper
+        .getTFHubSession(configProtoBytes = configProtoBytes,
+          initAllTables = false,
+          loadSP = false,
+          savedSignatures = signatures)
+        .runner
 
     val tokenTensors = tensors.createIntBufferTensor(shape, tokenBuffers)
     val maskTensors = tensorsMasks.createIntBufferTensor(shape, maskBuffers)

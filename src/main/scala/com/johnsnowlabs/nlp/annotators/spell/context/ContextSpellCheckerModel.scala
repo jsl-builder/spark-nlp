@@ -360,7 +360,7 @@ class ContextSpellCheckerModel(override val uid: String) extends AnnotatorModel[
 
   def getModelIfNotSet: TensorflowSpell = _model.get.value
 
-  def setModelIfNotSet(spark: SparkSession, tensorflow: TensorflowWrapper): this.type = {
+  def setModelIfNotSet(spark: SparkSession, tensorflow: TFWrapper[_]): this.type = {
     if (_model.isEmpty) {
       _model = Some(
         spark.sparkContext.broadcast(

@@ -216,7 +216,7 @@ class LanguageDetectorDL(override val uid: String)
   def getModelIfNotSet: TensorflowLD = _model.get.value
 
   /** @group setParam */
-  def setModelIfNotSet(spark: SparkSession, tensorflow: TensorflowWrapper): this.type = {
+  def setModelIfNotSet(spark: SparkSession, tensorflow: TFWrapper[_]): this.type = {
     if (_model.isEmpty) {
 
       _model = Some(

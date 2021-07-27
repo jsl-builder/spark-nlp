@@ -17,16 +17,15 @@
 
 package com.johnsnowlabs.ml.tensorflow
 
+import com.johnsnowlabs.ml.tensorflow.TensorflowWrapper.{InitAllTableOP, processInitAllTableOp, unpackFromBundle, unpackWithoutBundle, withSafeSavedModelBundleLoader}
 import com.johnsnowlabs.ml.tensorflow.sentencepiece.LoadSentencepiece
 import com.johnsnowlabs.ml.tensorflow.sign.ModelSignatureManager
 import com.johnsnowlabs.nlp.annotators.ner.dl.LoadsContrib
 import com.johnsnowlabs.nlp.util.io.ResourceHelper
 import com.johnsnowlabs.util.{FileHelper, ZipArchiveUtil}
-
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.WildcardFileFilter
 import org.apache.hadoop.fs.Path
-
 import org.tensorflow._
 import org.tensorflow.exceptions.TensorFlowException
 import org.tensorflow.proto.framework.{ConfigProto, GraphDef}
@@ -35,21 +34,48 @@ import java.io._
 import java.net.URI
 import java.nio.file.{Files, Paths}
 import java.util.UUID
-
 import scala.util.{Failure, Success, Try}
-
 import org.slf4j.{Logger, LoggerFactory}
 
 
 case class Variables(variables: Array[Byte], index: Array[Byte])
+
 
 case class ModelSignature(operation: String,
                           value: String,
                           matchingPatterns: List[String])
 
 
+trait TFWrapper[S <: TFWrapper[S]] {
+
+  def getTFHubSession(configProtoBytes: Option[Array[Byte]], initAllTables: Boolean, loadSP: Boolean, savedSignatures: Option[Map[String, String]]): Session
+
+  def saveToFile(tfFile: String, configProtoBytes: Option[Array[Byte]]): Unit
+
+  def getSession(configProtoBytes: Option[Array[Byte]]): Session
+
+  def createSession(configProtoBytes: Option[Array[Byte]]): Session
+
+  def saveToFileV1V2(tfFile: String,
+                     configProtoBytes: Option[Array[Byte]],
+                     savedSignatures: Option[Map[String, String]]): Unit
+
+  def useTFIO: Boolean
+
+  def getUseTFIO: Boolean = useTFIO
+
+  def read(file: String,
+           zipped: Boolean = true,
+           useBundle: Boolean = false,
+           tags: Array[String] = Array.empty[String],
+           initAllTables: Boolean = false,
+           savedSignatures: Option[Map[String, String]] = None): (TFWrapper[_], Option[Map[String, String]])
+}
+
 class TensorflowWrapper(var variables: Variables,
-                        var graph: Array[Byte]) extends Serializable {
+                        var graph: Array[Byte]) extends Serializable with TFWrapper[TensorflowWrapper] {
+
+  lazy val useTFIO = false
 
   /** For Deserialization */
   def this() = {
@@ -99,7 +125,7 @@ class TensorflowWrapper(var variables: Variables,
     m_session
   }
 
-  def getTFHubSession(configProtoBytes: Option[Array[Byte]] = None,
+  override def getTFHubSession(configProtoBytes: Option[Array[Byte]] = None,
                       initAllTables: Boolean = true,
                       loadSP: Boolean = false,
                       savedSignatures: Option[Map[String, String]] = None): Session = {
@@ -141,7 +167,7 @@ class TensorflowWrapper(var variables: Variables,
     m_session
   }
 
-  def createSession(configProtoBytes: Option[Array[Byte]] = None): Session = {
+  override def createSession(configProtoBytes: Option[Array[Byte]] = None): Session = {
 
     if (m_session == null) {
 
@@ -209,11 +235,11 @@ class TensorflowWrapper(var variables: Variables,
     }
 
     /**
-     * addTarget operation is the result of '''saverDef.getSaveTensorName()'''
-     * feed operation is the result of '''saverDef.getFilenameTensorName()'''
-     *
-     * @return List[Tensor]
-     */
+      * addTarget operation is the result of '''saverDef.getSaveTensorName()'''
+      * feed operation is the result of '''saverDef.getFilenameTensorName()'''
+      *
+      * @return List[Tensor]
+      */
     def runSessionNew = {
       getSession(configProtoBytes).runner
         .addTarget(_tfSignatures.getOrElse("saveTensorName_", "StatefulPartitionedCall_1"))
@@ -258,6 +284,67 @@ class TensorflowWrapper(var variables: Variables,
     t.clearTensors()
   }
 
+  /**
+    * Read method to create tmp folder, unpack archive and read file as SavedModelBundle
+    *
+    * @param file          : the file to read
+    * @param zipped        : boolean flag to know if compression is applied
+    * @param useBundle     : whether to use the SaveModelBundle object to parse the TF saved model
+    * @param tags          : tags to retrieve on the model bundle
+    * @param initAllTables : boolean flag whether to retrieve the TF init operation
+    * @return Returns a greeting based on the `name` field.
+    */
+  def read(file: String,
+           zipped: Boolean = true,
+           useBundle: Boolean = false,
+           tags: Array[String] = Array.empty[String],
+           initAllTables: Boolean = false,
+           savedSignatures: Option[Map[String, String]] = None): (TFWrapper[_], Option[Map[String, String]]) = {
+
+    val t = new TensorResources()
+
+    // 1. Create tmp folder
+    val tmpFolder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_ner")
+      .toAbsolutePath.toString
+
+    // 2. Unpack archive
+    val folder =
+      if (zipped)
+        ZipArchiveUtil.unzip(new File(file), Some(tmpFolder))
+      else
+        file
+
+    LoadsContrib.loadContribToTensorflow()
+
+    // 3. Read file as SavedModelBundle
+    val (graph, session, varPath, idxPath, signatures) =
+      if (useBundle) {
+        val model: SavedModelBundle = withSafeSavedModelBundleLoader(tags = tags, savedModelDir = folder)
+        val (graph, session, varPath, idxPath) = unpackFromBundle(folder, model)
+        if (initAllTables) session.runner().addTarget(InitAllTableOP)
+
+        // Extract saved model signatures
+        val saverDef = model.metaGraphDef().getSaverDef
+        val signatures = ModelSignatureManager.extractSignatures(model, saverDef)
+
+        (graph, session, varPath, idxPath, signatures)
+      } else {
+        val (graph, session, varPath, idxPath) = unpackWithoutBundle(folder)
+        processInitAllTableOp(initAllTables, t, session, folder, savedSignatures = savedSignatures)
+
+        (graph, session, varPath, idxPath, None)
+      }
+
+    val varBytes = Files.readAllBytes(varPath)
+    val idxBytes = Files.readAllBytes(idxPath)
+
+    // 4. Remove tmp folder
+    FileHelper.delete(tmpFolder)
+    t.clearTensors()
+    val tfWrapper = new TensorflowWrapper(Variables(varBytes, idxBytes), graph.toGraphDef.toByteArray)
+    tfWrapper.m_session = session
+    (tfWrapper, signatures)
+  }
 }
 
 /** Companion object */
@@ -326,9 +413,9 @@ object TensorflowWrapper {
       .feed(SaveConstOP, tensorResources.createTensor(Paths.get(variablesDir, variablesKey).toString))
 
     /**
-     * addTarget operation is the result of '''saverDef.getRestoreOpName()'''
-     * feed operation is the result of '''saverDef.getFilenameTensorName()'''
-     */
+      * addTarget operation is the result of '''saverDef.getRestoreOpName()'''
+      * feed operation is the result of '''saverDef.getFilenameTensorName()'''
+      */
     lazy val newSessionRunner = session.runner
       .addTarget(_tfSignatures.getOrElse("restoreOpName_", "StatefulPartitionedCall_2"))
       .feed(_tfSignatures.getOrElse("filenameTensorName_", "saver_filename"), tensorResources.createTensor(Paths.get(variablesDir, variablesKey).toString))
@@ -379,263 +466,263 @@ object TensorflowWrapper {
   }
 
   /**
-   * Read method to create tmp folder, unpack archive and read file as SavedModelBundle
-   *
-   * @param file          : the file to read
-   * @param zipped        : boolean flag to know if compression is applied
-   * @param useBundle     : whether to use the SaveModelBundle object to parse the TF saved model
-   * @param tags          : tags to retrieve on the model bundle
-   * @param initAllTables : boolean flag whether to retrieve the TF init operation
-   * @return Returns a greeting based on the `name` field.
-   */
-  def read(file: String,
-           zipped: Boolean = true,
-           useBundle: Boolean = false,
-           tags: Array[String] = Array.empty[String],
-           initAllTables: Boolean = false,
-           savedSignatures: Option[Map[String, String]] = None): (TensorflowWrapper, Option[Map[String, String]]) = {
+    * Read method to create tmp folder, unpack archive and read file as SavedModelBundle
+    *
+    * @param file          : the file to read
+    * @param zipped        : boolean flag to know if compression is applied
+    * @param useBundle     : whether to use the SaveModelBundle object to parse the TF saved model
+    * @param tags          : tags to retrieve on the model bundle
+    * @param initAllTables : boolean flag whether to retrieve the TF init operation
+    * @return Returns a greeting based on the `name` field.
+    */
+    def read(file: String,
+                      zipped: Boolean = true,
+                      useBundle: Boolean = false,
+                      tags: Array[String] = Array.empty[String],
+                      initAllTables: Boolean = false,
+                      savedSignatures: Option[Map[String, String]] = None): (TFWrapper[TensorflowWrapper], Option[Map[String, String]]) = {
 
-    val t = new TensorResources()
+      val t = new TensorResources()
 
-    // 1. Create tmp folder
-    val tmpFolder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_ner")
-      .toAbsolutePath.toString
-
-    // 2. Unpack archive
-    val folder =
-      if (zipped)
-        ZipArchiveUtil.unzip(new File(file), Some(tmpFolder))
-      else
-        file
-
-    LoadsContrib.loadContribToTensorflow()
-
-    // 3. Read file as SavedModelBundle
-    val (graph, session, varPath, idxPath, signatures) =
-      if (useBundle) {
-        val model: SavedModelBundle = withSafeSavedModelBundleLoader(tags = tags, savedModelDir = folder)
-        val (graph, session, varPath, idxPath) = unpackFromBundle(folder, model)
-        if (initAllTables) session.runner().addTarget(InitAllTableOP)
-
-        // Extract saved model signatures
-        val saverDef = model.metaGraphDef().getSaverDef
-        val signatures = ModelSignatureManager.extractSignatures(model, saverDef)
-
-        (graph, session, varPath, idxPath, signatures)
-      } else {
-        val (graph, session, varPath, idxPath) = unpackWithoutBundle(folder)
-        processInitAllTableOp(initAllTables, t, session, folder, savedSignatures = savedSignatures)
-
-        (graph, session, varPath, idxPath, None)
-      }
-
-    val varBytes = Files.readAllBytes(varPath)
-    val idxBytes = Files.readAllBytes(idxPath)
-
-    // 4. Remove tmp folder
-    FileHelper.delete(tmpFolder)
-    t.clearTensors()
-    val tfWrapper = new TensorflowWrapper(Variables(varBytes, idxBytes), graph.toGraphDef.toByteArray)
-    tfWrapper.m_session = session
-    (tfWrapper, signatures)
-  }
-
-  def readWithSP(
-                  file: String,
-                  zipped: Boolean = true,
-                  useBundle: Boolean = false,
-                  tags: Array[String] = Array.empty[String],
-                  initAllTables: Boolean = false,
-                  loadSP: Boolean = false
-                ): TensorflowWrapper = {
-    val t = new TensorResources()
-
-    // 1. Create tmp folder
-    val tmpFolder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_ner")
-      .toAbsolutePath.toString
-
-    // 2. Unpack archive
-    val folder = if (zipped)
-      ZipArchiveUtil.unzip(new File(file), Some(tmpFolder))
-    else
-      file
-
-    if (loadSP) {
-      LoadSentencepiece.loadSPToTensorflowLocally()
-      LoadSentencepiece.loadSPToTensorflow()
-    }
-    // 3. Read file as SavedModelBundle
-    val (graph, session, varPath, idxPath) =
-      if (useBundle) {
-        val model: SavedModelBundle = withSafeSavedModelBundleLoader(tags = tags, savedModelDir = folder)
-        val (graph, session, varPath, idxPath) = unpackFromBundle(folder, model)
-        if (initAllTables) session.runner().addTarget(InitAllTableOP)
-        (graph, session, varPath, idxPath)
-      } else {
-        val (graph, session, varPath, idxPath) = unpackWithoutBundle(folder)
-        processInitAllTableOp(initAllTables, t, session, folder)
-        (graph, session, varPath, idxPath)
-      }
-
-    val varBytes = Files.readAllBytes(varPath)
-    val idxBytes = Files.readAllBytes(idxPath)
-
-    // 4. Remove tmp folder
-    FileHelper.delete(tmpFolder)
-    t.clearTensors()
-
-    val tfWrapper = new TensorflowWrapper(Variables(varBytes, idxBytes), graph.toGraphDef.toByteArray)
-    tfWrapper.m_session = session
-    tfWrapper
-  }
-
-  def readZippedSavedModel(
-                            rootDir: String = "",
-                            fileName: String = "",
-                            tags: Array[String] = Array.empty[String],
-                            initAllTables: Boolean = false
-                          ): TensorflowWrapper = {
-    val tensorResources = new TensorResources()
-
-    val listFiles = ResourceHelper.listResourceDirectory(rootDir)
-
-    val path =
-      if (listFiles.length > 1)
-        s"${listFiles.head.split("/").head}/$fileName"
-      else
-        listFiles.head
-
-    val uri = new URI(path.replaceAllLiterally("\\", "/"))
-
-    val inputStream = ResourceHelper.getResourceStream(uri.toString)
-
-    // 1. Create tmp folder
-    val tmpFolder =
-      Files
-        .createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_classifier_dl_zip")
+      // 1. Create tmp folder
+      val tmpFolder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_ner")
         .toAbsolutePath.toString
 
-    val zipFile = new File(tmpFolder, "tmp_classifier_dl.zip")
+      // 2. Unpack archive
+      val folder =
+        if (zipped)
+          ZipArchiveUtil.unzip(new File(file), Some(tmpFolder))
+        else
+          file
 
-    Files.copy(inputStream, zipFile.toPath)
+      LoadsContrib.loadContribToTensorflow()
 
-    // 2. Unpack archive
-    val folder = ZipArchiveUtil.unzip(zipFile, Some(tmpFolder))
+      // 3. Read file as SavedModelBundle
+      val (graph, session, varPath, idxPath, signatures) =
+        if (useBundle) {
+          val model: SavedModelBundle = withSafeSavedModelBundleLoader(tags = tags, savedModelDir = folder)
+          val (graph, session, varPath, idxPath) = unpackFromBundle(folder, model)
+          if (initAllTables) session.runner().addTarget(InitAllTableOP)
 
-    // 3. Create second tmp folder
-    val finalFolder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_classifier_dl")
-      .toAbsolutePath.toString
+          // Extract saved model signatures
+          val saverDef = model.metaGraphDef().getSaverDef
+          val signatures = ModelSignatureManager.extractSignatures(model, saverDef)
 
-    val variablesFile = Paths.get(finalFolder, VariablesKey).toAbsolutePath
-    Files.createDirectory(variablesFile)
+          (graph, session, varPath, idxPath, signatures)
+        } else {
+          val (graph, session, varPath, idxPath) = unpackWithoutBundle(folder)
+          processInitAllTableOp(initAllTables, t, session, folder, savedSignatures = savedSignatures)
 
-    // 4. Copy the saved_model.zip into tmp folder
-    val savedModelInputStream = ResourceHelper.getResourceStream(new Path(folder, SavedModelPB).toString)
-    val savedModelFile = new File(finalFolder, SavedModelPB)
-    Files.copy(savedModelInputStream, savedModelFile.toPath)
+          (graph, session, varPath, idxPath, None)
+        }
 
-    val varIndexInputStream = ResourceHelper.getResourceStream(new Path(folder, VariablesIdxValue).toString)
-    val varIndexFile = new File(variablesFile.toString, VariablesIdxValue)
-    Files.copy(varIndexInputStream, varIndexFile.toPath)
+      val varBytes = Files.readAllBytes(varPath)
+      val idxBytes = Files.readAllBytes(idxPath)
 
-    val varDataInputStream = ResourceHelper.getResourceStream(new Path(folder, VariablesPathValue).toString)
-    val varDataFile = new File(variablesFile.toString, VariablesPathValue)
-    Files.copy(varDataInputStream, varDataFile.toPath)
+      // 4. Remove tmp folder
+      FileHelper.delete(tmpFolder)
+      t.clearTensors()
+      val tfWrapper = new TensorflowWrapper(Variables(varBytes, idxBytes), graph.toGraphDef.toByteArray)
+      tfWrapper.m_session = session
+      (tfWrapper, signatures)
+    }
 
-    // 5. Read file as SavedModelBundle
-    val model = withSafeSavedModelBundleLoader(tags = tags, savedModelDir = finalFolder)
+    def readWithSP(
+                    file: String,
+                    zipped: Boolean = true,
+                    useBundle: Boolean = false,
+                    tags: Array[String] = Array.empty[String],
+                    initAllTables: Boolean = false,
+                    loadSP: Boolean = false
+                  ): TensorflowWrapper = {
+      val t = new TensorResources()
 
-    val (graph, session, varPath, idxPath) = unpackFromBundle(finalFolder, model)
+      // 1. Create tmp folder
+      val tmpFolder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_ner")
+        .toAbsolutePath.toString
 
-    if (initAllTables) session.runner().addTarget(InitAllTableOP)
-
-    val varBytes = Files.readAllBytes(varPath)
-    val idxBytes = Files.readAllBytes(idxPath)
-
-    // 6. Remove tmp folder
-    FileHelper.delete(tmpFolder)
-    FileHelper.delete(finalFolder)
-    FileHelper.delete(folder)
-    tensorResources.clearTensors()
-
-    val tfWrapper = new TensorflowWrapper(Variables(varBytes, idxBytes), graph.toGraphDef.toByteArray)
-    tfWrapper.m_session = session
-    tfWrapper
-  }
-
-  def readChkPoints(
-                     file: String,
-                     zipped: Boolean = true,
-                     tags: Array[String] = Array.empty[String],
-                     initAllTables: Boolean = false
-                   ): TensorflowWrapper = {
-    val t = new TensorResources()
-
-    // 1. Create tmp folder
-    val tmpFolder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_ner")
-      .toAbsolutePath.toString
-
-    // 2. Unpack archive
-    val folder =
-      if (zipped)
+      // 2. Unpack archive
+      val folder = if (zipped)
         ZipArchiveUtil.unzip(new File(file), Some(tmpFolder))
       else
         file
 
-    LoadsContrib.loadContribToTensorflow()
+      if (loadSP) {
+        LoadSentencepiece.loadSPToTensorflowLocally()
+        LoadSentencepiece.loadSPToTensorflow()
+      }
+      // 3. Read file as SavedModelBundle
+      val (graph, session, varPath, idxPath) =
+        if (useBundle) {
+          val model: SavedModelBundle = withSafeSavedModelBundleLoader(tags = tags, savedModelDir = folder)
+          val (graph, session, varPath, idxPath) = unpackFromBundle(folder, model)
+          if (initAllTables) session.runner().addTarget(InitAllTableOP)
+          (graph, session, varPath, idxPath)
+        } else {
+          val (graph, session, varPath, idxPath) = unpackWithoutBundle(folder)
+          processInitAllTableOp(initAllTables, t, session, folder)
+          (graph, session, varPath, idxPath)
+        }
 
-    val tfChkPointsVars = FileUtils.listFilesAndDirs(
-      new File(folder),
-      new WildcardFileFilter("part*"),
-      new WildcardFileFilter("variables*")
-    ).toArray()
+      val varBytes = Files.readAllBytes(varPath)
+      val idxBytes = Files.readAllBytes(idxPath)
 
-    val variablesDir = tfChkPointsVars(1).toString
-    val variablesData = tfChkPointsVars(2).toString
-    val variablesIndex = tfChkPointsVars(3).toString
+      // 4. Remove tmp folder
+      FileHelper.delete(tmpFolder)
+      t.clearTensors()
 
-    // 3. Read file as SavedModelBundle
-    val graph = readGraph(Paths.get(folder, SavedModelPB).toString)
-    val session = new Session(graph, ConfigProto.parseFrom(TFSessionConfig))
-    val varPath = Paths.get(variablesData)
-    val idxPath = Paths.get(variablesIndex)
+      val tfWrapper = new TensorflowWrapper(Variables(varBytes, idxBytes), graph.toGraphDef.toByteArray)
+      tfWrapper.m_session = session
+      tfWrapper
+    }
 
-    processInitAllTableOp(initAllTables, t, session, variablesDir, variablesKey = "part-00000-of-00001")
+    def readZippedSavedModel(
+                              rootDir: String = "",
+                              fileName: String = "",
+                              tags: Array[String] = Array.empty[String],
+                              initAllTables: Boolean = false
+                            ): TensorflowWrapper = {
+      val tensorResources = new TensorResources()
 
-    val varBytes = Files.readAllBytes(varPath)
-    val idxBytes = Files.readAllBytes(idxPath)
+      val listFiles = ResourceHelper.listResourceDirectory(rootDir)
 
-    // 4. Remove tmp folder
-    FileHelper.delete(tmpFolder)
-    t.clearTensors()
+      val path =
+        if (listFiles.length > 1)
+          s"${listFiles.head.split("/").head}/$fileName"
+        else
+          listFiles.head
 
-    val tfWrapper = new TensorflowWrapper(Variables(varBytes, idxBytes), graph.toGraphDef.toByteArray)
-    tfWrapper.m_session = session
-    tfWrapper
+      val uri = new URI(path.replaceAllLiterally("\\", "/"))
+
+      val inputStream = ResourceHelper.getResourceStream(uri.toString)
+
+      // 1. Create tmp folder
+      val tmpFolder =
+        Files
+          .createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_classifier_dl_zip")
+          .toAbsolutePath.toString
+
+      val zipFile = new File(tmpFolder, "tmp_classifier_dl.zip")
+
+      Files.copy(inputStream, zipFile.toPath)
+
+      // 2. Unpack archive
+      val folder = ZipArchiveUtil.unzip(zipFile, Some(tmpFolder))
+
+      // 3. Create second tmp folder
+      val finalFolder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_classifier_dl")
+        .toAbsolutePath.toString
+
+      val variablesFile = Paths.get(finalFolder, VariablesKey).toAbsolutePath
+      Files.createDirectory(variablesFile)
+
+      // 4. Copy the saved_model.zip into tmp folder
+      val savedModelInputStream = ResourceHelper.getResourceStream(new Path(folder, SavedModelPB).toString)
+      val savedModelFile = new File(finalFolder, SavedModelPB)
+      Files.copy(savedModelInputStream, savedModelFile.toPath)
+
+      val varIndexInputStream = ResourceHelper.getResourceStream(new Path(folder, VariablesIdxValue).toString)
+      val varIndexFile = new File(variablesFile.toString, VariablesIdxValue)
+      Files.copy(varIndexInputStream, varIndexFile.toPath)
+
+      val varDataInputStream = ResourceHelper.getResourceStream(new Path(folder, VariablesPathValue).toString)
+      val varDataFile = new File(variablesFile.toString, VariablesPathValue)
+      Files.copy(varDataInputStream, varDataFile.toPath)
+
+      // 5. Read file as SavedModelBundle
+      val model = withSafeSavedModelBundleLoader(tags = tags, savedModelDir = finalFolder)
+
+      val (graph, session, varPath, idxPath) = unpackFromBundle(finalFolder, model)
+
+      if (initAllTables) session.runner().addTarget(InitAllTableOP)
+
+      val varBytes = Files.readAllBytes(varPath)
+      val idxBytes = Files.readAllBytes(idxPath)
+
+      // 6. Remove tmp folder
+      FileHelper.delete(tmpFolder)
+      FileHelper.delete(finalFolder)
+      FileHelper.delete(folder)
+      tensorResources.clearTensors()
+
+      val tfWrapper = new TensorflowWrapper(Variables(varBytes, idxBytes), graph.toGraphDef.toByteArray)
+      tfWrapper.m_session = session
+      tfWrapper
+    }
+
+    def readChkPoints(
+                       file: String,
+                       zipped: Boolean = true,
+                       tags: Array[String] = Array.empty[String],
+                       initAllTables: Boolean = false
+                     ): TensorflowWrapper = {
+      val t = new TensorResources()
+
+      // 1. Create tmp folder
+      val tmpFolder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_ner")
+        .toAbsolutePath.toString
+
+      // 2. Unpack archive
+      val folder =
+        if (zipped)
+          ZipArchiveUtil.unzip(new File(file), Some(tmpFolder))
+        else
+          file
+
+      LoadsContrib.loadContribToTensorflow()
+
+      val tfChkPointsVars = FileUtils.listFilesAndDirs(
+        new File(folder),
+        new WildcardFileFilter("part*"),
+        new WildcardFileFilter("variables*")
+      ).toArray()
+
+      val variablesDir = tfChkPointsVars(1).toString
+      val variablesData = tfChkPointsVars(2).toString
+      val variablesIndex = tfChkPointsVars(3).toString
+
+      // 3. Read file as SavedModelBundle
+      val graph = readGraph(Paths.get(folder, SavedModelPB).toString)
+      val session = new Session(graph, ConfigProto.parseFrom(TFSessionConfig))
+      val varPath = Paths.get(variablesData)
+      val idxPath = Paths.get(variablesIndex)
+
+      processInitAllTableOp(initAllTables, t, session, variablesDir, variablesKey = "part-00000-of-00001")
+
+      val varBytes = Files.readAllBytes(varPath)
+      val idxBytes = Files.readAllBytes(idxPath)
+
+      // 4. Remove tmp folder
+      FileHelper.delete(tmpFolder)
+      t.clearTensors()
+
+      val tfWrapper = new TensorflowWrapper(Variables(varBytes, idxBytes), graph.toGraphDef.toByteArray)
+      tfWrapper.m_session = session
+      tfWrapper
+    }
+
+    def extractVariablesSavedModel(session: Session): Variables = {
+      val t = new TensorResources()
+
+      val folder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + TFVarsSuffix)
+        .toAbsolutePath.toString
+      val variablesFile = Paths.get(folder, VariablesKey).toString
+
+      session.runner.addTarget(SaveControlDependenciesOP)
+        .feed(SaveConstOP, t.createTensor(variablesFile))
+        .run()
+
+      val varPath = Paths.get(folder, VariablesPathValue)
+      val varBytes = Files.readAllBytes(varPath)
+
+      val idxPath = Paths.get(folder, VariablesIdxValue)
+      val idxBytes = Files.readAllBytes(idxPath)
+
+      val vars = Variables(varBytes, idxBytes)
+
+      FileHelper.delete(folder)
+
+      vars
+    }
+
   }
-
-  def extractVariablesSavedModel(session: Session): Variables = {
-    val t = new TensorResources()
-
-    val folder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + TFVarsSuffix)
-      .toAbsolutePath.toString
-    val variablesFile = Paths.get(folder, VariablesKey).toString
-
-    session.runner.addTarget(SaveControlDependenciesOP)
-      .feed(SaveConstOP, t.createTensor(variablesFile))
-      .run()
-
-    val varPath = Paths.get(folder, VariablesPathValue)
-    val varBytes = Files.readAllBytes(varPath)
-
-    val idxPath = Paths.get(folder, VariablesIdxValue)
-    val idxBytes = Files.readAllBytes(idxPath)
-
-    val vars = Variables(varBytes, idxBytes)
-
-    FileHelper.delete(folder)
-
-    vars
-  }
-
-}

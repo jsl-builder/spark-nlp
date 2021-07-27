@@ -207,7 +207,7 @@ class NerDLModel(override val uid: String)
    * */
   def setIncludeAllConfidenceScores(value: Boolean): this.type = set(this.includeAllConfidenceScores, value)
 
-  def setModelIfNotSet(spark: SparkSession, tf: TensorflowWrapper): this.type = {
+  def setModelIfNotSet(spark: SparkSession, tf: TFWrapper[_]): this.type = {
     if (_model.isEmpty) {
       require(datasetParams.isSet, "datasetParams must be set before usage")
 

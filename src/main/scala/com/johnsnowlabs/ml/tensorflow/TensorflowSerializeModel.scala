@@ -35,7 +35,7 @@ trait WriteTensorflowModel {
   def writeTensorflowModel(
                             path: String,
                             spark: SparkSession,
-                            tensorflow: TensorflowWrapper,
+                            tensorflow: TFWrapper[_],
                             suffix: String, filename: String,
                             configProtoBytes: Option[Array[Byte]] = None
                           ): Unit = {
@@ -62,7 +62,7 @@ trait WriteTensorflowModel {
   def writeTensorflowModelV2(
                               path: String,
                               spark: SparkSession,
-                              tensorflow: TensorflowWrapper,
+                              tensorflow: TFWrapper[_],
                               suffix: String, filename: String,
                               configProtoBytes: Option[Array[Byte]] = None,
                               savedSignatures: Option[Map[String, String]] = None
@@ -127,7 +127,7 @@ trait ReadTensorflowModel {
                            tags: Array[String] = Array.empty,
                            initAllTables: Boolean = false,
                            savedSignatures: Option[Map[String, String]] = None
-                         ): TensorflowWrapper = {
+                         ): TFWrapper[_] = {
 
     LoadsContrib.loadContribToCluster(spark)
 
@@ -224,7 +224,7 @@ trait ReadTensorflowModel {
                          zipped: Boolean = true,
                          useBundle: Boolean = false,
                          tags: Array[String] = Array.empty
-                       ): TensorflowWrapper = {
+                       ): TFWrapper[_] = {
 
 
     val uri = new java.net.URI(path.replaceAllLiterally("\\", "/"))

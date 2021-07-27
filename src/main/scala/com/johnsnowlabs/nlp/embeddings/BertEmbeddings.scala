@@ -216,7 +216,7 @@ class BertEmbeddings(override val uid: String)
   private var _model: Option[Broadcast[TensorflowBert]] = None
 
   /** @group setParam */
-  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TensorflowWrapper): BertEmbeddings = {
+  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TFWrapper[_]): BertEmbeddings = {
     if (_model.isEmpty) {
       _model = Some(
         spark.sparkContext.broadcast(

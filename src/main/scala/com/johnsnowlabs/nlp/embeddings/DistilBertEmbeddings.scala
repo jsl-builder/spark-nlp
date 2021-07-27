@@ -217,7 +217,7 @@ class DistilBertEmbeddings(override val uid: String)
   private var _model: Option[Broadcast[TensorflowDistilBert]] = None
 
   /** @group setParam */
-  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TensorflowWrapper): DistilBertEmbeddings = {
+  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TFWrapper[_]): DistilBertEmbeddings = {
     if (_model.isEmpty) {
       _model = Some(
         spark.sparkContext.broadcast(

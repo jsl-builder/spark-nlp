@@ -25,7 +25,7 @@ import scala.collection.JavaConverters._
  * @param sppSrc           Contains the vocabulary for the target language.
  * @param sppTrg           Contains the vocabulary for the source language
  */
-class TensorflowMarian(val tensorflow: TensorflowWrapper,
+class TensorflowMarian(val tensorflow: TFWrapper[_],
                        val sppSrc: SentencePieceWrapper,
                        val sppTrg: SentencePieceWrapper,
                        configProtoBytes: Option[Array[Byte]] = None,
@@ -68,7 +68,7 @@ class TensorflowMarian(val tensorflow: TensorflowWrapper,
     val encoderAttentionMaskKeyTensors = tensorEncoder.createIntBufferTensor(shape, encoderAttentionMaskBuffers)
     val decoderAttentionMaskTensors = tensorEncoder.createIntBufferTensor(shape, decoderAttentionMaskBuffers)
 
-    val session = tensorflow.getTFHubSession(configProtoBytes = configProtoBytes, initAllTables = false, savedSignatures = signatures)
+    val session = tensorflow.getTFHubSession(configProtoBytes = configProtoBytes, loadSP = false, initAllTables = false, savedSignatures = signatures)
     val runner = session.runner
 
     runner

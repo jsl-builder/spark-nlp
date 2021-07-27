@@ -9,7 +9,7 @@ import org.apache.spark.ml.util.Identifiable
 import org.tensorflow.proto.framework.GraphDef
 
 class TensorflowSentenceDetectorDL (
-                                   val model: TensorflowWrapper,
+                                   val model: TFWrapper[_],
                                    val verboseLevel: Verbose.Value = Verbose.All,
                                    val outputLogsPath: Option[String] = None
                                  )
@@ -29,7 +29,7 @@ class TensorflowSentenceDetectorDL (
 
   private lazy val _graphOperations = {
     val graph = new Graph()
-    graph.importGraphDef(GraphDef.parseFrom(model.graph))
+    graph.importGraphDef(GraphDef.parseFrom(model.asInstanceOf[TensorflowWrapper].graph))
     graph.operations().asScala.toArray
   }
 
@@ -51,7 +51,7 @@ class TensorflowSentenceDetectorDL (
     }
   }
 
-  def getTFModel: TensorflowWrapper = this.model
+  def getTFModel: TFWrapper[_] = this.model
 
   protected def logMessage(message: String, uuid: String): Unit = {
 

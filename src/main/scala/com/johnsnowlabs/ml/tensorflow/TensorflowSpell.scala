@@ -9,7 +9,7 @@ import scala.collection.JavaConversions.asScalaBuffer
 
 
 class TensorflowSpell(
-  val tensorflow: TensorflowWrapper,
+  val tensorflow: TFWrapper[_],
   val verboseLevel: Verbose.Value
   ) extends Logging with Serializable {
 

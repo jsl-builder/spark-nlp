@@ -229,7 +229,7 @@ class XlnetEmbeddings(override val uid: String)
   private var _model: Option[Broadcast[TensorflowXlnet]] = None
 
   /** Sets XLNet tensorflow Model */
-  def setModelIfNotSet(spark: SparkSession, tensorflow: TensorflowWrapper, spp: SentencePieceWrapper): this.type = {
+  def setModelIfNotSet(spark: SparkSession, tensorflow: TFWrapper[_], spp: SentencePieceWrapper): this.type = {
     if (_model.isEmpty) {
 
       _model = Some(

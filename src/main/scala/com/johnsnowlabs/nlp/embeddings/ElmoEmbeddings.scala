@@ -239,7 +239,7 @@ class ElmoEmbeddings(override val uid: String)
     dimension -> 512
   )
 
-  def setModelIfNotSet(spark: SparkSession, tensorflow: TensorflowWrapper): this.type = {
+  def setModelIfNotSet(spark: SparkSession, tensorflow: TFWrapper[_]): this.type = {
     if (_model.isEmpty) {
 
       _model = Some(

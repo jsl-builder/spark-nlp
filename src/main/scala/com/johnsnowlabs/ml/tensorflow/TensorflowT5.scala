@@ -34,7 +34,7 @@ import scala.math._
  * @param configProtoBytes Configuration for TensorFlow session
  */
 
-class TensorflowT5(val tensorflow: TensorflowWrapper,
+class TensorflowT5(val tensorflow: TFWrapper[_],
                    val spp: SentencePieceWrapper,
                    configProtoBytes: Option[Array[Byte]] = None
                   ) extends Serializable {
@@ -137,7 +137,13 @@ class TensorflowT5(val tensorflow: TensorflowWrapper,
     val encoderInputTensors = tensorEncoder.createLongBufferTensor(shape, encoderInputBuffers)
     val encoderAttentionMaskTensors = tensorEncoder.createLongBufferTensor(shape, encoderAttentionMaskBuffers)
 
-    val session = tensorflow.getTFHubSession(configProtoBytes = configProtoBytes)
+    val session =
+      tensorflow
+        .getTFHubSession(configProtoBytes = configProtoBytes,
+          initAllTables = true,
+          loadSP = false,
+          savedSignatures = None)
+
     val runner = session.runner
 
     runner

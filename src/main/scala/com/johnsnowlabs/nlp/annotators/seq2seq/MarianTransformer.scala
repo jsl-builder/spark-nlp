@@ -245,7 +245,7 @@ class MarianTransformer(override val uid: String) extends
   private var _model: Option[Broadcast[TensorflowMarian]] = None
 
   /** @group setParam * */
-  def setModelIfNotSet(spark: SparkSession, tensorflow: TensorflowWrapper, sppSrc: SentencePieceWrapper, sppTrg: SentencePieceWrapper): this.type = {
+  def setModelIfNotSet(spark: SparkSession, tensorflow: TFWrapper[_], sppSrc: SentencePieceWrapper, sppTrg: SentencePieceWrapper): this.type = {
     if (_model.isEmpty) {
       _model = Some(
         spark.sparkContext.broadcast(

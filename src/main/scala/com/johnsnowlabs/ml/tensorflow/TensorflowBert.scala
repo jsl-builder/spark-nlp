@@ -41,7 +41,7 @@ import scala.collection.JavaConverters._
  *
  *                             Source:  [[https://github.com/google-research/bert]]
  * */
-class TensorflowBert(val tensorflowWrapper: TensorflowWrapper,
+class TensorflowBert(val tensorflowWrapper: TFWrapper[_],
                      sentenceStartTokenId: Int,
                      sentenceEndTokenId: Int,
                      configProtoBytes: Option[Array[Byte]] = None,
@@ -87,7 +87,13 @@ class TensorflowBert(val tensorflowWrapper: TensorflowWrapper,
         segmentBuffers.offset(offset).write(Array.fill(maxSentenceLength)(0))
       }
 
-    val runner = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false).runner
+    val runner =
+      tensorflowWrapper
+        .getTFHubSession(configProtoBytes = configProtoBytes,
+          initAllTables = false,
+          loadSP = false,
+          savedSignatures = signatures)
+        .runner
 
     val tokenTensors = tensors.createIntBufferTensor(shape, tokenBuffers)
     val maskTensors = tensors.createIntBufferTensor(shape, maskBuffers)
@@ -145,7 +151,13 @@ class TensorflowBert(val tensorflowWrapper: TensorflowWrapper,
       segmentBuffers.offset(offset).write(Array.fill(maxSentenceLength)(0))
     }
 
-    val runner = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false).runner
+    val runner =
+      tensorflowWrapper
+        .getTFHubSession(configProtoBytes = configProtoBytes,
+          initAllTables = false,
+          loadSP = false,
+          savedSignatures = signatures)
+        .runner
 
     val tokenTensors = tensors.createIntBufferTensor(shape, tokenBuffers)
     val maskTensors = tensorsMasks.createIntBufferTensor(shape, maskBuffers)
@@ -187,8 +199,13 @@ class TensorflowBert(val tensorflowWrapper: TensorflowWrapper,
       segmentBuffers.offset(offset).write(Array.fill(maxSentenceLength)(0L))
     }
 
-
-    val runner = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false).runner
+    val runner =
+      tensorflowWrapper
+        .getTFHubSession(configProtoBytes = configProtoBytes,
+          initAllTables = false,
+          loadSP = false,
+          savedSignatures = signatures)
+        .runner
 
     val tokenTensors = tensors.createLongBufferTensor(shape, tokenBuffers)
     val maskTensors = tensors.createLongBufferTensor(shape, maskBuffers)

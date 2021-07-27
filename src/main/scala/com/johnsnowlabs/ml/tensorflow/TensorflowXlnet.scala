@@ -58,7 +58,7 @@ import scala.collection.JavaConverters._
  * @groupprio getParam  5
  * @groupdesc param A list of (hyper-)parameter keys this annotator can take. Users can set and get the parameter values through setters and getters, respectively.
  */
-class TensorflowXlnet(val tensorflow: TensorflowWrapper,
+class TensorflowXlnet(val tensorflow: TFWrapper[_],
                       val spp: SentencePieceWrapper,
                       configProtoBytes: Option[Array[Byte]] = None,
                       signatures: Option[Map[String, String]] = None
@@ -122,7 +122,13 @@ class TensorflowXlnet(val tensorflow: TensorflowWrapper,
     val maskTensors = tensors.createIntBufferTensor(shape, maskBuffers)
     val segmentTensors = tensors.createIntBufferTensor(shape, segmentBuffers)
 
-    val runner = tensorflow.getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false).runner
+    val runner =
+      tensorflow
+        .getTFHubSession(configProtoBytes = configProtoBytes,
+          initAllTables = false,
+          loadSP = false,
+          savedSignatures = signatures)
+        .runner
 
     runner
       .feed(_tfXlnetSignatures.getOrElse(ModelSignatureConstants.InputIdsV1.key, "missing_input_id_key"), tokenTensors)

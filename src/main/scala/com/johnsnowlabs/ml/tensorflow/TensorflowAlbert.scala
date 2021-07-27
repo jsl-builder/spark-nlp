@@ -60,7 +60,7 @@ import scala.collection.JavaConverters._
  * @param configProtoBytes Configuration for TensorFlow session
  */
 
-class TensorflowAlbert(val tensorflow: TensorflowWrapper,
+class TensorflowAlbert(val tensorflow: TFWrapper[_],
                        val spp: SentencePieceWrapper,
                        batchSize: Int,
                        configProtoBytes: Option[Array[Byte]] = None,
@@ -123,7 +123,13 @@ class TensorflowAlbert(val tensorflow: TensorflowWrapper,
     val maskTensors = tensorsMasks.createIntBufferTensor(shape, maskBuffers)
     val segmentTensors = tensorsSegments.createIntBufferTensor(shape, segmentBuffers)
 
-    val runner = tensorflow.getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false).runner
+    val runner =
+      tensorflow
+        .getTFHubSession(configProtoBytes = configProtoBytes,
+          initAllTables = false,
+          loadSP = false,
+          savedSignatures = signatures)
+        .runner
 
     runner
       .feed(_tfAlbertSignatures.getOrElse(ModelSignatureConstants.InputIdsV1.key, "missing_input_id_key"), tokenTensors)

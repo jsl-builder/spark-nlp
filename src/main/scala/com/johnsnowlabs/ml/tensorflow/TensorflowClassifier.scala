@@ -8,7 +8,7 @@ import scala.collection.mutable
 import scala.util.Random
 
 class TensorflowClassifier(
-                            val tensorflow: TensorflowWrapper,
+                            val tensorflow: TFWrapper[_],
                             val encoder: ClassifierDatasetEncoder,
                             override val verboseLevel: Verbose.Value
                           )
