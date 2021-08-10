@@ -19,7 +19,9 @@ package com.johnsnowlabs.util
 import org.apache.hadoop.fs.FileSystem
 
 import java.util.UUID
+import scala.language.existentials
 import scala.util.{Failure, Success, Try}
+
 
 object ConfigLoader {
 
@@ -32,22 +34,22 @@ object ConfigLoader {
   private lazy val configData: Map[String, String] = {
 
     getConfigInfo(ConfigHelper.pretrainedS3BucketKey, "auxdata.johnsnowlabs.com") ++
-    getConfigInfo(ConfigHelper.pretrainedCommunityS3BucketKey, "community.johnsnowlabs.com") ++
-    getConfigInfo(ConfigHelper.pretrainedS3PathKey, "") ++
-    getConfigInfo(ConfigHelper.pretrainedCacheFolder, homeDirectory + "/cache_pretrained") ++
-    getConfigInfo(ConfigHelper.annotatorLogFolder, homeDirectory + "/annotator_logs") ++
-    getConfigInfo(ConfigHelper.accessKeyId, "") ++
-    getConfigInfo(ConfigHelper.secretAccessKey, "") ++
-    getConfigInfo(ConfigHelper.awsProfileName, "") ++
-    getConfigInfo(ConfigHelper.s3SocketTimeout, "0") ++
-    getConfigInfo(ConfigHelper.storageTmpDir, hadoopTmpDir) ++
-    getConfigInfo(ConfigHelper.serializationMode, "object") ++
-    getConfigInfo(ConfigHelper.useBroadcast, "true") ++
-    getConfigInfo(ConfigHelper.logAccessKeyId, "") ++
-    getConfigInfo(ConfigHelper.logSecretAccessKey, "") ++
-    getConfigInfo(ConfigHelper.logAwsProfileName, "") ++
-    getConfigInfo(ConfigHelper.logS3BucketKey, "") ++
-    getConfigInfo(ConfigHelper.logAwsRegion, "")
+      getConfigInfo(ConfigHelper.pretrainedCommunityS3BucketKey, "community.johnsnowlabs.com") ++
+      getConfigInfo(ConfigHelper.pretrainedS3PathKey, "") ++
+      getConfigInfo(ConfigHelper.pretrainedCacheFolder, homeDirectory + "/cache_pretrained") ++
+      getConfigInfo(ConfigHelper.annotatorLogFolder, homeDirectory + "/annotator_logs") ++
+      getConfigInfo(ConfigHelper.accessKeyId, "") ++
+      getConfigInfo(ConfigHelper.secretAccessKey, "") ++
+      getConfigInfo(ConfigHelper.awsProfileName, "") ++
+      getConfigInfo(ConfigHelper.s3SocketTimeout, "0") ++
+      getConfigInfo(ConfigHelper.storageTmpDir, hadoopTmpDir) ++
+      getConfigInfo(ConfigHelper.serializationMode, "object") ++
+      getConfigInfo(ConfigHelper.useBroadcast, "true") ++
+      getConfigInfo(ConfigHelper.logAccessKeyId, "") ++
+      getConfigInfo(ConfigHelper.logSecretAccessKey, "") ++
+      getConfigInfo(ConfigHelper.logAwsProfileName, "") ++
+      getConfigInfo(ConfigHelper.logS3BucketKey, "") ++
+      getConfigInfo(ConfigHelper.logAwsRegion, "")
   }
 
   private def getConfigInfo(property: String, defaultValue: String): Map[String, String] = {

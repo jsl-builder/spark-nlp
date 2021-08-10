@@ -33,7 +33,7 @@ import scala.collection.JavaConverters._
  * @param tags                 labels which model was trained with in order
  * @param signatures           TF v2 signatures in Spark NLP
  * */
-class TensorflowBertTokenClassification(val tensorflowWrapper: TensorflowWrapper,
+class TensorflowBertTokenClassification(val tensorflowWrapper: TFWrapper[_],
                                         sentenceStartTokenId: Int,
                                         sentenceEndTokenId: Int,
                                         configProtoBytes: Option[Array[Byte]] = None,
@@ -85,7 +85,7 @@ class TensorflowBertTokenClassification(val tensorflowWrapper: TensorflowWrapper
         segmentBuffers.offset(offset).write(Array.fill(maxSentenceLength)(0))
       }
 
-    val session = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false)
+    val session = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, loadSP = false, initAllTables = false)
     val runner = session.runner
 
     val tokenTensors = tensors.createIntBufferTensor(shape, tokenBuffers)

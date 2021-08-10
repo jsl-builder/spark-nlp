@@ -197,7 +197,7 @@ class DistilBertForTokenClassification(override val uid: String)
   private var _model: Option[Broadcast[TensorflowDistilBertTokenClassification]] = None
 
   /** @group setParam */
-  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TensorflowWrapper): DistilBertForTokenClassification = {
+  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TFWrapper[_]): DistilBertForTokenClassification = {
     if (_model.isEmpty) {
       _model = Some(
         spark.sparkContext.broadcast(

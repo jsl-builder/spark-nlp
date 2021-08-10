@@ -197,7 +197,7 @@ class BertForTokenClassification(override val uid: String)
   private var _model: Option[Broadcast[TensorflowBertTokenClassification]] = None
 
   /** @group setParam */
-  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TensorflowWrapper): BertForTokenClassification = {
+  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TFWrapper[_]): BertForTokenClassification = {
     if (_model.isEmpty) {
       _model = Some(
         spark.sparkContext.broadcast(
