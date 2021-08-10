@@ -29,16 +29,18 @@ docs-en:
         url:    /docs/en/annotators
       - title:  Transformers
         url:    /docs/en/transformers
-      - title:  Helpers
-        url:    /docs/en/auxiliary
+      - title:  Training
+        url:    /docs/en/training        
       - title:  Pipelines
         url:    /docs/en/pipelines
       - title:  Models
         url:    /models
-      - title:  Training
-        url:    /docs/en/training
-      - title: Scaladoc
+      - title:  Helpers
+        url:    /docs/en/auxiliary
+      - title: Scala API (Scaladoc)
         url: /api/
+      - title: Python API (Sphinx)
+        url: /api/python/  
       - title: Spark NLP Display
         url: /docs/en/display
       - title:  Developers
@@ -95,6 +97,8 @@ docs-en:
         url:    /docs/en/ocr
       - title:  Installation
         url:    /docs/en/ocr_install
+      - title:  Version Compatibility
+        url:    /docs/en/version_compatibility
       - title:  Pipeline components
         url:    /docs/en/ocr_pipeline_components
       - title:  Table recognition
