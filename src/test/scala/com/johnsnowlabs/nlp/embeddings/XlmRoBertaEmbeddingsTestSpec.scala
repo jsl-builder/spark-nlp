@@ -17,13 +17,13 @@
 
 package com.johnsnowlabs.nlp.embeddings
 
+import com.johnsnowlabs.nlp.annotator.SentenceDetector
 import com.johnsnowlabs.nlp.annotators.{StopWordsCleaner, Tokenizer}
 import com.johnsnowlabs.nlp.base.DocumentAssembler
 import com.johnsnowlabs.nlp.training.CoNLL
 import com.johnsnowlabs.nlp.util.io.ResourceHelper
 import com.johnsnowlabs.tags.SlowTest
 import com.johnsnowlabs.util.Benchmark
-
 import org.apache.spark.ml.{Pipeline, PipelineModel}
 import org.apache.spark.sql.functions.{col, explode, size}
 import org.scalatest._
@@ -202,5 +202,40 @@ class XlmRoBertaEmbeddingsTestSpec extends FlatSpec {
 
     assert(totalTokens == totalEmbeddings)
 
+  }
+
+  "XlmRoBertaEmbeddings" should "load a larger than 2G model" taggedAs SlowTest in {
+
+    import ResourceHelper.spark.implicits._
+
+    val ddd = Seq(
+      "This is just a simple sentence for the testing purposes!"
+    ).toDF("text")
+
+    val document = new DocumentAssembler()
+      .setInputCol("text")
+      .setOutputCol("document")
+
+    val sentence = new SentenceDetector()
+      .setInputCols(Array("document"))
+      .setOutputCol("sentence")
+
+    val tokenizer = new Tokenizer()
+      .setInputCols(Array("document"))
+      .setOutputCol("token")
+
+    val savedModelPath = "PATH_TO_xlm-roberta-large-finetuned-conll03-english/saved_model/1"
+    val embeddings = XlmRoBertaEmbeddings.loadSavedModel(savedModelPath, ResourceHelper.spark, useTfIo = true)
+
+    embeddings.setInputCols(Array("sentence","token"))
+     .setOutputCol("embeddings")
+     .setCaseSensitive(true)
+     .setDimension(768)
+     .setStorageRef("xlm_roberta_large")
+
+    val pipeline = new Pipeline().setStages(Array(document, sentence, tokenizer, embeddings))
+
+    val pipelineModel = pipeline.fit(ddd)
+    pipelineModel.transform(ddd).show()
   }
 }
