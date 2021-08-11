@@ -176,6 +176,6 @@ class BertEmbeddingsTestSpec extends FlatSpec {
     pipeline.fit(ddd).write.overwrite().save("./tmp_bert_pipeline")
     val pipelineModel = PipelineModel.load("./tmp_bert_pipeline")
 
-    pipelineModel.transform(ddd)
+    pipelineModel.transform(ddd).show()
   }
 }

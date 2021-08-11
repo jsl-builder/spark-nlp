@@ -374,7 +374,8 @@ trait ReadBertTensorflowModel extends ReadTensorflowModel {
     val vocabResource = new ExternalResource(vocab.getAbsolutePath, ReadAs.TEXT, Map("format" -> "text"))
     val words = ResourceHelper.parseLines(vocabResource).zipWithIndex.toMap
 
-    val (wrapper, signatures) = TensorflowWrapper.read(tfModelPath, zipped = false, useBundle = true)
+    // FIXME check why running a full spec generates a java.lang.StackOverflowError
+    val (wrapper, signatures) = TensorflowWrapperWithTfIo.read(tfModelPath, zipped = false, useBundle = true)
 
     val _signatures = signatures match {
       case Some(s) => s

@@ -203,29 +203,4 @@ class XlmRoBertaEmbeddingsTestSpec extends FlatSpec {
     assert(totalTokens == totalEmbeddings)
 
   }
-
-  "XlmRoBertaEmbeddings" should "load a larger than 2G model" taggedAs SlowTest in {
-
-    import ResourceHelper.spark.implicits._
-
-    val ddd = Seq(
-      "This is just a simple sentence for the testing purposes!"
-    ).toDF("text")
-
-    val document = new DocumentAssembler()
-      .setInputCol("text")
-      .setOutputCol("document")
-
-    val tokenizer = new Tokenizer()
-      .setInputCols(Array("document"))
-      .setOutputCol("token")
-
-    val savedModelPath = "/home/wolliqeonii/workspace/dev/jsl/hugs/jplu-tf-xlm-roberta-large/saved_model/1"
-    val embeddings = XlmRoBertaEmbeddings.loadSavedModel(savedModelPath, ResourceHelper.spark, useTfIo = true)
-
-    val pipeline = new Pipeline().setStages(Array(document, tokenizer, embeddings))
-
-    val pipelineModel = pipeline.fit(ddd)
-    pipelineModel.transform(ddd).show()
-  }
 }
