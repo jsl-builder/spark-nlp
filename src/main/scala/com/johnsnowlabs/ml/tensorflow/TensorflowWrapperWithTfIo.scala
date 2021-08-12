@@ -349,6 +349,8 @@ class TensorflowWrapperWithTfIo(var variables: VariablesTfIo,
     tfWrapper.m_session = session
     (tfWrapper, signatures)
   }
+
+  override def getGraph(): Array[Byte] = graph
 }
 
 /** Companion object */

@@ -48,6 +48,8 @@ case class ModelSignature(operation: String,
 
 trait TFWrapper[S <: TFWrapper[S]] {
 
+  def getGraph(): Array[Byte]
+
   def getTFHubSession(configProtoBytes: Option[Array[Byte]], initAllTables: Boolean, loadSP: Boolean, savedSignatures: Option[Map[String, String]]): Session
 
   def saveToFile(tfFile: String, configProtoBytes: Option[Array[Byte]]): Unit
@@ -345,6 +347,8 @@ class TensorflowWrapper(var variables: Variables,
     tfWrapper.m_session = session
     (tfWrapper, signatures)
   }
+
+  override def getGraph(): Array[Byte] = graph
 }
 
 /** Companion object */
