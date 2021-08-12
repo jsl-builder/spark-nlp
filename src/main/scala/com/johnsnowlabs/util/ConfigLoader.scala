@@ -53,7 +53,7 @@ object ConfigLoader {
   }
 
   private def getConfigInfo(property: String, defaultValue: String): Map[String, String] = {
-    if (property== ConfigHelper.storageTmpDir) {
+    if (property == ConfigHelper.storageTmpDir) {
       val path = ConfigHelper.getConfigValueOrElse(property, defaultValue)
       val tmpLocation = path + "/" + UUID.randomUUID().toString.takeRight(12) + "_cdx"
       Map(property -> tmpLocation)
@@ -101,9 +101,9 @@ object ConfigLoader {
     val hasAccessKeyId = getConfigStringValue(ConfigHelper.logAccessKeyId) != ""
     val hasSecretAccessKey = getConfigStringValue(ConfigHelper.logSecretAccessKey) != ""
     val hasAwsProfileName = getConfigStringValue(ConfigHelper.logAwsProfileName) != ""
-    val hasAwsRegion= getConfigStringValue(ConfigHelper.logAwsRegion) != ""
-    val hasAwsBucket= getConfigStringValue(ConfigHelper.logS3BucketKey) != ""
-    if ((hasAwsProfileName && hasAwsRegion &&  hasAwsBucket) ||
+    val hasAwsRegion = getConfigStringValue(ConfigHelper.logAwsRegion) != ""
+    val hasAwsBucket = getConfigStringValue(ConfigHelper.logS3BucketKey) != ""
+    if ((hasAwsProfileName && hasAwsRegion && hasAwsBucket) ||
       (hasAccessKeyId && hasSecretAccessKey && hasAwsRegion && hasAwsBucket)) true else false
   }
 
