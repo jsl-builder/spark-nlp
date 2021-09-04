@@ -181,7 +181,7 @@ class TensorflowXlmRoberta(val tensorflowWrapper: TFWrapper[_],
       maskBuffers.offset(offset).write(sentence.map(x => if (x == 0) 0 else 1))
     }
 
-    val runner = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false).runner
+    val runner = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, savedSignatures = signatures, initAllTables = false, loadSP = false).runner
 
     val tokenTensors = tensors.createIntBufferTensor(shape, tokenBuffers)
     val maskTensors = tensorsMasks.createIntBufferTensor(shape, maskBuffers)

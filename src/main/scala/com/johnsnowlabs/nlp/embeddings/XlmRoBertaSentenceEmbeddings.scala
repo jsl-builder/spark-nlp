@@ -200,7 +200,7 @@ class XlmRoBertaSentenceEmbeddings(override val uid: String)
   private var _model: Option[Broadcast[TensorflowXlmRoberta]] = None
 
   /** @group setParam */
-  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TensorflowWrapper, spp: SentencePieceWrapper): XlmRoBertaSentenceEmbeddings = {
+  def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TFWrapper[_], spp: SentencePieceWrapper): XlmRoBertaSentenceEmbeddings = {
     if (_model.isEmpty) {
       _model = Some(
         spark.sparkContext.broadcast(

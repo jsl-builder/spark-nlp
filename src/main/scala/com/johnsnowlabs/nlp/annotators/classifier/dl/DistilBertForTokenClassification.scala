@@ -194,14 +194,14 @@ class DistilBertForTokenClassification(override val uid: String)
   /** @group getParam */
   def getSignatures: Option[Map[String, String]] = get(this.signatures)
 
-  private var _model: Option[Broadcast[TensorflowDistilBertClassification]] = None
+  private var _model: Option[Broadcast[TensorflowDistilBertTokenClassification]] = None
 
   /** @group setParam */
   def setModelIfNotSet(spark: SparkSession, tensorflowWrapper: TFWrapper[_]): DistilBertForTokenClassification = {
     if (_model.isEmpty) {
       _model = Some(
         spark.sparkContext.broadcast(
-          new TensorflowDistilBertClassification(
+          new TensorflowDistilBertTokenClassification(
             tensorflowWrapper,
             sentenceStartTokenId,
             sentenceEndTokenId,
@@ -217,7 +217,7 @@ class DistilBertForTokenClassification(override val uid: String)
   }
 
   /** @group getParam */
-  def getModelIfNotSet: TensorflowDistilBertClassification = _model.get.value
+  def getModelIfNotSet: TensorflowDistilBertTokenClassification = _model.get.value
 
 
   /** Whether to lowercase tokens or not
