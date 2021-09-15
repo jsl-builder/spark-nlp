@@ -1,6 +1,7 @@
 ---
 layout: docs
 header: true
+seotitle: Spark OCR - Pipeline components
 title: Pipeline components
 permalink: /docs/en/ocr_pipeline_components
 key: docs-ocr-pipeline-components

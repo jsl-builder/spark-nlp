@@ -1,6 +1,7 @@
 ---
 layout: docs
 header: true
+seotitle: Spark NLP - Installation
 title: Installation
 permalink: /docs/en/install
 key: docs-install

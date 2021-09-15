@@ -1,6 +1,7 @@
 ---
 layout: docs
 header: true
+seotitle: Healthcare NLP - Getting started
 title: Healthcare NLP
 permalink: /docs/en/licensed_install
 key: docs-licensed-install

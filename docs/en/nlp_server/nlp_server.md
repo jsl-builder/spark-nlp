@@ -1,6 +1,7 @@
 ---
 layout: docs
 header: true
+seotitle: NLP Server - Getting Started
 title: NLP Server
 permalink: /docs/en/nlp_server/nlp_server
 key: docs-nlp-server

@@ -1,6 +1,7 @@
 ---
 layout: docs
 header: true
+seotitle:
 title: Examples
 key: docs-examples
 permalink: /docs/en/examples

@@ -1,6 +1,7 @@
 ---
 layout: docs
 header: true
+seotitle: Healthcare NLP - Release Notes
 title: Spark NLP for Healthcare Release Notes
 permalink: /docs/en/licensed_release_notes
 key: docs-licensed-release-notes

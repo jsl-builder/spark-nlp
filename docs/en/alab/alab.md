@@ -1,12 +1,12 @@
 ---
 layout: docs
 header: true
+seotitle: Annotation Lab - Getting Started
 title: Annotation Lab
 excerpt: A lightning fast tool for document annotation.
 permalink: /docs/en/alab/alab
 key: docs-quickstart
 modify_date: "2020-11-19"
-header: true
 show_nav: true
 sidebar:
     nav: annotation-lab

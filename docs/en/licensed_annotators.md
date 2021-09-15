@@ -1,6 +1,7 @@
 ---
 layout: docs
 header: true
+seotitle: Healthcare NLP - Annotators
 title: Healthcare NLP Annotators
 permalink: /docs/en/licensed_annotators
 key: docs-licensed-annotators

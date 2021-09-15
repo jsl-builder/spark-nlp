@@ -1,6 +1,7 @@
 ---
 layout: docs
 header: true
+seotitle: Spark OCR - Version Compatibility
 title: Version Compatibility
 permalink: /docs/en/version_compatibility
 key: version_compatibility
