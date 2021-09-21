@@ -47,9 +47,8 @@ class TensorflowWrapperWithTfIo(var variables: VariablesTfIo,
   lazy val useTFIO = true
 
   /** For Deserialization */
-  def this() = {
+  def this() =
     this(null, null)
-  }
 
   @transient private var m_session: Session = _
   @transient private val logger = LoggerFactory.getLogger("TensorflowWrapperWithTfIo")

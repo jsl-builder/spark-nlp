@@ -1,22 +1,22 @@
 {%- capture title -%}
-DistilBertForTokenClassification
+RoBertaForTokenClassification
 {%- endcapture -%}
 
 {%- capture description -%}
-DistilBertForTokenClassification can load Bert Models with a token classification head on top (a linear layer on top of the hidden-states output)
+RoBertaForTokenClassification can load RoBERTa Models with a token classification head on top (a linear layer on top of the hidden-states output)
 e.g. for Named-Entity-Recognition (NER) tasks.
 
 Pretrained models can be loaded with `pretrained` of the companion object:
 ```
-val labels = DistilBertForTokenClassification.pretrained()
+val tokenClassifier = RoBertaForTokenClassification.pretrained()
   .setInputCols("token", "document")
   .setOutputCol("label")
 ```
-The default model is `"distilbert_base_token_classifier_conll03"`, if no name is provided.
+The default model is `"roberta_base_token_classifier_conll03"`, if no name is provided.
 
-For available pretrained models please see the [Models Hub](https://nlp.johnsnowlabs.com/models?task=Text+Classification).
+For available pretrained models please see the [Models Hub](https://nlp.johnsnowlabs.com/models?task=Named+Entity+Recognition).
 
-and the [DistilBertForTokenClassificationTestSpec](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/test/scala/com/johnsnowlabs/nlp/annotators/classifier/dl/DistilBertForTokenClassificationTestSpec.scala).
+and the [RoBertaForTokenClassificationTestSpec](https://github.com/JohnSnowLabs/spark-nlp/blob/master/src/test/scala/com/johnsnowlabs/nlp/annotators/classifier/dl/RoBertaForTokenClassificationTestSpec.scala).
 Models from the HuggingFace 🤗 Transformers library are also compatible with Spark NLP 🚀. To see which models are compatible and how to import them see [Import Transformers into Spark NLP 🚀](https://github.com/JohnSnowLabs/spark-nlp/discussions/5669).
 {%- endcapture -%}
 
@@ -28,7 +28,7 @@ DOCUMENT, TOKEN
 NAMED_ENTITY
 {%- endcapture -%}
 
-{%- capture python_example -%}
+{%- capture prediction_python_example -%}
 import sparknlp
 from sparknlp.base import *
 from sparknlp.annotator import *
@@ -42,7 +42,7 @@ tokenizer = Tokenizer() \
     .setInputCols(["document"]) \
     .setOutputCol("token")
 
-tokenClassifier = DistilBertForTokenClassification.pretrained() \
+tokenClassifier = RoBertaForTokenClassification.pretrained() \
     .setInputCols(["token", "document"]) \
     .setOutputCol("label") \
     .setCaseSensitive(True)
@@ -65,7 +65,7 @@ result.select("label.result").show(truncate=False)
 
 {%- endcapture -%}
 
-{%- capture scala_example -%}
+{%- capture prediction_scala_example -%}
 import spark.implicits._
 import com.johnsnowlabs.nlp.base._
 import com.johnsnowlabs.nlp.annotator._
@@ -79,7 +79,7 @@ val tokenizer = new Tokenizer()
   .setInputCols("document")
   .setOutputCol("token")
 
-val tokenClassifier = DistilBertForTokenClassification.pretrained()
+val tokenClassifier = RoBertaForTokenClassification.pretrained()
   .setInputCols("token", "document")
   .setOutputCol("label")
   .setCaseSensitive(true)
@@ -102,26 +102,50 @@ result.select("label.result").show(false)
 
 {%- endcapture -%}
 
+{%- capture training_python_example -%}
+# This annotator needs to be trained externally. Please see the training page
+# for instructions.
+{%- endcapture -%}
+
+{%- capture training_scala_example -%}
+// This annotator needs to be trained externally. Please see the training page
+// for instructions.
+{%- endcapture -%}
+
+{%- capture embeddings_python_example -%}
+# This annotator has a fully connected layer attached for classification. For
+# embeddings see the base transformer annotator.
+{%- endcapture -%}
+
+{%- capture embeddings_scala_example -%}
+// This annotator has a fully connected layer attached for classification. For
+// embeddings see the base transformer annotator.
+{%- endcapture -%}
+
 {%- capture api_link -%}
-[DistilBertForTokenClassification](https://nlp.johnsnowlabs.com/api/com/johnsnowlabs/nlp/annotators/classifier/dl/DistilBertForTokenClassification)
+[RoBertaForTokenClassification](https://nlp.johnsnowlabs.com/api/com/johnsnowlabs/nlp/annotators/classifier/dl/RoBertaForTokenClassification)
 {%- endcapture -%}
 
 {%- capture python_api_link -%}
-[DistilBertForTokenClassification](https://nlp.johnsnowlabs.com/api/python/reference/autosummary/sparknlp.annotator.DistilBertForTokenClassification.html)
+[RoBertaForTokenClassification](https://nlp.johnsnowlabs.com/api/python/reference/autosummary/sparknlp.annotator.RoBertaForTokenClassification.html)
 {%- endcapture -%}
 
 {%- capture source_link -%}
-[DistilBertForTokenClassification](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/classifier/dl/DistilBertForTokenClassification.scala)
+[RoBertaForTokenClassification](https://github.com/JohnSnowLabs/spark-nlp/tree/master/src/main/scala/com/johnsnowlabs/nlp/annotators/classifier/dl/RoBertaForTokenClassification.scala)
 {%- endcapture -%}
 
-{% include templates/anno_template.md
+{% include templates/transformer_usecases_template.md
 title=title
 description=description
 input_anno=input_anno
 output_anno=output_anno
-python_example=python_example
-scala_example=scala_example
 python_api_link=python_api_link
 api_link=api_link
 source_link=source_link
+prediction_python_example=prediction_python_example
+prediction_scala_example=prediction_scala_example
+training_python_example=training_python_example
+training_scala_example=training_scala_example
+embeddings_python_example=embeddings_python_example
+embeddings_scala_example=embeddings_scala_example
 %}
