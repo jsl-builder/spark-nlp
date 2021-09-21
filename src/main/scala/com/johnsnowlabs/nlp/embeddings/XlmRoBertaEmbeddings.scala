@@ -18,11 +18,11 @@ package com.johnsnowlabs.nlp.embeddings
 
 import com.johnsnowlabs.ml.tensorflow._
 import com.johnsnowlabs.ml.tensorflow.sentencepiece._
+import com.johnsnowlabs.ml.tensorflow.wrap.{TFWrapper, TensorflowWrapper, TensorflowWrapperWithTfIo}
 import com.johnsnowlabs.nlp._
 import com.johnsnowlabs.nlp.annotators.common._
 import com.johnsnowlabs.nlp.serialization.MapFeature
 import com.johnsnowlabs.storage.HasStorageRef
-
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.ml.param.{IntArrayParam, IntParam}
 import org.apache.spark.ml.util.Identifiable
@@ -329,14 +329,14 @@ trait ReadXlmRobertaTensorflowModel extends ReadTensorflowModel with ReadSentenc
 
   def readTensorflow(instance: XlmRoBertaEmbeddings, path: String, spark: SparkSession): Unit = {
 
-    val tf = readTensorflowModel(path, spark, "_xlmroberta_tf", initAllTables = false)
+    val tf = readTensorflowModel(path, spark, "_xlmroberta_tf", initAllTables = false, useTfIo = "true")
     val spp = readSentencePieceModel(path, spark, "_xlmroberta_spp", sppFile)
     instance.setModelIfNotSet(spark, tf, spp)
   }
 
   addReader(readTensorflow)
 
-  def loadSavedModel(tfModelPath: String, spark: SparkSession, useTfIo: Boolean = false): XlmRoBertaEmbeddings = {
+  def loadSavedModel(tfModelPath: String, spark: SparkSession, useTfIo: String = "false"): XlmRoBertaEmbeddings = {
 
     val f = new File(tfModelPath)
     val savedModel = new File(tfModelPath, "saved_model.pb")
@@ -351,7 +351,7 @@ trait ReadXlmRobertaTensorflowModel extends ReadTensorflowModel with ReadSentenc
     require(sppModel.exists(), s"SentencePiece model 30k-clean.model not found in folder $sppModelPath")
 
     val (wrapper: TFWrapper[_], signatures) =
-      if(useTfIo)
+      if(useTfIo == "true")
         TensorflowWrapperWithTfIo.read(tfModelPath, zipped = false, useBundle = true)
       else
         TensorflowWrapper.read(tfModelPath, zipped = false, useBundle = true)

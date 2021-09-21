@@ -17,13 +17,13 @@
 package com.johnsnowlabs.ml.tensorflow
 
 import com.johnsnowlabs.ml.tensorflow.sentencepiece.LoadSentencepiece
+import com.johnsnowlabs.ml.tensorflow.wrap.{TFWrapper, TensorflowWrapper, TensorflowWrapperWithTfIo}
 import com.johnsnowlabs.nlp.annotators.ner.dl.LoadsContrib
 import com.johnsnowlabs.util.FileHelper
 
 import java.io.File
 import java.nio.file.{Files, Paths}
 import java.util.UUID
-
 import org.apache.commons.io.FileUtils
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.sql.SparkSession
@@ -125,7 +125,8 @@ trait ReadTensorflowModel {
                            useBundle: Boolean = false,
                            tags: Array[String] = Array.empty,
                            initAllTables: Boolean = false,
-                           savedSignatures: Option[Map[String, String]] = None
+                           savedSignatures: Option[Map[String, String]] = None,
+                           useTfIo: String = "false"
                          ): TFWrapper[_] = {
 
     LoadsContrib.loadContribToCluster(spark)
@@ -141,13 +142,19 @@ trait ReadTensorflowModel {
     fs.copyToLocalFile(new Path(path, tfFile), new Path(tmpFolder))
 
     // 3. Read Tensorflow state
-    val (tf, _) = TensorflowWrapper.read(new Path(tmpFolder, tfFile).toString,
-      zipped, tags = tags, useBundle = useBundle, initAllTables = initAllTables, savedSignatures = savedSignatures)
+
+    val (wrapper: TFWrapper[_], signatures) =
+      if(useTfIo == "true")
+        TensorflowWrapperWithTfIo.read(new Path(tmpFolder, tfFile).toString,
+          zipped, tags = tags, useBundle = useBundle, initAllTables = initAllTables, savedSignatures = savedSignatures)
+      else
+        TensorflowWrapper.read(new Path(tmpFolder, tfFile).toString,
+          zipped, tags = tags, useBundle = useBundle, initAllTables = initAllTables, savedSignatures = savedSignatures)
 
     // 4. Remove tmp folder
     FileHelper.delete(tmpFolder)
 
-    tf
+    wrapper
   }
 
   def readTensorflowWithSPModel(

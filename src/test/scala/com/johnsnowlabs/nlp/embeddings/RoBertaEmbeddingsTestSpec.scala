@@ -16,13 +16,13 @@
 
 package com.johnsnowlabs.nlp.embeddings
 
+import com.johnsnowlabs.nlp.annotator.SentenceDetector
 import com.johnsnowlabs.nlp.annotators.{StopWordsCleaner, Tokenizer}
 import com.johnsnowlabs.nlp.base.DocumentAssembler
 import com.johnsnowlabs.nlp.training.CoNLL
 import com.johnsnowlabs.nlp.util.io.ResourceHelper
 import com.johnsnowlabs.tags.SlowTest
 import com.johnsnowlabs.util.Benchmark
-
 import org.apache.spark.ml.{Pipeline, PipelineModel}
 import org.apache.spark.sql.functions.{col, explode, size}
 import org.scalatest.flatspec.AnyFlatSpec
@@ -198,5 +198,48 @@ class RoBertaEmbeddingsTestSpec extends AnyFlatSpec {
     println(s"total embeddings: $totalEmbeddings")
 
 
+  }
+
+  "Bert Embeddings" should "correctly load custom roberta model with extracted signatures" taggedAs SlowTest in {
+
+    import ResourceHelper.spark.implicits._
+
+    val ddd = Seq(
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening."
+    ).toDF("text")
+
+    val document = new DocumentAssembler()
+      .setInputCol("text")
+      .setOutputCol("document")
+
+    val sentence = new SentenceDetector()
+      .setInputCols(Array("document"))
+      .setOutputCol("sentence")
+
+    val tokenizer = new Tokenizer()
+      .setInputCols(Array("document"))
+      .setOutputCol("token")
+
+    val tfModelPathBase = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/roberta/"
+    val tfModelPath = s"${tfModelPathBase}roberta-large/saved_model/1"
+
+    val embeddings = RoBertaEmbeddings
+      .loadSavedModel(tfModelPath, ResourceHelper.spark, useTfIo = "true")
+      .setInputCols(Array("sentence","token"))
+      .setOutputCol("embeddings")
+      .setCaseSensitive(false)
+      .setDimension(768)
+      .setStorageRef("roberta-large")
+
+    val pipeline = new Pipeline().setStages(Array(document, sentence, tokenizer, embeddings))
+
+    pipeline.fit(ddd).transform(ddd).show
   }
 }

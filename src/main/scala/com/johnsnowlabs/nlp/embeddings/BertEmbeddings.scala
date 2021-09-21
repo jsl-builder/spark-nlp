@@ -17,21 +17,21 @@
 package com.johnsnowlabs.nlp.embeddings
 
 import com.johnsnowlabs.ml.tensorflow._
+import com.johnsnowlabs.ml.tensorflow.wrap.{TFWrapper, TensorflowWrapper, TensorflowWrapperWithTfIo}
 import com.johnsnowlabs.nlp._
 import com.johnsnowlabs.nlp.annotators.common._
 import com.johnsnowlabs.nlp.annotators.tokenizer.wordpiece.{BasicTokenizer, WordpieceEncoder}
 import com.johnsnowlabs.nlp.serialization.MapFeature
 import com.johnsnowlabs.nlp.util.io.{ExternalResource, ReadAs, ResourceHelper}
 import com.johnsnowlabs.storage.HasStorageRef
-
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.ml.param.{IntArrayParam, IntParam}
 import org.apache.spark.ml.util.Identifiable
 import org.apache.spark.sql.{DataFrame, SparkSession}
-
 import org.slf4j.{Logger, LoggerFactory}
 
 import java.io.File
+import scala.language.existentials
 
 /**
  * Token-level embeddings using BERT. BERT (Bidirectional Encoder Representations from Transformers) provides dense
@@ -352,7 +352,7 @@ trait ReadBertTensorflowModel extends ReadTensorflowModel {
 
   addReader(readTensorflow)
 
-  def loadSavedModel(tfModelPath: String, spark: SparkSession): BertEmbeddings = {
+  def loadSavedModel(tfModelPath: String, spark: SparkSession, useTfIo: String = "false"): BertEmbeddings = {
 
     val f = new File(tfModelPath)
     val savedModel = new File(tfModelPath, "saved_model.pb")
@@ -373,8 +373,12 @@ trait ReadBertTensorflowModel extends ReadTensorflowModel {
     val vocabResource = new ExternalResource(vocab.getAbsolutePath, ReadAs.TEXT, Map("format" -> "text"))
     val words = ResourceHelper.parseLines(vocabResource).zipWithIndex.toMap
 
-    // FIXME check why running a full spec generates a java.lang.StackOverflowError
-    val (wrapper, signatures) = TensorflowWrapperWithTfIo.read(tfModelPath, zipped = false, useBundle = true)
+    // TODO check why running a full spec generates a java.lang.StackOverflowError
+    val (wrapper: TFWrapper[_], signatures) =
+      if(useTfIo == "true")
+        TensorflowWrapperWithTfIo.read(tfModelPath, zipped = false, useBundle = true)
+      else
+        TensorflowWrapper.read(tfModelPath, zipped = false, useBundle = true)
 
     val _signatures = signatures match {
       case Some(s) => s

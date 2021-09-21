@@ -16,6 +16,7 @@
 
 package com.johnsnowlabs.ml.tensorflow
 
+import com.johnsnowlabs.ml.tensorflow.wrap.TensorflowWrapper
 import com.johnsnowlabs.nlp.annotators.common._
 import com.johnsnowlabs.nlp.{Annotation, AnnotatorType}
 

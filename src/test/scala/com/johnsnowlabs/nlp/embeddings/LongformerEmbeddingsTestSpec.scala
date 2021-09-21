@@ -16,6 +16,7 @@
 
 package com.johnsnowlabs.nlp.embeddings
 
+import com.johnsnowlabs.nlp.annotator.SentenceDetector
 import com.johnsnowlabs.nlp.annotators.{StopWordsCleaner, Tokenizer}
 import com.johnsnowlabs.nlp.base.DocumentAssembler
 import com.johnsnowlabs.nlp.training.CoNLL
@@ -151,7 +152,7 @@ class LongformerEmbeddingsTestSpec extends AnyFlatSpec {
 
   }
 
-  "LongformerEmbeddings" should "be aligned with custome tokens from Tokenizer" taggedAs SlowTest in {
+  "LongformerEmbeddings" should "be aligned with custom tokens from Tokenizer" taggedAs SlowTest in {
 
     import ResourceHelper.spark.implicits._
 
@@ -195,7 +196,49 @@ class LongformerEmbeddingsTestSpec extends AnyFlatSpec {
 
     println(s"total tokens: $totalTokens")
     println(s"total embeddings: $totalEmbeddings")
+  }
 
+  "Bert Embeddings" should "correctly load custom longformer model with extracted signatures" taggedAs SlowTest in {
 
+    import ResourceHelper.spark.implicits._
+
+    val ddd = Seq(
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening."
+    ).toDF("text")
+
+    val document = new DocumentAssembler()
+      .setInputCol("text")
+      .setOutputCol("document")
+
+    val sentence = new SentenceDetector()
+      .setInputCols(Array("document"))
+      .setOutputCol("sentence")
+
+    val tokenizer = new Tokenizer()
+      .setInputCols(Array("document"))
+      .setOutputCol("token")
+
+    val tfModelPathBase = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/longformer/"
+    val tfModelPath = s"${tfModelPathBase}allenai/longformer-base-4096/saved_model/1"
+
+    val embeddings = LongformerEmbeddings
+      .loadSavedModel(tfModelPath, ResourceHelper.spark, useTfIo = "true")
+      .setInputCols(Array("sentence","token"))
+      .setOutputCol("embeddings")
+      .setCaseSensitive(true)
+      .setDimension(768)
+      .setMaxSentenceLength(4096)
+      .setStorageRef("longformer_base_4096")
+
+    val pipeline = new Pipeline().setStages(Array(document, sentence, tokenizer, embeddings))
+
+    pipeline.fit(ddd).transform(ddd).show
   }
 }

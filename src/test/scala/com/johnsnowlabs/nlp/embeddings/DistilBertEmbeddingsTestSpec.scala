@@ -16,17 +16,17 @@
 
 package com.johnsnowlabs.nlp.embeddings
 
+import com.johnsnowlabs.nlp.annotator.SentenceDetector
 import com.johnsnowlabs.nlp.annotators.{StopWordsCleaner, Tokenizer}
 import com.johnsnowlabs.nlp.base.DocumentAssembler
 import com.johnsnowlabs.nlp.training.CoNLL
 import com.johnsnowlabs.nlp.util.io.ResourceHelper
 import com.johnsnowlabs.tags.SlowTest
 import com.johnsnowlabs.util.Benchmark
-
 import org.apache.spark.ml.{Pipeline, PipelineModel}
 import org.apache.spark.sql.functions.{col, explode, size}
-
 import org.scalatest.flatspec.AnyFlatSpec
+
 
 class DistilBertEmbeddingsTestSpec extends AnyFlatSpec {
 
@@ -158,6 +158,54 @@ class DistilBertEmbeddingsTestSpec extends AnyFlatSpec {
     val loadedDistilBertModel = DistilBertEmbeddings.load("./tmp_distilbert_model")
     loadedDistilBertModel.getDimension
 
+  }
+
+  "Bert Embeddings" should "correctly load custom distilbert model with extracted signatures" taggedAs SlowTest in {
+
+    import ResourceHelper.spark.implicits._
+
+    val ddd = Seq(
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening."
+    ).toDF("text")
+
+    val document = new DocumentAssembler()
+      .setInputCol("text")
+      .setOutputCol("document")
+
+    val sentence = new SentenceDetector()
+      .setInputCols(Array("document"))
+      .setOutputCol("sentence")
+
+    val tokenizer = new Tokenizer()
+      .setInputCols(Array("document"))
+      .setOutputCol("token")
+
+//    val tfModelPath = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/distilbert/distilbert-base-uncased-finetuned-sst-2-english/saved_model/1"
+//
+//    val embeddings = DistilBertEmbeddings
+//      .loadSavedModel(tfModelPath, ResourceHelper.spark, useTfIo = "true")
+//      .setInputCols(Array("sentence","token"))
+//      .setOutputCol("embeddings")
+//      .setCaseSensitive(false)
+//      .setDimension(768)
+//      .setStorageRef("distilbert_base_uncased")
+
+    val sparkModelPath = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/distilbert/distilbert-base-uncased/saved_model/distilbert-base-uncased-spk"
+
+//    embeddings.save(sparkModelPath)
+
+    val sparkModelEmbeddings = DistilBertEmbeddings.load(sparkModelPath)
+
+    val pipeline = new Pipeline().setStages(Array(document, sentence, tokenizer, sparkModelEmbeddings))
+
+    pipeline.fit(ddd).transform(ddd).show
   }
 
 }

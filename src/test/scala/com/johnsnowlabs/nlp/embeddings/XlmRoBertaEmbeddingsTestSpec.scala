@@ -223,16 +223,29 @@ class XlmRoBertaEmbeddingsTestSpec extends AnyFlatSpec {
       .setInputCols(Array("document"))
       .setOutputCol("token")
 
-    val savedModelPath = "PATH_TO_xlm-roberta-large-finetuned-conll03-english/saved_model/1"
-    val embeddings = XlmRoBertaEmbeddings.loadSavedModel(savedModelPath, ResourceHelper.spark, useTfIo = true)
+//    val savedModelPath = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/xlm-roberta/xlm-roberta-large-finetuned-conll03-english/saved_model/1"
+//    val embeddings =
+//      XlmRoBertaEmbeddings
+//        .loadSavedModel(savedModelPath,
+//          ResourceHelper.spark,
+//          useTfIo = "true")
+//
+//    val configuredSavedModelEmbeddings: embeddings.type = embeddings.setInputCols(Array("sentence","token"))
+//      .setOutputCol("embeddings")
+//      .setCaseSensitive(true)
+//      .setDimension(768)
+//      .setStorageRef("xlm_roberta_large")
 
-    embeddings.setInputCols(Array("sentence","token"))
-     .setOutputCol("embeddings")
-     .setCaseSensitive(true)
-     .setDimension(768)
-     .setStorageRef("xlm_roberta_large")
+    val sparkModelPath = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/xlm-roberta/xlm_roberta_large_finetuned_conll03_english_spk"
+//    configuredSavedModelEmbeddings.save(sparkModelPath)
 
-    val pipeline = new Pipeline().setStages(Array(document, sentence, tokenizer, embeddings))
+//    System.setProperty("org.bytedeco.javacpp.logger.debug", "true")
+//    System.setProperty("org.bytedeco.javacpp.maxphysicalbytes", "8192M")
+    //    System.setProperty("org.bytedeco.javacpp.maxbytes", "0")
+
+    val sparkModelEmbeddings = XlmRoBertaEmbeddings.load(sparkModelPath)
+
+    val pipeline = new Pipeline().setStages(Array(document, sentence, tokenizer, sparkModelEmbeddings))
 
     val pipelineModel = pipeline.fit(ddd)
     pipelineModel.transform(ddd).show()

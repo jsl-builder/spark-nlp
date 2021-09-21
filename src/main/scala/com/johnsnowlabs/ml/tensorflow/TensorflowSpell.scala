@@ -17,6 +17,7 @@
 package com.johnsnowlabs.ml.tensorflow
 
 import com.johnsnowlabs.ml.tensorflow.TensorResources._
+import com.johnsnowlabs.ml.tensorflow.wrap.TFWrapper
 import com.johnsnowlabs.nlp.annotators.ner.Verbose
 import com.johnsnowlabs.nlp.annotators.spell.context.LangModelSentence
 import org.tensorflow.Graph

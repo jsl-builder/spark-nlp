@@ -17,6 +17,7 @@
 package com.johnsnowlabs.nlp.annotators.ner.dl
 
 import com.johnsnowlabs.ml.tensorflow._
+import com.johnsnowlabs.ml.tensorflow.wrap.TFWrapper
 import com.johnsnowlabs.nlp.AnnotatorType._
 import com.johnsnowlabs.nlp._
 import com.johnsnowlabs.nlp.annotators.common.Annotated.NerTaggedSentence
@@ -25,7 +26,6 @@ import com.johnsnowlabs.nlp.annotators.ner.Verbose
 import com.johnsnowlabs.nlp.pretrained.ResourceDownloader
 import com.johnsnowlabs.nlp.serialization.StructFeature
 import com.johnsnowlabs.storage.HasStorageRef
-
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.ml.param.{BooleanParam, FloatParam, IntArrayParam, StringArrayParam}
 import org.apache.spark.ml.util.Identifiable

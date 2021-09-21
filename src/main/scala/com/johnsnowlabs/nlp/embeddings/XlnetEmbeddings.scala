@@ -18,17 +18,18 @@ package com.johnsnowlabs.nlp.embeddings
 
 import com.johnsnowlabs.ml.tensorflow._
 import com.johnsnowlabs.ml.tensorflow.sentencepiece._
+import com.johnsnowlabs.ml.tensorflow.wrap.{TFWrapper, TensorflowWrapper, TensorflowWrapperWithTfIo}
 import com.johnsnowlabs.nlp._
 import com.johnsnowlabs.nlp.annotators.common._
 import com.johnsnowlabs.nlp.serialization.MapFeature
 import com.johnsnowlabs.storage.HasStorageRef
-
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.ml.param.{IntArrayParam, IntParam}
 import org.apache.spark.ml.util.Identifiable
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import java.io.File
+import scala.language.existentials
 
 /** XlnetEmbeddings (XLNet): Generalized Autoregressive Pretraining for Language Understanding
  *
@@ -321,7 +322,7 @@ trait ReadXlnetTensorflowModel extends ReadTensorflowModel with ReadSentencePiec
 
   addReader(readTensorflow)
 
-  def loadSavedModel(tfModelPath: String, spark: SparkSession): XlnetEmbeddings = {
+  def loadSavedModel(tfModelPath: String, spark: SparkSession, useTfIo: String = "false"): XlnetEmbeddings = {
 
     val f = new File(tfModelPath)
     val sppModelPath = tfModelPath + "/assets"
@@ -336,7 +337,12 @@ trait ReadXlnetTensorflowModel extends ReadTensorflowModel with ReadSentencePiec
     )
     require(sppModel.exists(), s"SentencePiece model spiece.model not found in folder $sppModelPath")
 
-    val (wrapper, signatures) = TensorflowWrapper.read(tfModelPath, zipped = false, useBundle = true)
+    val (wrapper: TFWrapper[_], signatures) =
+      if(useTfIo == "true")
+        TensorflowWrapperWithTfIo.read(tfModelPath, zipped = false, useBundle = true)
+      else
+        TensorflowWrapper.read(tfModelPath, zipped = false, useBundle = true)
+
     val spp = SentencePieceWrapper.read(sppModel.toString)
 
     val _signatures = signatures match {

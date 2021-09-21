@@ -16,6 +16,7 @@
 
 package com.johnsnowlabs.ml.tensorflow
 
+import com.johnsnowlabs.ml.tensorflow.wrap.{TFWrapper, TensorflowWrapper}
 import com.johnsnowlabs.nlp.annotators.ner.Verbose
 import com.johnsnowlabs.nlp.util.io.OutputHelper
 import org.apache.spark.ml.util.Identifiable

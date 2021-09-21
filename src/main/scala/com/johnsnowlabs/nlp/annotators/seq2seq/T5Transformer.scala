@@ -17,7 +17,8 @@
 package com.johnsnowlabs.nlp.annotators.seq2seq
 
 import com.johnsnowlabs.ml.tensorflow.sentencepiece.{ReadSentencePieceModel, SentencePieceWrapper, WriteSentencePieceModel}
-import com.johnsnowlabs.ml.tensorflow.{ReadTensorflowModel, TFWrapper, TensorflowT5, TensorflowWrapper, WriteTensorflowModel}
+import com.johnsnowlabs.ml.tensorflow.wrap.{TFWrapper, TensorflowWrapper}
+import com.johnsnowlabs.ml.tensorflow.{ReadTensorflowModel, TensorflowT5, WriteTensorflowModel}
 import com.johnsnowlabs.nlp.AnnotatorType.DOCUMENT
 import com.johnsnowlabs.nlp.{Annotation, AnnotatorModel, HasPretrained, HasSimpleAnnotate, ParamsAndFeaturesReadable, ParamsAndFeaturesWritable}
 import org.apache.spark.broadcast.Broadcast

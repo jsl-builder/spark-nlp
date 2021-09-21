@@ -17,12 +17,11 @@
 package com.johnsnowlabs.nlp.embeddings
 
 import java.io.File
-
 import com.johnsnowlabs.ml.tensorflow._
+import com.johnsnowlabs.ml.tensorflow.wrap.{TFWrapper, TensorflowWrapper}
 import com.johnsnowlabs.nlp._
 import com.johnsnowlabs.nlp.annotators.common._
 import com.johnsnowlabs.storage.HasStorageRef
-
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.ml.param.{IntArrayParam, IntParam, Param}
 import org.apache.spark.ml.util.Identifiable

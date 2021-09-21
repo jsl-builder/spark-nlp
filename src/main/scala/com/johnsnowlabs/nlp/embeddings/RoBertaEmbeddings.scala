@@ -17,19 +17,20 @@
 package com.johnsnowlabs.nlp.embeddings
 
 import com.johnsnowlabs.ml.tensorflow._
+import com.johnsnowlabs.ml.tensorflow.wrap.{TFWrapper, TensorflowWrapper, TensorflowWrapperWithTfIo}
 import com.johnsnowlabs.nlp._
 import com.johnsnowlabs.nlp.annotators.common._
 import com.johnsnowlabs.nlp.annotators.tokenizer.bpe.BpeTokenizer
 import com.johnsnowlabs.nlp.serialization.MapFeature
 import com.johnsnowlabs.nlp.util.io.{ExternalResource, ReadAs, ResourceHelper}
 import com.johnsnowlabs.storage.HasStorageRef
-
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.ml.param.{IntArrayParam, IntParam}
 import org.apache.spark.ml.util.Identifiable
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import java.io.File
+import scala.language.existentials
 
 /**
  * The RoBERTa model was proposed in [[https://arxiv.org/abs/1907.11692 RoBERTa: A Robustly Optimized BERT Pretraining Approach]]
@@ -380,7 +381,7 @@ trait ReadRobertaTensorflowModel extends ReadTensorflowModel {
 
   addReader(readTensorflow)
 
-  def loadSavedModel(tfModelPath: String, spark: SparkSession): RoBertaEmbeddings = {
+  def loadSavedModel(tfModelPath: String, spark: SparkSession, useTfIo: String = "false"): RoBertaEmbeddings = {
 
     val f = new File(tfModelPath)
     val savedModel = new File(tfModelPath, "saved_model.pb")
@@ -412,7 +413,11 @@ trait ReadRobertaTensorflowModel extends ReadTensorflowModel {
       .map { case Array(c1, c2) => (c1, c2) }
       .zipWithIndex.toMap
 
-    val (wrapper, signatures) = TensorflowWrapper.read(tfModelPath, zipped = false, useBundle = true)
+    val (wrapper: TFWrapper[_], signatures) =
+      if(useTfIo == "true")
+        TensorflowWrapperWithTfIo.read(tfModelPath, zipped = false, useBundle = true)
+      else
+        TensorflowWrapper.read(tfModelPath, zipped = false, useBundle = true)
 
     val _signatures = signatures match {
       case Some(s) => s

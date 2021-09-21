@@ -17,6 +17,7 @@
 package com.johnsnowlabs.nlp.embeddings
 
 import com.johnsnowlabs.nlp.annotator._
+import com.johnsnowlabs.nlp.annotators.Tokenizer
 import com.johnsnowlabs.nlp.base._
 import com.johnsnowlabs.nlp.training.CoNLL
 import com.johnsnowlabs.nlp.util.io.ResourceHelper
@@ -205,5 +206,48 @@ class XlnetEmbeddingsTestSpec extends AnyFlatSpec {
     val pipelineModel = PipelineModel.load("./tmp_xlnet_pipeline")
 
     pipelineModel.transform(ddd)
+  }
+
+  "XLNet Embeddings" should "correctly load custom XlNet model with extracted signatures" taggedAs SlowTest in {
+
+    import ResourceHelper.spark.implicits._
+
+    val ddd = Seq(
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening.",
+      "Something is weird on the notebooks, something is happening."
+    ).toDF("text")
+
+    val document = new DocumentAssembler()
+      .setInputCol("text")
+      .setOutputCol("document")
+
+    val sentence = new SentenceDetector()
+      .setInputCols(Array("document"))
+      .setOutputCol("sentence")
+
+    val tokenizer = new Tokenizer()
+      .setInputCols(Array("document"))
+      .setOutputCol("token")
+
+    val tfModelPathBase = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/xlnet/"
+    val tfModelPath = s"${tfModelPathBase}xlnet-large-cased/saved_model/1"
+
+    val embeddings = XlnetEmbeddings
+      .loadSavedModel(tfModelPath, ResourceHelper.spark, useTfIo = "true")
+      .setInputCols(Array("sentence","token"))
+      .setOutputCol("embeddings")
+      .setCaseSensitive(true)
+      .setDimension(768)
+      .setStorageRef("xlnet-large-cased")
+
+    val pipeline = new Pipeline().setStages(Array(document, sentence, tokenizer, embeddings))
+
+    pipeline.fit(ddd).transform(ddd).show
   }
 }

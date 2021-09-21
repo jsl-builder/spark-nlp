@@ -16,10 +16,11 @@
 
 package com.johnsnowlabs.nlp.annotators.ner.dl
 
+import com.johnsnowlabs.ml.tensorflow.wrap.TensorflowWrapper
+
 import java.nio.file.{Files, Paths}
 import java.util.UUID
-
-import com.johnsnowlabs.ml.tensorflow.{DatasetEncoderParams, NerDatasetEncoder, TensorflowNer, TensorflowWrapper}
+import com.johnsnowlabs.ml.tensorflow.{DatasetEncoderParams, NerDatasetEncoder, TensorflowNer}
 import com.johnsnowlabs.nlp.annotators.ner.Verbose
 import com.johnsnowlabs.storage.{RocksDBConnection, StorageHelper}
 import com.johnsnowlabs.util.FileHelper

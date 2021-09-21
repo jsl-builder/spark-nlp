@@ -17,7 +17,8 @@
 package com.johnsnowlabs.nlp.annotators.sentence_detector_dl
 
 
-import com.johnsnowlabs.ml.tensorflow.{ReadTensorflowModel, TFWrapper, TensorflowSentenceDetectorDL, TensorflowWrapper, WriteTensorflowModel}
+import com.johnsnowlabs.ml.tensorflow.wrap.{TFWrapper, TensorflowWrapper}
+import com.johnsnowlabs.ml.tensorflow.{ReadTensorflowModel, TensorflowSentenceDetectorDL, WriteTensorflowModel}
 import com.johnsnowlabs.nlp.AnnotatorType.DOCUMENT
 import com.johnsnowlabs.nlp.{Annotation, AnnotatorModel, AnnotatorType, HasPretrained, HasSimpleAnnotate, ParamsAndFeaturesReadable, ParamsAndFeaturesWritable}
 import com.johnsnowlabs.storage.HasStorageRef

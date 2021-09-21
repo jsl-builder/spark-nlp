@@ -309,8 +309,8 @@ class _CoverageResult(ExtendedJavaWrapper):
 
 
 class _BertLoader(ExtendedJavaWrapper):
-    def __init__(self, path, jspark):
-        super(_BertLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.BertEmbeddings.loadSavedModel", path, jspark)
+    def __init__(self, path, jspark, use_tfio):
+        super(_BertLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.BertEmbeddings.loadSavedModel", path, jspark, use_tfio)
 
 
 class _BertSentenceLoader(ExtendedJavaWrapper):
@@ -337,9 +337,8 @@ class _AlbertLoader(ExtendedJavaWrapper):
 
 
 class _XlnetLoader(ExtendedJavaWrapper):
-    def __init__(self, path, jspark):
-        super(_XlnetLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.XlnetEmbeddings.loadSavedModel", path,
-                                           jspark)
+    def __init__(self, path, jspark, use_tfio):
+        super(_XlnetLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.XlnetEmbeddings.loadSavedModel", path, jspark, use_tfio)
 
 
 class _T5Loader(ExtendedJavaWrapper):
@@ -355,21 +354,18 @@ class _MarianLoader(ExtendedJavaWrapper):
 
 
 class _DistilBertLoader(ExtendedJavaWrapper):
-    def __init__(self, path, jspark):
-        super(_DistilBertLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.DistilBertEmbeddings.loadSavedModel",
-                                                path, jspark)
+    def __init__(self, path, jspark, use_tfio):
+        super(_DistilBertLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.DistilBertEmbeddings.loadSavedModel", path, jspark, use_tfio)
 
 
 class _RoBertaLoader(ExtendedJavaWrapper):
-    def __init__(self, path, jspark):
-        super(_RoBertaLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.RoBertaEmbeddings.loadSavedModel", path,
-                                             jspark)
+    def __init__(self, path, jspark, use_tfio):
+        super(_RoBertaLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.RoBertaEmbeddings.loadSavedModel", path, path, jspark, use_tfio)
 
 
 class _XlmRoBertaLoader(ExtendedJavaWrapper):
-    def __init__(self, path, jspark):
-        super(_XlmRoBertaLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.XlmRoBertaEmbeddings.loadSavedModel",
-                                                path, jspark)
+    def __init__(self, path, jspark, use_tfio):
+        super(_XlmRoBertaLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.XlmRoBertaEmbeddings.loadSavedModel", path, jspark, use_tfio)
 
 
 class _BertTokenClassifierLoader(ExtendedJavaWrapper):
@@ -386,10 +382,8 @@ class _DistilBertTokenClassifierLoader(ExtendedJavaWrapper):
 
 
 class _LongformerLoader(ExtendedJavaWrapper):
-    def __init__(self, path, jspark):
-        super(_LongformerLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.LongformerEmbeddings.loadSavedModel",
-                                                path,
-                                                jspark)
+    def __init__(self, path, jspark, use_tfio):
+        super(_LongformerLoader, self).__init__("com.johnsnowlabs.nlp.embeddings.LongformerEmbeddings.loadSavedModel", path, jspark, use_tfio)
 
 
 class _RoBertaSentenceLoader(ExtendedJavaWrapper):

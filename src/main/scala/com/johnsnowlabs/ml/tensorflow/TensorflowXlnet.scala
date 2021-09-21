@@ -18,6 +18,7 @@ package com.johnsnowlabs.ml.tensorflow
 
 import com.johnsnowlabs.ml.tensorflow.sentencepiece._
 import com.johnsnowlabs.ml.tensorflow.sign.{ModelSignatureConstants, ModelSignatureManager}
+import com.johnsnowlabs.ml.tensorflow.wrap.TFWrapper
 import com.johnsnowlabs.nlp.annotators.common._
 
 import scala.collection.JavaConverters._

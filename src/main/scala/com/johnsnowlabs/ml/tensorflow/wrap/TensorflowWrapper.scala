@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package com.johnsnowlabs.ml.tensorflow
+package com.johnsnowlabs.ml.tensorflow.wrap
 
-import com.johnsnowlabs.ml.tensorflow.TensorflowWrapper.{InitAllTableOP, processInitAllTableOp, unpackFromBundle, unpackWithoutBundle, withSafeSavedModelBundleLoader}
+import com.johnsnowlabs.ml.tensorflow.TensorResources
 import com.johnsnowlabs.ml.tensorflow.sentencepiece.LoadSentencepiece
 import com.johnsnowlabs.ml.tensorflow.sign.ModelSignatureManager
+import com.johnsnowlabs.ml.tensorflow.wrap.TensorflowWrapper._
 import com.johnsnowlabs.nlp.annotators.ner.dl.LoadsContrib
 import com.johnsnowlabs.nlp.util.io.ResourceHelper
 import com.johnsnowlabs.util.{FileHelper, ZipArchiveUtil}
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.WildcardFileFilter
 import org.apache.hadoop.fs.Path
+import org.slf4j.{Logger, LoggerFactory}
 import org.tensorflow._
 import org.tensorflow.exceptions.TensorFlowException
 import org.tensorflow.proto.framework.{ConfigProto, GraphDef}
@@ -34,44 +36,7 @@ import java.net.URI
 import java.nio.file.{Files, Paths}
 import java.util.UUID
 import scala.util.{Failure, Success, Try}
-import org.slf4j.{Logger, LoggerFactory}
 
-
-case class Variables(variables: Array[Byte], index: Array[Byte])
-
-
-case class ModelSignature(operation: String,
-                          value: String,
-                          matchingPatterns: List[String])
-
-
-trait TFWrapper[S <: TFWrapper[S]] {
-
-  def getGraph(): Array[Byte]
-
-  def getTFHubSession(configProtoBytes: Option[Array[Byte]], initAllTables: Boolean, loadSP: Boolean, savedSignatures: Option[Map[String, String]]): Session
-
-  def saveToFile(tfFile: String, configProtoBytes: Option[Array[Byte]]): Unit
-
-  def getSession(configProtoBytes: Option[Array[Byte]]): Session
-
-  def createSession(configProtoBytes: Option[Array[Byte]]): Session
-
-  def saveToFileV1V2(tfFile: String,
-                     configProtoBytes: Option[Array[Byte]],
-                     savedSignatures: Option[Map[String, String]]): Unit
-
-  def useTFIO: Boolean
-
-  def getUseTFIO: Boolean = useTFIO
-
-  def read(file: String,
-           zipped: Boolean = true,
-           useBundle: Boolean = false,
-           tags: Array[String] = Array.empty[String],
-           initAllTables: Boolean = false,
-           savedSignatures: Option[Map[String, String]] = None): (TFWrapper[_], Option[Map[String, String]])
-}
 
 class TensorflowWrapper(var variables: Variables,
                         var graph: Array[Byte]) extends Serializable with TFWrapper[TensorflowWrapper] {
@@ -519,6 +484,8 @@ object TensorflowWrapper {
           (graph, session, varPath, idxPath, None)
         }
 
+      print(s"varPath: $varPath ||| idxPath: $idxPath")
+
       val varBytes = Files.readAllBytes(varPath)
       val idxBytes = Files.readAllBytes(idxPath)
 
@@ -529,6 +496,58 @@ object TensorflowWrapper {
       tfWrapper.m_session = session
       (tfWrapper, signatures)
     }
+
+  def readWithTfIo(file: String,
+           zipped: Boolean = true,
+           useBundle: Boolean = false,
+           tags: Array[String] = Array.empty[String],
+           initAllTables: Boolean = false,
+           savedSignatures: Option[Map[String, String]] = None): (TFWrapper[TensorflowWrapper], Option[Map[String, String]]) = {
+
+    val t = new TensorResources()
+
+    // 1. Create tmp folder
+    val tmpFolder = Files.createTempDirectory(UUID.randomUUID().toString.takeRight(12) + "_ner")
+      .toAbsolutePath.toString
+
+    // 2. Unpack archive
+    val folder =
+      if (zipped)
+        ZipArchiveUtil.unzip(new File(file), Some(tmpFolder))
+      else
+        file
+
+    LoadsContrib.loadContribToTensorflow()
+
+    // 3. Read file as SavedModelBundle
+    val (graph, session, varPath, idxPath, signatures) =
+      if (useBundle) {
+        val model: SavedModelBundle = withSafeSavedModelBundleLoader(tags = tags, savedModelDir = folder)
+        val (graph, session, varPath, idxPath) = unpackFromBundle(folder, model)
+        if (initAllTables) session.runner().addTarget(InitAllTableOP)
+
+        // Extract saved model signatures
+        val saverDef = model.metaGraphDef().getSaverDef
+        val signatures = ModelSignatureManager.extractSignatures(model, saverDef)
+
+        (graph, session, varPath, idxPath, signatures)
+      } else {
+        val (graph, session, varPath, idxPath) = unpackWithoutBundle(folder)
+        processInitAllTableOp(initAllTables, t, session, folder, savedSignatures = savedSignatures)
+
+        (graph, session, varPath, idxPath, None)
+      }
+
+    val varBytes = Files.readAllBytes(varPath)
+    val idxBytes = Files.readAllBytes(idxPath)
+
+    // 4. Remove tmp folder
+    FileHelper.delete(tmpFolder)
+    t.clearTensors()
+    val tfWrapper = new TensorflowWrapper(Variables(varBytes, idxBytes), graph.toGraphDef.toByteArray)
+    tfWrapper.m_session = session
+    (tfWrapper, signatures)
+  }
 
     def readWithSP(
                     file: String,

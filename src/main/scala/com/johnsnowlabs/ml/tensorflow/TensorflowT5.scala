@@ -17,6 +17,7 @@
 package com.johnsnowlabs.ml.tensorflow
 
 import com.johnsnowlabs.ml.tensorflow.sentencepiece._
+import com.johnsnowlabs.ml.tensorflow.wrap.TFWrapper
 import com.johnsnowlabs.nlp.{Annotation, AnnotatorType}
 import org.tensorflow.{Session, Tensor}
 
