@@ -227,7 +227,7 @@ class RoBertaEmbeddingsTestSpec extends AnyFlatSpec {
       .setInputCols(Array("document"))
       .setOutputCol("token")
 
-    val tfModelPathBase = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/roberta/"
+    val tfModelPathBase = "PATH_TO"
     val tfModelPath = s"${tfModelPathBase}roberta-large/saved_model/1"
 
     val embeddings = RoBertaEmbeddings

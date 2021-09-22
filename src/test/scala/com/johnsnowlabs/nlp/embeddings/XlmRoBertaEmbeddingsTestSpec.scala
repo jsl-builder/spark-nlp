@@ -223,7 +223,8 @@ class XlmRoBertaEmbeddingsTestSpec extends AnyFlatSpec {
       .setInputCols(Array("document"))
       .setOutputCol("token")
 
-//    val savedModelPath = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/xlm-roberta/xlm-roberta-large-finetuned-conll03-english/saved_model/1"
+    val tfModelPathBase = "PATH_TO"
+//    val savedModelPath = s"$tfModelPathBase/xlm-roberta-large-finetuned-conll03-english/saved_model/1"
 //    val embeddings =
 //      XlmRoBertaEmbeddings
 //        .loadSavedModel(savedModelPath,
@@ -236,7 +237,7 @@ class XlmRoBertaEmbeddingsTestSpec extends AnyFlatSpec {
 //      .setDimension(768)
 //      .setStorageRef("xlm_roberta_large")
 
-    val sparkModelPath = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/xlm-roberta/xlm_roberta_large_finetuned_conll03_english_spk"
+    val sparkModelPath = s"$tfModelPathBase/xlm_roberta_large_finetuned_conll03_english_spk"
 //    configuredSavedModelEmbeddings.save(sparkModelPath)
 
 //    System.setProperty("org.bytedeco.javacpp.logger.debug", "true")

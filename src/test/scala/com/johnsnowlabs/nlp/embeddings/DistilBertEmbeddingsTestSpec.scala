@@ -187,7 +187,8 @@ class DistilBertEmbeddingsTestSpec extends AnyFlatSpec {
       .setInputCols(Array("document"))
       .setOutputCol("token")
 
-//    val tfModelPath = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/distilbert/distilbert-base-uncased-finetuned-sst-2-english/saved_model/1"
+    val tfModelPathBase = "PATH_TO"
+//    val tfModelPath = s"$tfModelPathBase/distilbert-base-uncased-finetuned-sst-2-english/saved_model/1"
 //
 //    val embeddings = DistilBertEmbeddings
 //      .loadSavedModel(tfModelPath, ResourceHelper.spark, useTfIo = "true")
@@ -197,7 +198,7 @@ class DistilBertEmbeddingsTestSpec extends AnyFlatSpec {
 //      .setDimension(768)
 //      .setStorageRef("distilbert_base_uncased")
 
-    val sparkModelPath = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/distilbert/distilbert-base-uncased/saved_model/distilbert-base-uncased-spk"
+    val sparkModelPath = "PATH_TO_distilbert-base-uncased/saved_model/distilbert-base-uncased-spk"
 
 //    embeddings.save(sparkModelPath)
 

@@ -17,6 +17,7 @@
 package com.johnsnowlabs.ml.tensorflow
 
 import com.johnsnowlabs.ml.tensorflow.sign.{ModelSignatureConstants, ModelSignatureManager}
+import com.johnsnowlabs.ml.tensorflow.wrap.TFWrapper
 import com.johnsnowlabs.nlp.annotators.common._
 import com.johnsnowlabs.nlp.{Annotation, AnnotatorType}
 import org.tensorflow.ndarray.buffer.IntDataBuffer
@@ -32,7 +33,7 @@ import scala.collection.JavaConverters._
  * @param tags                 labels which model was trained with in order
  * @param signatures           TF v2 signatures in Spark NLP
  * */
-class TensorflowRoBertaClassification(val tensorflowWrapper: TensorflowWrapper,
+class TensorflowRoBertaClassification(val tensorflowWrapper: TFWrapper[_],
                                       sentenceStartTokenId: Int,
                                       sentenceEndTokenId: Int,
                                       padTokenId: Int,
@@ -83,7 +84,7 @@ class TensorflowRoBertaClassification(val tensorflowWrapper: TensorflowWrapper,
         maskBuffers.offset(offset).write(sentence.map(x => if (x == padTokenId) 0 else 1))
       }
 
-    val runner = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, initAllTables = false).runner
+    val runner = tensorflowWrapper.getTFHubSession(configProtoBytes = configProtoBytes, initAllTables = false, loadSP = false, savedSignatures = None).runner
 
     val tokenTensors = tensors.createIntBufferTensor(shape, tokenBuffers)
     val maskTensors = tensors.createIntBufferTensor(shape, maskBuffers)

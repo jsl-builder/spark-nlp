@@ -235,7 +235,7 @@ class XlnetEmbeddingsTestSpec extends AnyFlatSpec {
       .setInputCols(Array("document"))
       .setOutputCol("token")
 
-    val tfModelPathBase = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/xlnet/"
+    val tfModelPathBase = "PATH_TO"
     val tfModelPath = s"${tfModelPathBase}xlnet-large-cased/saved_model/1"
 
     val embeddings = XlnetEmbeddings

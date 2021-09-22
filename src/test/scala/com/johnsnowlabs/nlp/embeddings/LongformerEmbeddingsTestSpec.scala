@@ -225,7 +225,7 @@ class LongformerEmbeddingsTestSpec extends AnyFlatSpec {
       .setInputCols(Array("document"))
       .setOutputCol("token")
 
-    val tfModelPathBase = "/home/wolliqeonii/workspace/dev/jsl/hugs/perfs/longformer/"
+    val tfModelPathBase = "PATH_TO"
     val tfModelPath = s"${tfModelPathBase}allenai/longformer-base-4096/saved_model/1"
 
     val embeddings = LongformerEmbeddings
