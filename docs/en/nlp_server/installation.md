@@ -29,7 +29,7 @@ NLP Server is available on AWS Marketplace at [this URL](https://aws.amazon.com/
 
 For deploying NLP Server on AWS, follow the video instructions or the seven steps described below.
 
-<div class="cell cell--12 cell--lg-6 cell--sm-12"><div class="video-item">{%- include extensions/youtube.html id='oDFXmFCMpXY' -%}<div class="video-descr">Deploy NLP Server via AWS Marketplace</div></div></div>
+<div class="cell cell--12 cell--lg-6 cell--sm-12"><div class="video-item">{%- include extensions/youtube.html id='3_T0P397i-k' -%}<div class="video-descr">Deploy NLP Server via AWS Marketplace</div></div></div>
 
 1.Click on `Continue to subscribe` button for creating a subscription to the NLP Server product. The software is free of charge.
 
