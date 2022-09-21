@@ -24,7 +24,6 @@ import org.apache.spark.ml.util.{DefaultParamsReadable, Identifiable}
 import java.nio.charset.{Charset, StandardCharsets}
 import scala.collection.mutable.ListBuffer
 import scala.util.matching.Regex
-import scala.util.matching.Regex.Match
 import scala.util.{Failure, Success, Try}
 import scala.xml.XML
 
@@ -439,7 +438,11 @@ object LookAroundManager {
   val EMPTY_STR = ""
   val OR_STR = "|"
 
-  def withReplacement(text: String, replacement: String, m: Regex.Match, groupIdx: Int = 1) = { // implicit condition of picking the
+  def withReplacement(
+      text: String,
+      replacement: String,
+      m: Regex.Match,
+      groupIdx: Int = 1): String = { // implicit condition of picking the
     // assuming first group to be the lookaround pattern replacement
     text.replace(m.group(groupIdx), replacement)
   }
