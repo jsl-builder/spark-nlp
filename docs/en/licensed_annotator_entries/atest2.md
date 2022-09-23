@@ -117,6 +117,7 @@ approach=approach
 model_description=model_description
 model_input_anno=model_input_anno
 model_output_anno=model_output_anno
+model_python_medical=model_python_medical
 model_python_finance=model_python_finance
 model_python_legal=model_python_legal
 model_scala_medical=model_scala_medical
@@ -130,6 +131,7 @@ approach_python_medical=approach_python_medical
 approach_python_finance=approach_python_finance
 approach_python_legal=approach_python_legal
 approach_scala_medical=approach_scala_medical
+approach_scala_finance=approach_scala_finance
 approach_scala_legal=approach_scala_legal
 approach_api_link=approach_api_link
 %}
