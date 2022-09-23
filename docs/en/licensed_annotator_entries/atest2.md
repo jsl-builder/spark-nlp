@@ -27,6 +27,10 @@ TESTING
 
 
 
+{%- capture model_python_medical -%}
+PYTHON MEDICAL MODEL
+{%- endcapture -%}
+
 {%- capture model_python_finance -%}
 PYTHON FINANCE MODEL
 {%- endcapture -%}
@@ -87,6 +91,10 @@ PYTHON LEGAL APPROACH
 
 {%- capture approach_scala_medical -%}
 SCALA MEDICAL APPROACH
+{%- endcapture -%}
+
+{%- capture approach_scala_finance -%}
+SCALA FINANCE APPROACH
 {%- endcapture -%}
 
 {%- capture approach_scala_legal -%}
