@@ -187,13 +187,7 @@ To do this, let’s create a content/main.py Python script to download the requi
 
 First, the import section
 
-    import uvicorn, json, os
-    from fastapi import FastAPI
-    from sparknlp.annotator import *
-    from sparknlp_jsl.annotator import *
-    from sparknlp.base import *
-    import sparknlp, sparknlp_jsl
-    from sparknlp.pretrained import PretrainedPipeline
+    from johnsnowlabs import *
 
     app = FastAPI()
     pipelines = {}

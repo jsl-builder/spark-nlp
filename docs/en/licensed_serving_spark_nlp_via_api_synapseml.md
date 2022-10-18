@@ -105,51 +105,46 @@ Synapse ML recommends using at least Spark 3.2, so first of all, let’s configu
 
 After the initialization, add your required imports (Spark NLP) and add to them the SynapseML-specific ones:
 
-    import sparknlp
-    import sparknlp_jsl
-    ...
-
-    import synapse.ml
-    from synapse.ml.io import *
+    from johnsnowlabs import *
 
 Now, let’s create a Spark NLP for Healthcare pipeline to carry out Entity Resolution.
 
-    document_assembler = DocumentAssembler()\
+    document_assembler = nlp.DocumentAssembler()\
           .setInputCol("text")\
           .setOutputCol("document")
     
-    sentenceDetectorDL = SentenceDetectorDLModel.pretrained("sentence_detector_dl_healthcare", "en", 'clinical/models') \
+    sentenceDetectorDL = nlp.SentenceDetectorDLModel.pretrained("sentence_detector_dl_healthcare", "en", 'clinical/models') \
           .setInputCols(["document"]) \
           .setOutputCol("sentence")
     
-    tokenizer = Tokenizer()\
+    tokenizer = nlp.Tokenizer()\
           .setInputCols(["sentence"])\
           .setOutputCol("token")
     
-    word_embeddings = WordEmbeddingsModel.pretrained("embeddings_clinical", "en", "clinical/models")\
+    word_embeddings = nlp.WordEmbeddingsModel.pretrained("embeddings_clinical", "en", "clinical/models")\
       .setInputCols(["sentence", "token"])\
       .setOutputCol("word_embeddings")
     
-    clinical_ner = MedicalNerModel.pretrained("ner_clinical", "en", "clinical/models") \
+    clinical_ner = medical.NerModel.pretrained("ner_clinical", "en", "clinical/models") \
           .setInputCols(["sentence", "token", "word_embeddings"]) \
           .setOutputCol("ner")
     
-    ner_converter_icd = NerConverterInternal() \
+    ner_converter_icd = medical.NerConverterInternal() \
           .setInputCols(["sentence", "token", "ner"]) \
           .setOutputCol("ner_chunk")\
           .setWhiteList(['PROBLEM'])\
           .setPreservePosition(False)
     
-    c2doc = Chunk2Doc()\
+    c2doc = nlp.Chunk2Doc()\
           .setInputCols("ner_chunk")\
           .setOutputCol("ner_chunk_doc") 
     
-    sbert_embedder = BertSentenceEmbeddings.pretrained('sbiobert_base_cased_mli', 'en','clinical/models')\
+    sbert_embedder = nlp.BertSentenceEmbeddings.pretrained('sbiobert_base_cased_mli', 'en','clinical/models')\
           .setInputCols(["ner_chunk_doc"])\
           .setOutputCol("sentence_embeddings")\
           .setCaseSensitive(False)
         
-    icd_resolver = SentenceEntityResolverModel.pretrained("sbiobertresolve_icd10cm_augmented_billable_hcc","en", "clinical/models") \
+    icd_resolver = medical.SentenceEntityResolverModel.pretrained("sbiobertresolve_icd10cm_augmented_billable_hcc","en", "clinical/models") \
          .setInputCols(["ner_chunk", "sentence_embeddings"]) \
          .setOutputCol("icd10cm_code")\
          .setDistanceFunction("EUCLIDEAN")

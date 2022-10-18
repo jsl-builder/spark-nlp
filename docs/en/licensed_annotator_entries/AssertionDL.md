@@ -527,13 +527,13 @@ val token = new nlp.Tokenizer()
   .setInputCols("document")
   .setOutputCol("token")
 val embeddings = nlp.WordEmbeddingsModel.pretrained("embeddings_clinical", "en", "clinical/models")
-  .setInputCols("document", "token")
+  .setInputCols(Array("document", "token"))
   .setOutputCol("embeddings")
 
 // Define AssertionDLApproach with parameters and start training
 val assertionStatus = new medical.AssertionDLApproach()
   .setLabelCol("label")
-  .setInputCols("document", "chunk", "embeddings")
+  .setInputCols(Array("document", "chunk", "embeddings"))
   .setOutputCol("assertion")
   .setBatchSize(128)
   .setDropout(0.012f)
@@ -558,44 +558,44 @@ val assertionResults = assertionModel.transform(data).cache()
 {%- capture approach_scala_legal -%}
 from johnsnowlabs import * 
 
-val document = new nlp.DocumentAssembler()\
-    .setInputCol("sentence")\
+val document = new nlp.DocumentAssembler()
+    .setInputCol("sentence")
     .setOutputCol("document")
-val chunk = new nlp.Doc2Chunk()\
-    .setInputCols("document")\
-    .setOutputCol("doc_chunk")\
-    .setChunkCol("chunk")\
-    .setStartCol("tkn_start")\
-    .setStartColByTokenIndex(True)\
-    .setFailOnMissing(False)\
+val chunk = new nlp.Doc2Chunk()
+    .setInputCols("document")
+    .setOutputCol("doc_chunk")
+    .setChunkCol("chunk")
+    .setStartCol("tkn_start")
+    .setStartColByTokenIndex(True)
+    .setFailOnMissing(False)
     .setLowerCase(False)
-val token = new nlp.Tokenizer()\
-    .setInputCols(['document'])\
+val token = new nlp.Tokenizer()
+    .setInputCols('document')
     .setOutputCol('token')
-val roberta_embeddings = nlp.RoBertaEmbeddings.pretrained("roberta_embeddings_legal_roberta_base","en") \
-    .setInputCols(["document", "token"]) \
-    .setOutputCol("embeddings") \
+val roberta_embeddings = nlp.RoBertaEmbeddings.pretrained("roberta_embeddings_legal_roberta_base","en")
+    .setInputCols(Array("document", "token"))
+    .setOutputCol("embeddings")
     .setMaxSentenceLength(512)
 
 # Define AssertionDLApproach with parameters and start training
-val assertionStatus = new legal.AssertionDLApproach()\
-    .setLabelCol("assertion_label")\
-    .setInputCols("document", "doc_chunk", "embeddings")\
-    .setOutputCol("assertion")\
-    .setBatchSize(128)\
-    .setLearningRate(0.001)\
-    .setEpochs(2)\
-    .setStartCol("tkn_start")\
-    .setEndCol("tkn_end")\
-    .setMaxSentLen(1200)\
-    .setEnableOutputLogs(True)\
-    .setOutputLogsPath('training_logs/')\
-    .setGraphFolder(graph_folder)\
-    .setGraphFile(f"{graph_folder}/assertion_graph.pb")\
-    .setTestDataset(path="test_data.parquet", read_as='SPARK', options={'format': 'parquet'})\
+val assertionStatus = new legal.AssertionDLApproach()
+    .setLabelCol("assertion_label")
+    .setInputCols(Array("document", "doc_chunk", "embeddings"))
+    .setOutputCol("assertion")
+    .setBatchSize(128)
+    .setLearningRate(0.001)
+    .setEpochs(2)
+    .setStartCol("tkn_start")
+    .setEndCol("tkn_end")
+    .setMaxSentLen(1200)
+    .setEnableOutputLogs(True)
+    .setOutputLogsPath('training_logs/')
+    .setGraphFolder(graph_folder)
+    .setGraphFile(f"{graph_folder}/assertion_graph.pb")
+    .setTestDataset(path="test_data.parquet", read_as='SPARK', options={'format': 'parquet'})
     .setScopeWindow(scope_window)
-    #.setValidationSplit(0.2)\    
-    #.setDropout(0.1)\    
+    #.setValidationSplit(0.2)  
+    #.setDropout(0.1)
 
 val trainingPipeline = new Pipeline().setStages(Array(
   document,
@@ -623,13 +623,13 @@ val token = new nlp.Tokenizer()
   .setInputCols("document")
   .setOutputCol("token")
 val embeddings = nlp.WordEmbeddingsModel.pretrained("embeddings_clinical", "en", "clinical/models")
-  .setInputCols("document", "token")
+  .setInputCols(Array("document", "token"))
   .setOutputCol("embeddings")
 
 // Define AssertionDLApproach with parameters and start training
 val assertionStatus = new finance.AssertionDLApproach()
   .setLabelCol("label")
-  .setInputCols("document", "chunk", "embeddings")
+  .setInputCols(Array("document", "chunk", "embeddings"))
   .setOutputCol("assertion")
   .setBatchSize(128)
   .setDropout(0.012f)

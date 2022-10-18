@@ -2,7 +2,11 @@
 AssertionLogRegApproach
 {%- endcapture -%}
 
-{%- capture description -%}
+{%- capture approach -%}
+approach
+{%- endcapture -%}
+
+{%- capture approach_description -%}
 Train a Assertion Model algorithm using a regression log model. 
 
 The training data should have annotations columns of type `DOCUMENT`, `CHUNK`, `WORD_EMBEDDINGS`, the `label`column (The assertion status that you want to predict), the `start` (the start index for the term that has the assertion status),
@@ -16,43 +20,39 @@ Excluding the label, this can be done with for example
 
 {%- endcapture -%}
 
-{%- capture input_anno -%}
+{%- capture approach_input_anno -%}
 DOCUMENT, CHUNK, WORD_EMBEDDINGS
 {%- endcapture -%}
 
-{%- capture output_anno -%}
+{%- capture approach_output_anno -%}
 ASSERTION
 {%- endcapture -%}
 
-{%- capture python_example -%}
+{%- capture approach_python_medical -%}
 
-import sparknlp
-from sparknlp.base import *
-from sparknlp.annotator import *
-from sparknlp_jsl.annotator import *
-from pyspark.ml import Pipeline
+from johnsnowlabs import *
 
-document_assembler = DocumentAssembler().setInputCol('text').setOutputCol('document')
+document_assembler = nlp.DocumentAssembler().setInputCol('text').setOutputCol('document')
 
-sentence_detector = SentenceDetector().setInputCols(["document"]).setOutputCol("sentence")
+sentence_detector = nlp.SentenceDetector().setInputCols(["document"]).setOutputCol("sentence")
 
-tokenizer = Tokenizer().setInputCols("sentence").setOutputCol("token")
+tokenizer = nlp.Tokenizer().setInputCols("sentence").setOutputCol("token")
 
-POSTag = PerceptronModel.pretrained() \
+POSTag = nlp.PerceptronModel.pretrained() \
 .setInputCols("sentence", "token") \
 .setOutputCol("pos")
 
-chunker = Chunker() \
+chunker = nlp.Chunker() \
 .setInputCols(["pos", "sentence"]) \
 .setOutputCol("chunk") \
 .setRegexParsers(["(<NN>)+"])
 
-pubmed = WordEmbeddingsModel.pretrained("embeddings_clinical","en","clinical/models") \
+pubmed = nlp.WordEmbeddingsModel.pretrained("embeddings_clinical","en","clinical/models") \
 .setInputCols("sentence", "token") \
 .setOutputCol("embeddings") \
 .setCaseSensitive(False)
 
-assertion_status = AssertionLogRegApproach() \
+assertion_status = medical.AssertionLogRegApproach() \
 .setInputCols("sentence", "chunk", "embeddings") \
 .setOutputCol("assertion") \
 .setStartCol("start") \
@@ -82,49 +82,138 @@ pipelineModel = pipeline.fit(trainingData)
 
 {%- endcapture -%}
 
-{%- capture scala_example -%}
+
+{%- capture approach_python_legal -%}
+from johnsnowlabs import *
+# Training with Glove Embeddings
+# First define pipeline stages to extract embeddings and text chunks
+documentAssembler = nlp.DocumentAssembler() \
+    .setInputCol("text") \
+    .setOutputCol("document")
+
+tokenizer = nlp.Tokenizer() \
+    .setInputCols(["document"]) \
+    .setOutputCol("token")
+
+glove = nlp.WordEmbeddingsModel.pretrained("embeddings_clinical", "en", "clinical/models") \
+    .setInputCols(["document", "token"]) \
+    .setOutputCol("word_embeddings") \
+    .setCaseSensitive(False)
+
+chunkAssembler = nlp.Doc2Chunk() \
+    .setInputCols(["document"]) \
+    .setChunkCol("target") \
+    .setOutputCol("chunk")
+
+# Then the AssertionLogRegApproach model is defined. Label column is needed in the dataset for training.
+assertion = legal.AssertionLogRegApproach() \
+    .setLabelCol("label") \
+    .setInputCols(["document", "chunk", "word_embeddings"]) \
+    .setOutputCol("assertion") \
+    .setReg(0.01) \
+    .setBefore(11) \
+    .setAfter(13) \
+    .setStartCol("start") \
+    .setEndCol("end")
+
+assertionPipeline = Pipeline(stages=[
+    documentAssembler,
+    sentenceDetector,
+    tokenizer,
+    embeddings,
+    nerModel,
+    nerConverter,
+    assertion
+])
+
+assertionModel = assertionPipeline.fit(dataset)
+{%- endcapture -%}
+
+
+{%- capture approach_python_finance -%}
+from johnsnowlabs import *
+# Training with Glove Embeddings
+# First define pipeline stages to extract embeddings and text chunks
+documentAssembler = nlp.DocumentAssembler() \
+    .setInputCol("text") \
+    .setOutputCol("document")
+
+tokenizer = nlp.Tokenizer() \
+    .setInputCols(["document"]) \
+    .setOutputCol("token")
+
+glove = nlp.WordEmbeddingsModel.pretrained("embeddings_clinical", "en", "clinical/models") \
+    .setInputCols(["document", "token"]) \
+    .setOutputCol("word_embeddings") \
+    .setCaseSensitive(False)
+
+chunkAssembler = nlp.Doc2Chunk() \
+    .setInputCols(["document"]) \
+    .setChunkCol("target") \
+    .setOutputCol("chunk")
+
+# Then the AssertionLogRegApproach model is defined. Label column is needed in the dataset for training.
+assertion = finance.AssertionLogRegApproach() \
+    .setLabelCol("label") \
+    .setInputCols(["document", "chunk", "word_embeddings"]) \
+    .setOutputCol("assertion") \
+    .setReg(0.01) \
+    .setBefore(11) \
+    .setAfter(13) \
+    .setStartCol("start") \
+    .setEndCol("end")
+
+assertionPipeline = Pipeline(stages=[
+    documentAssembler,
+    sentenceDetector,
+    tokenizer,
+    embeddings,
+    nerModel,
+    nerConverter,
+    assertion
+])
+
+assertionModel = assertionPipeline.fit(dataset)
+{%- endcapture -%}
+
+
+
+{%- capture approach_scala_medical -%}
 // This CoNLL dataset already includes the sentence, token, pos and label column with their respective annotator types.
 // If a custom dataset is used, these need to be defined.
 
-import com.johnsnowlabs.nlp.base.DocumentAssembler
-import com.johnsnowlabs.nlp.annotators.sbd.pragmatic.SentenceDetector
-import com.johnsnowlabs.nlp.annotators.{Chunker, Tokenizer}
-import com.johnsnowlabs.nlp.embeddings.WordEmbeddingsModel
-import com.johnsnowlabs.nlp.annotator.PerceptronModel
-import com.johnsnowlabs.nlp.annotators.assertion.dl.AssertionDLModel
-import com.johnsnowlabs.nlp.annotator.NerCrfApproach
-import org.apache.spark.ml.Pipeline
+from johnsnowlabs import *
 
-val documentAssembler = new DocumentAssembler()
+val documentAssembler = new nlp.DocumentAssembler()
 .setInputCol("text")
 .setOutputCol("document")
 
-val sentenceDetector = new SentenceDetector()
-.setInputCols(Array("document"))
+val sentenceDetector = new nlp.SentenceDetector()
+.setInputCols("document")
 .setOutputCol("sentence")
 
-val tokenizer = new Tokenizer()
-.setInputCols(Array("sentence"))
+val tokenizer = new nlp.Tokenizer()
+.setInputCols("sentence")
 .setOutputCol("token")
 
-val POSTag = PerceptronModel
+val POSTag = nlp.PerceptronModel
 .pretrained()
-.setInputCols("sentence", "token")
+.setInputCols(Array("sentence", "token"))
 .setOutputCol("pos")
 
-val chunker = new Chunker()
+val chunker = new nlp.Chunker()
 .setInputCols(Array("pos", "sentence"))
 .setOutputCol("chunk")
 .setRegexParsers(Array("(<NN>)+"))
 
-val pubmed = WordEmbeddingsModel.pretrained("embeddings_clinical","en","clinical/models")
-.setInputCols("sentence", "token")
+val pubmed = nlp.WordEmbeddingsModel.pretrained("embeddings_clinical","en","clinical/models")
+.setInputCols(Array("sentence", "token"))
 .setOutputCol("embeddings")
 .setCaseSensitive(false)
 
-val assertion = new AssertionLogRegApproach()
+val assertion = new medical.AssertionLogRegApproach()
 .setLabelCol("label")
-.setInputCols("document", "chunk", "embeddings")
+.setInputCols(Array("document", "chunk", "embeddings"))
 .setOutputCol("assertion")
 .setReg(0.01)
 .setBefore(11)
@@ -149,7 +238,102 @@ val pipelineModel = pipeline.fit(trainingData)
 
 {%- endcapture -%}
 
-{%- capture api_link -%}
+{%- capture approach_scala_legal -%}
+from johnsnowlabs import * 
+
+// Training with Glove Embeddings
+// First define pipeline stages to extract embeddings and text chunks
+val documentAssembler = new nlp.DocumentAssembler()
+  .setInputCol("text")
+  .setOutputCol("document")
+
+val tokenizer = new nlp.Tokenizer()
+  .setInputCols("document")
+  .setOutputCol("token")
+
+val glove = nlp.WordEmbeddingsModel.pretrained("embeddings_clinical", "en", "clinical/models")
+  .setInputCols(Array("document", "token"))
+  .setOutputCol("word_embeddings")
+  .setCaseSensitive(false)
+
+val chunkAssembler = new nlp.Doc2Chunk()
+  .setInputCols("document")
+  .setChunkCol("target")
+  .setOutputCol("chunk")
+
+// Then the AssertionLogRegApproach model is defined. Label column is needed in the dataset for training.
+val assertion = new legal.AssertionLogRegApproach()
+  .setLabelCol("label")
+  .setInputCols(Array("document", "chunk", "word_embeddings"))
+  .setOutputCol("assertion")
+  .setReg(0.01)
+  .setBefore(11)
+  .setAfter(13)
+  .setStartCol("start")
+  .setEndCol("end")
+
+val assertionPipeline = new Pipeline().setStages(Array(
+  documentAssembler,
+  sentenceDetector,
+  tokenizer,
+  embeddings,
+  nerModel,
+  nerConverter,
+  assertion
+))
+
+val assertionModel = assertionPipeline.fit(dataset)
+{%- endcapture -%}
+
+{%- capture approach_scala_finance -%}
+from johnsnowlabs import * 
+
+// Training with Glove Embeddings
+// First define pipeline stages to extract embeddings and text chunks
+val documentAssembler = new nlp.DocumentAssembler()
+  .setInputCol("text")
+  .setOutputCol("document")
+
+val tokenizer = new nlp.Tokenizer()
+  .setInputCols("document")
+  .setOutputCol("token")
+
+val glove = nlp.WordEmbeddingsModel.pretrained("embeddings_clinical", "en", "clinical/models")
+  .setInputCols(Array("document", "token"))
+  .setOutputCol("word_embeddings")
+  .setCaseSensitive(false)
+
+val chunkAssembler = new nlp.Doc2Chunk()
+  .setInputCols("document")
+  .setChunkCol("target")
+  .setOutputCol("chunk")
+
+// Then the AssertionLogRegApproach model is defined. Label column is needed in the dataset for training.
+val assertion = new finance.AssertionLogRegApproach()
+  .setLabelCol("label")
+  .setInputCols(Array("document", "chunk", "word_embeddings"))
+  .setOutputCol("assertion")
+  .setReg(0.01)
+  .setBefore(11)
+  .setAfter(13)
+  .setStartCol("start")
+  .setEndCol("end")
+
+val assertionPipeline = new Pipeline().setStages(Array(
+  documentAssembler,
+  sentenceDetector,
+  tokenizer,
+  embeddings,
+  nerModel,
+  nerConverter,
+  assertion
+))
+
+val assertionModel = assertionPipeline.fit(dataset)
+{%- endcapture -%}
+
+
+{%- capture approach_api_link -%}
 [AssertionLogRegApproach](https://nlp.johnsnowlabs.com/licensed/api/com/johnsnowlabs/nlp/annotators/assertion/logreg/AssertionLogRegApproach.html)
 {%- endcapture -%}
 
@@ -160,13 +344,18 @@ val pipelineModel = pipeline.fit(trainingData)
 
 
 
-{% include templates/licensed_training_anno_template.md
+{% include templates/licensed_approach_model_medical_fin_leg_template.md
 title=title
-description=description
-input_anno=input_anno
-output_anno=output_anno
-python_example=python_example
-scala_example=scala_example
+approach=approach
+approach_description=approach_description
+approach_input_anno=approach_input_anno
+approach_output_anno=approach_output_anno
+approach_python_medical=approach_python_medical
+approach_python_legal=approach_python_legal
+approach_python_finance=approach_python_finance
+approach_scala_medical=approach_scala_medical
+approach_scala_legal=approach_scala_legal
+approach_scala_finance=approach_scala_finance
 python_api_link=python_api_link
-api_link=api_link
+approach_api_link=approach_api_link
 %}
